@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <style>
+        li {
+
+            display:inline;
+            padding: 2%;
+            text-align: center;
+        }
+
+        lable {         
+            display:block;
+            text-align: left;
+            padding: 5px;
+        }
+
+        input {
+            padding: 5px;
+            margin-bottom: 10px;
+
+        }
+        button {
+            padding: 10px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .in-this-link {
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Home</a></li> <!--This page is the landing page and will be used to explain abouth the web app and what it is about... -->
+                <li><a href="">Calculations</a></li> <!--Mainly to create new calculations and show the calculation procedure. But also to show previous calculations, technical sources, material certificates...-->
+                <li><a href="">Database</a></li> <!--Page to access and manage the database. Here I intend to give access to previous jobs information (jobcards, drawings, calculations), Bill of Materials, material certificates...-->
+                <li><a class="in-this-link" href="pages/quotations/customerdetails.html">Quotations</a></li> <!--Used to create and search previous quotations. I intend to provide a quick comparison to previous prices provided for similar cylinders-->
+                <li><a href="">Register</a></li> <!--Used to CRUD users of this web app-->
+                <li><a href="">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>New Quotation - Customer Details</h1>
+        <div>
+            <form>
+                <lable>Customer</lable>
+                <input class="js-customerName" type="text" name="customerName" placeholder="Insert customer name" required>
+                <lable>Contact name</lable>
+                <input class="js-contactName" type="text" name="contactName" placeholder="Insert contact name" required>
+                <lable>Phone number</lable>
+                <input class="js-phoneNumber" type="tel" name="phoneNumber" placeholder="Insert phone number" required>
+                <lable>Mobile number</lable>
+                <input type="tel" name="mobileNumber" placeholder="Insert mobile number">
+                <lable>E-mail</lable>
+                <input class="js-email" type="email" name="email" placeholder="Insert contact's email" required>
+                <lable>Delivery address</lable>
+                <input type="text" name="customerDeliveryAddress" placeholder="Insert delivery address" required>
+                <lable>Delivery via</lable>
+                <input type="text" name="customerDeliveryVia" placeholder="Insert delivery method" required>
+                <lable>Date recorded</lable>
+                <input type="date" name="dateRecorded" placeholder="Insert today's date" required>
+                <lable>Date required</lable>
+                <input type="date" name="dateRequired" placeholder="Insert the required date" required>
+            </form>
+            <button onclick="
+                nextCustomerSpecs();
+            ">Next</button>
+        </div>
+
+    </main>
+    <footer>
+
+    </footer>
+    <script>
+
+        function nextCustomerSpecs () {
+
+            let customer = {
+                customerName: document.querySelector(".js-customerName").value,
+                contactName: document.querySelector(".js-contactName").value,
+                phoneNumber: document.querySelector(".js-phoneNumber").value,
+                email: document.querySelector(".js-email").value
+
+            };
+
+            localStorage.setItem("customer", customer);
+            
+            location.href="cylinderspecs.html"
+            // console.log(customer.customerName);
+
+            // localStorage.clear("customer");
+
+            // let customerName = localStorage.getItem("customerName");            
+            // let contactName = localStorage.getItem("contactName");
+            // let phoneNumber = localStorage.getItem("phoneNumber");
+            
+            // localStorage.setItem("customerName", document.querySelector('.customerName').value);
+            // let customerName = localStorage.getItem("customerName");
+            
+            // localStorage.setItem("contactName", document.querySelector('.contactName').value);
+            // let contactName = localStorage.getItem("contactName");
+         
+            // localStorage.setItem("phoneNumber", document.querySelector('.phoneNumber').value);
+            // let phoneNumber = localStorage.getItem("phoneNumber");
+
+            // localStorage.setItem("email", document.querySelector('.email').value);
+            // let email = localStorage.getItem("email");
+
+            // console.log(customerName);
+            // console.log(contactName);
+            // console.log(phoneNumber);
+            // console.log(email);
+         
+         
+         
+            // localStorage.clear("customerName");
+            // localStorage.clear("contactName");
+            // localStorage.clear("phoneNumber");
+            // localStorage.clear("email");
+
+
+
+           
+
+
+
+        }
+
+
+
+    </script>
+</body>
+</html>

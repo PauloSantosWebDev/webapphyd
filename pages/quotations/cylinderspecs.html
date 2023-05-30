@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cylinder Specifications</title>
+    <style>
+        li {
+
+            display:inline;
+            padding: 2%;
+            text-align: center;
+        }
+
+        lable {         
+            display:block;
+            text-align: left;
+            padding: 5px;
+        }
+
+        .radio {
+            display:inline;
+        }
+
+        input {
+            padding: 5px;
+            margin-bottom: 10px;
+
+        }
+        button {
+            padding: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .in-this-link {
+            pointer-events: none;
+        }
+
+        .offStop {
+            background-color: lightgrey;
+            border: none;
+            pointer-events: none;
+        }
+
+        td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            text-align: center;
+        }
+        table, td, th {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+       
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Home</a></li> <!--This page is the landing page and will be used to explain abouth the web app and what it is about... -->
+                <li><a href="">Calculations</a></li> <!--Mainly to create new calculations and show the calculation procedure. But also to show previous calculations, technical sources, material certificates...-->
+                <li><a href="">Database</a></li> <!--Page to access and manage the database. Here I intend to give access to previous jobs information (jobcards, drawings, calculations), Bill of Materials, material certificates...-->
+                <li><a class="in-this-link" href="customerdetails.html">Quotations</a></li> <!--Used to create and search previous quotations. I intend to provide a quick comparison to previous prices provided for similar cylinders-->
+                <li><a href="">Register</a></li> <!--Used to CRUD users of this web app-->
+                <li><a href="">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>New Quotation - Cylinder Specifications</h1>
+        <div>
+            <form>
+                <form>
+                    <input type="radio" id="HSH" name="cylinderType" value="HSH" checked>
+                    <lable class="radio" for="HSH">HSH</lable>
+                    <input type="radio" id="HB" name="cylinderType" value="HB">
+                    <lable class="radio" for="HB">HB</lable>
+                    <input type="radio" id="HHMI" name="cylinderType" value="HHMI">
+                    <lable class="radio" for="HHMI">HHMI</lable>
+                    <input type="radio" id="HSMI" name="cylinderType" value="HSMI">
+                    <lable class="radio" for="HSMI">HSMI</lable>
+                </form>
+                
+                <!--                    BORE DETAILS                    -->
+
+                <lable>Bore</lable>                
+                <div>
+                    <input class="js-in-to-mm" type="number" name="boreInches" placeholder="in inches"> <!-- onchange="boreConversionInToMM()" onkeyup="boreConversionInToMM()" -->
+                    <label>Inches</label>
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="boreMillimiters" placeholder="in millimeters"> <!--onchange="boreConversionMMToIn()" onkeyup="boreConversionMMToIn()"-->
+                    <label>Millimiters</label>
+                </div>
+                                
+                <form>
+                    <labe>Outer diameter required by customer?</labe>
+                    <input type="radio" class="js-radio-on" id="tubeODYes" name="tubeODSelection" value="Yes"> <!--onchange="onTubeODLength()"-->
+                    <lable class="radio" for="tubeODYes">Yes</lable>
+                    <input type="radio" class="js-radio-off" id="tubeODNo" name="tubeODSelection" value="No" checked> <!--onchange="offTubeODLength()"-->
+                    <lable class="radio" for="tubeODYes">No</lable>
+                    <lable>Outside diameter</lable>
+                    <div>
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" onfocusout="checkTubeODIn()" type="number" name="tubeODInches" placeholder="in inches"> <!--onchange="tubeODConversionInToMM()" onkeyup="tubeODConversionInToMM()"-->
+                        <label>Inches</label>
+                    </div>
+                    <div>
+                        <input class="offStop js-mm-to-in js-off-through-radio-mm" onfocusout="checkTubeODMM()" type="number" name="tubeODMillimiters" placeholder="in millimeters"> <!--onchange="tubeODConversionMMToIn()" onkeyup="tubeODConversionMMToIn()"-->
+                        <label>Millimeters</label>
+                    </div>
+                </form>
+                
+                <!--                    ROD DETAILS                 -->
+
+                <lable>Rod</lable>
+                <div>
+                    <input class="js-in-to-mm" type="number" name="rodInches" placeholder="in inches"> <!--onchange="rodConversionInToMM()" onkeyup="rodConversionInToMM()"-->
+                    <label>Inches</label>
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="rodMillimiters" placeholder="in millimeters"> <!--onchange="rodConversionMMToIn()" onkeyup="rodConversionMMToIn()"-->
+                    <label>Millimiters</label>
+                </div>
+
+                <form>
+                    <labe>Is the rod hollow?</labe>
+                    <input type="radio" class="js-radio-on" id="rodHollowYes" name="rodHollowSelection" value="Yes"> <!--onchange="onRodHollowLength()"-->
+                    <lable class="radio" for="rodHollowYes">Yes</lable>
+                    <input type="radio" class="js-radio-off" id="rodHollowNo" name="rodHollowSelection" value="No" checked> <!--onchange="offRodHollowLength()"-->
+                    <lable class="radio" for="tubeODYes">No</lable>
+                    <lable>Inside diameter</lable>
+                    <div>
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" onfocusout="checkRodHollowIn()" type="number" name="rodHollowInches" placeholder="in inches"> <!--onchange="rodHollowConversionInToMM()" onkeyup="rodHollowConversionInToMM()"-->
+                        <label>Inches</label>
+                    </div>
+                    <div>
+                        <input class="offStop js-mm-to-in js-off-through-radio-mm" onfocusout="checkRodHollowMM()" type="number" name="rodHollowMillimiters" placeholder="in millimeters"> <!--onchange="rodHollowConversionMMToIn()" onkeyup="rodHollowConversionMMToIn()"-->
+                        <label>Millimeters</label>
+                    </div>
+                </form>
+
+                <!--                    CLOSED CENTERS DETAILS                  -->
+
+                <lable>Closed Centers</lable>
+                <div>
+                    <input class="js-in-to-mm" type="number" name="closedCentersInches" placeholder="in inches"> <!--onchange="closedCentersConversionInToMM()" onkeyup="closedCentersConversionInToMM()"-->
+                    <label>Inches</label>
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="closedCentersMillimiters" placeholder="in millimeters"> <!--onchange="closedCentersConversionMMToIn()" onkeyup="closedCentersConversionMMToIn()"-->
+                    <label>Millimiters</label>
+                </div>
+
+                <!--                    NET STROKE DETAILS                  -->
+
+                <lable>Net stroke</lable>
+                <div>
+                    <input class="js-in-to-mm" type="number" name="netStrokeInches" placeholder="in inches"> <!--onchange="netStrokeConversionInToMM()" onkeyup="netStrokeConversionInToMM()"-->
+                    <label>Inches</label>
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="netStrokeMillimiters" placeholder="in millimeters"> <!--onchange="netStrokeConversionMMToIn()" onkeyup="netStrokeConversionMMToIn()"-->
+                    <label>Millimeters</label>
+                </div>
+
+                <!--                    STOP TUBE DETAILS                   -->
+
+                <form>
+                    <labe>Stop tube?</labe>
+                    <input type="radio" class="js-radio-on" id="stopTubeYes" name="stopTubeSelection" value="Yes"> <!--onchange="onStopTubeLength()"-->
+                    <lable class="radio" for="stopTubeYes">Yes</lable>
+                    <input type="radio" class="js-radio-off" id="stopTubeNo" name="stopTubeSelection" value="No" checked> <!--onchange="offStopTubeLength()"-->
+                    <lable class="radio" for="stopTubeNo">No</lable>
+                    <lable>Stop tube length</lable>
+                    <div>
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" type="number" name="stopTubeInches" placeholder="in inches"> <!--onkeyup="stopTubeConversionInToMM ()"-->
+                        <label>Inches</label>
+                    </div>
+                    <div>
+                        <input class="offStop js-mm-to-in js-off-through-radio-mm" type="number" name="stopTubeMillimiters" placeholder="in millimeters"> <!--onkeyup="stopTubeConversionMMToIn ()"-->
+                        <label>Millimeters</label>
+                    </div>
+                </form>
+
+                <!--                    GROSS STROKE DETAILS                    -->
+
+                <lable>Gross stroke</lable>
+                <div>
+                    <input class="offStop js-in-to-mm" type="number" name="grossStrokeInches" placeholder="in inches">
+                    <label>Inches</label>
+                </div>
+                <div>
+                    <input class="offStop js-mm-to-in" type="number" name="grossStrokeMillimiters" placeholder="in millimeters">
+                    <label>Millimeters</label>
+                </div>
+
+
+                
+                <!--                    PUSH PRESSURE DETAILS                   -->
+
+                <lable>Push pressure</lable>
+                <input class="js-push-pressure-psi" onchange="pushPressureConversionFromPSI()" onkeyup="pushPressureConversionFromPSI()" type="number" name="pushPressurePSI" placeholder="in PSI">
+                <input class="js-push-pressure-mpa" onchange="pushPressureConversionFromMPa()" onkeyup="pushPressureConversionFromMPa()" type="number" name="pushPressureMPa" placeholder="in MPa">
+                <input class="js-push-pressure-bar" onchange="pushPressureConversionFromBar()" onkeyup="pushPressureConversionFromBar()" type="number" name="pushPressureBar" placeholder="in Bar">
+                
+                <lable>Pull pressure</lable>
+                <input class="js-pull-pressure-psi" onchange="pullPressureConversionFromPSI()" onkeyup="pullPressureConversionFromPSI()" type="number" name="pullPressurePSI" placeholder="in PSI">
+                <input class="js-pull-pressure-mpa" onchange="pullPressureConversionFromMPa()" onkeyup="pullPressureConversionFromMPa()" type="number" name="pullPressureMPa" placeholder="in MPa">
+                <input class="js-pull-pressure-bar" onchange="pullPressureConversionFromBar()" onkeyup="pullPressureConversionFromBar()" type="number" name="pullPressureBar" placeholder="in Bar">
+                
+                <lable>Push force</lable>
+                <input class="js-push-force-lbf" onchange="pushForceConversionFromLBF()" onkeyup="pushForceConversionFromLBF()" type="number" name="pushForceLbf" placeholder="in lbf">
+                <input class="js-push-force-newton" onchange="pushForceConversionFromNewton()" onkeyup="pushForceConversionFromNewton()" type="number" name="pushForceNewton" placeholder="in Newtons">
+                <input class="js-push-force-ton-force" onchange="pushForceConversionFromTonForce()" onkeyup="pushForceConversionFromTonForce()" type="number" name="pushForceNewton" placeholder="in ton-force">
+                
+                <lable>Pull force</lable>
+                <input class="js-pull-force-lbf" onchange="pullForceConversionFromLBF()" onkeyup="pullForceConversionFromLBF()" type="number" name="pullForceLbf" placeholder="in lbf">
+                <input class="js-pull-force-newton" onchange="pullForceConversionFromNewton()" onkeyup="pullForceConversionFromNewton()" type="number" name="pullForceNewton" placeholder="in Newtons">
+                <input class="js-pull-force-ton-force" onchange="pullForceConversionFromTonForce()" onkeyup="pullForceConversionFromTonForce()" type="number" name="pullForceNewton" placeholder="in ton-force">               
+            </form>
+            <!-- <button onclick="
+                nextCustomerSpecs();
+            ">Next</button> -->
+        </div>
+        
+        <div class="js-summary">
+            <button onclick="generateSummary()">Generate Summary</button>
+        </div>
+
+        <button onclick="
+            nextToCalcBuckling();
+        ">Next</button>
+    </main>
+    <footer>
+
+    </footer>
+
+    <script src="../../scripts/cylinderspecs.js"></script>
+</body>
+</html>

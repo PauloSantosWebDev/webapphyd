@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rod Buckling Safety Factor</title>
+    
+    <style>
+        li {
+
+            display:inline;
+            padding: 2%;
+            text-align: center;
+        }
+
+        lable {         
+            display:block;
+            text-align: left;
+            padding: 5px;
+        }
+        
+        .radio {
+            display:inline;
+        }
+
+        form {
+            padding: 10px;
+        }
+
+        .in-this-link {
+            pointer-events: none;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Home</a></li> <!--This page is the landing page and will be used to explain abouth the web app and what it is about... -->
+                <li><a href="">Calculations</a></li> <!--Mainly to create new calculations and show the calculation procedure. But also to show previous calculations, technical sources, material certificates...-->
+                <li><a href="">Database</a></li> <!--Page to access and manage the database. Here I intend to give access to previous jobs information (jobcards, drawings, calculations), Bill of Materials, material certificates...-->
+                <li><a class="in-this-link" href="customerdetails.html">Quotations</a></li> <!--Used to create and search previous quotations. I intend to provide a quick comparison to previous prices provided for similar cylinders-->
+                <li><a href="">Register</a></li> <!--Used to CRUD users of this web app-->
+                <li><a href="">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Calculations - Rod Buckling</h1>
+        <form>
+            <label>Young's Modulus (Modulus of Elasticity)</label><br>
+            <input type="radio" name="modulusForBuckling">
+            <lable class="radio">190 GPa</lable>
+            <input type="radio" name="modulusForBuckling">
+            <lable class="radio">200 GPa</lable>
+        </form>
+        <form>
+            <label>End condition</label><br>
+            <input type="radio" name="endConditionBuckling">
+            <lable class="radio">Both ends pinned</lable>
+            <input type="radio" name="endConditionBuckling">
+            <lable class="radio">One fixed end, one free end</lable>
+            <input type="radio" name="endConditionBuckling">
+            <lable class="radio">One fixed end, one pinned end</lable>
+            <input type="radio" name="endConditionBuckling">
+            <lable class="radio">Both ends fixed</lable>
+        </form>
+    </main>
+    
+</body>
+</html>
