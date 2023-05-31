@@ -1,7 +1,7 @@
 //General functions - Start
 
 //Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
-function elementsConversionInAndMM (elementYouAre, otherElement, selector) { 
+function elementsConversion (elementYouAre, otherElement, selector) { 
     if (elementYouAre.value < 0 || elementYouAre.value === '') {
         emptyFields(elementYouAre, otherElement);
     }
@@ -10,41 +10,97 @@ function elementsConversionInAndMM (elementYouAre, otherElement, selector) {
     }
 }
 
+//Used to convert a variety of numbers from one measurement unit to another
 function conversion (origim, selector) {
     let resultDestiny = 0;
-    if (Number(selector) === 1) {
-        resultDestiny = origim * 254 / 10; //Conversion from inches to millimeters.
-        return resultDestiny.toFixed(2);
-    } else if (Number(selector) === 2) {
-        resultDestiny = origim / 254 * 10; //Conversion from millimeters to inches.
-    } 
-    else {
-        alert("Conversion function with undefined selector.")
+    switch (Number(selector)) {
+        case 1:
+            resultDestiny = origim * 254 / 10; //Conversion from inches to millimeters.
+            break;
+        case 2:
+            resultDestiny = origim / 254 * 10; //Conversion from millimeters to inches.
+            break;
+        case 3:
+            resultDestiny = origim / 1450377377 * 10000000; //Conversion from psi to MPa
+            break;
+        case 4:
+            resultDestiny = origim / 1450377377 * 100000000; //Conversion from psi to Bar
+            break;
+        case 5:
+            resultDestiny = origim * 1450377377 / 10000000; //Conversion from MPa to psi
+            break;
+        case 6:
+            resultDestiny = origim * 10; //Conversion from MPa to bar
+            break;
+        case 7:
+            resultDestiny = origim * 1450377377 / 100000000; //Conversion from bar to psi
+            break;
+        case 8:
+            resultDestiny = origim / 10; //Conversion from bar to MPa
+            break;
+        case 9:
+            resultDestiny = origim * 44482216153 / Math.pow(10,10); //Conversion from lbf to Newton
+            break;
+        case 10:
+            resultDestiny = origim * 4535924 / Math.pow(10,10); //Conversion from lbf to ton-force
+            break;
+        case 11:
+            resultDestiny = origim / 44482216153 * Math.pow(10,10); //Conversion from Newton to lbf
+            break;
+        case 12:
+            resultDestiny = origim * 1019716 / Math.pow(10,10); //Conversion from Newton to ton-force
+            break;
+        case 13:
+            resultDestiny = origim / 4535924 * Math.pow(10,10); //Conversion from ton-force to lbf
+            break;
+        case 14:
+            resultDestiny = origim / 1019716 * Math.pow(10,10); //Conversion from ton-force to Newton
+            break;
     }
     return resultDestiny.toFixed(2);
 }
 
-function emptyFields (first, second, third = 0) {
-    const fieldsToEmpty = [first, second, third];
-    fieldsToEmpty.forEach((field) => {
-        if (field.value === 0) {
-            return;
-        }
-        else {
-            field.value = '';
-        }
-    });
+//Used to bring the fields back to showing placeholders' values
+function emptyFields (first, second) {
+    const fieldsToEmpty = [first, second];
+    fieldsToEmpty.forEach((field) => field.value = '');
 }
 
+//Used to unable some input elements
 function unabledWhenRadioOff (inElement, mmElement) {
     inElement.value = mmElement.value = '';
     inElement.classList.add("offStop");
     mmElement.classList.add("offStop");
 }
 
+//Used to enable some input elements
 function enabledWhenRadioOn (inElement, mmElement) {
     inElement.classList.remove("offStop");
     mmElement.classList.remove("offStop");
+}
+
+//Used to find the difference between two numbers
+function twoNumberSubtraction (minuend, subtrahend) {
+    let difference = minuend.value - subtrahend.value;
+    return Number(difference).toFixed(2);
+}
+
+//Used to calculate the net stroke. Difference btw gross stroke and stop tube length.
+function netStrokeCalc () {
+    let gsElementIn = document.getElementById('js-gs-in');
+    let stElementIn = document.getElementById('js-st-in');
+    let gsElementMM = document.getElementById('js-gs-mm');
+    let stElementMM = document.getElementById('js-st-mm');
+    if (gsElementIn.value == '' && stElementIn.value == '') {
+        emptyFields(document.getElementById('js-ns-in'), document.getElementById('js-ns-mm'));
+    }
+    else
+    {
+        let result = document.getElementById('js-ns-in');
+        result.value = twoNumberSubtraction(gsElementIn, stElementIn);
+        result = document.getElementById('js-ns-mm');
+        result.value = twoNumberSubtraction(gsElementMM, stElementMM);
+    }
 }
 
 //General functions - End
@@ -56,10 +112,10 @@ function enabledWhenRadioOn (inElement, mmElement) {
 document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
     let other = document.querySelectorAll(".js-mm-to-in")[index];
     e.addEventListener('keyup', () => {
-        elementsConversionInAndMM(e, other, 1);
+        elementsConversion(e, other, 1);
     });
     e.addEventListener('change', () => {
-        elementsConversionInAndMM(e, other, 1);
+        elementsConversion(e, other, 1);
     });
 });
 
@@ -67,13 +123,14 @@ document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
 document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
     let other = document.querySelectorAll(".js-in-to-mm")[index];
     e.addEventListener('keyup', () => {
-        elementsConversionInAndMM(e, other, 2);
+        elementsConversion(e, other, 2);
     });
     e.addEventListener('change', () => {
-        elementsConversionInAndMM(e, other, 2);
+        elementsConversion(e, other, 2);
     });
 });
 
+//Unable fields with class js-off-through-radio-.. when js-radio-off class radio buttons are selected.
 document.querySelectorAll(".js-radio-off").forEach((e, index) => {
     e.addEventListener('change', () => {
         let inElement = document.querySelectorAll(".js-off-through-radio-in")[index];
@@ -82,6 +139,7 @@ document.querySelectorAll(".js-radio-off").forEach((e, index) => {
     });
 });
 
+//Enable fields with class js-off-through-radio-.. when js-radio-off class radio buttons are selected.
 document.querySelectorAll(".js-radio-on").forEach((e, index) => {
     e.addEventListener('change', () => {
         let inElement = document.querySelectorAll(".js-off-through-radio-in")[index];
@@ -90,11 +148,166 @@ document.querySelectorAll(".js-radio-on").forEach((e, index) => {
     });
 });
 
+//General - It changes values from psi to mpa and bar
+document.querySelectorAll(".js-psi").forEach((e, index) => {
+    let mpaElement = document.querySelectorAll(".js-mpa")[index];
+    let barElement = document.querySelectorAll(".js-bar")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, mpaElement, 3);
+        elementsConversion(e, barElement, 4);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, mpaElement, 3);
+        elementsConversion(e, barElement, 4);
+    });
+});
+
+//General - It changes values from mpa to psi and bar
+document.querySelectorAll(".js-mpa").forEach((e, index) => {
+    let psiElement = document.querySelectorAll(".js-psi")[index];
+    let barElement = document.querySelectorAll(".js-bar")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, psiElement, 5);
+        elementsConversion(e, barElement, 6);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, psiElement, 5);
+        elementsConversion(e, barElement, 6);
+    });
+});
+
+//General - It changes values from bar to psi and mpa
+document.querySelectorAll(".js-bar").forEach((e, index) => {
+    let psiElement = document.querySelectorAll(".js-psi")[index];
+    let mpaElement = document.querySelectorAll(".js-mpa")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, psiElement, 7);
+        elementsConversion(e, mpaElement, 8);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, psiElement, 7);
+        elementsConversion(e, mpaElement, 8);
+    });
+});
+
+//General - It changes values from lbf to Newtons and ton-force
+document.querySelectorAll(".js-lbf").forEach((e, index) => {
+    let newtonElement = document.querySelectorAll(".js-newton")[index];
+    let tonElement = document.querySelectorAll(".js-ton")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, newtonElement, 9);
+        elementsConversion(e, tonElement, 10);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, newtonElement, 9);
+        elementsConversion(e, tonElement, 10);
+    });
+});
+
+//General - It changes values from Newtons to lbf and ton-force
+document.querySelectorAll(".js-newton").forEach((e, index) => {
+    let lbfElement = document.querySelectorAll(".js-lbf")[index];
+    let tonElement = document.querySelectorAll(".js-ton")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, lbfElement, 11);
+        elementsConversion(e, tonElement, 12);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, lbfElement, 11);
+        elementsConversion(e, tonElement, 12);
+    });
+});
+
+//General - It changes values from ton-force to lbf and Newtons
+document.querySelectorAll(".js-ton").forEach((e, index) => {
+    let lbfElement = document.querySelectorAll(".js-lbf")[index];
+    let newtonElement = document.querySelectorAll(".js-newton")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, lbfElement, 13);
+        elementsConversion(e, newtonElement, 14);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, lbfElement, 13);
+        elementsConversion(e, newtonElement, 14);
+    });
+});
+
+//Used to calculate the net stroke. Triggered when changing Gross Stroke
+document.getElementById('js-gs-in').addEventListener('focusout', () => netStrokeCalc());
+
+//Used to calculate the net stroke. Triggered when changing Gross Stroke
+document.getElementById('js-gs-mm').addEventListener('focusout', () => netStrokeCalc());
+
+//Used to calculate the net stroke. Triggered when changing Stop tube
+document.getElementById('js-st-in').addEventListener('focusout', () => netStrokeCalc());
+
+//Used to calculate the net stroke. Triggered when changing Stop tube
+document.getElementById('js-st-mm').addEventListener('focusout', () => netStrokeCalc());
 
 
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------------------------------
+//HTML Generating Functions
+
+
+//Generating rod end mountings
+let hshMountings = ['Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder'];
+let hbMountings = ['1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
+                    '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
+                    '14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing'];
+let hhmiMountings = ['Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
+
+//Load hsh cylinder mountings when hsh radio button is clicked
+document.getElementById('js-hsh').addEventListener('click', () => {
+    let controler = document.getElementById('js-cyl-mount');
+    let accumulator = '';
+    for (i=0; i<hshMountings.length; i++) {
+        accumulator += `<option>${hshMountings[i]}</option>`
+    }
+    controler.innerHTML = accumulator;
+});
+
+//Load hb cylinder mountings when hb radio button is clicked
+document.getElementById('js-hb').addEventListener('click', () => {
+    let controler = document.getElementById('js-cyl-mount');
+    let accumulator = '';
+    for (i=0; i<hbMountings.length; i++) {
+        accumulator += `<option>${hbMountings[i]}</option>`
+    }
+    controler.innerHTML = accumulator;
+});
+
+//Load hhmi cylinder mountings when hhmi radio button is clicked
+document.getElementById('js-hhmi').addEventListener('click', () => {
+    let controler = document.getElementById('js-cyl-mount');
+    let accumulator = '';
+    for (i=0; i<hhmiMountings.length; i++) {
+        accumulator += `<option>${hhmiMountings[i]}</option>`
+    }
+    controler.innerHTML = accumulator;
+});
+
+//Load hsmi cylinder mountings when hsmi radio button is clicked
+document.getElementById('js-hsmi').addEventListener('click', () => {
+    let controler = document.getElementById('js-cyl-mount');
+    let accumulator = '';
+    for (i=0; i<hhmiMountings.length; i++) {
+        accumulator += `<option>${hhmiMountings[i]}</option>`
+    }
+    controler.innerHTML = accumulator;
+});
+
+//Load hsh cylinder mountings when the page is loaded
+window.addEventListener('load', () => {
+    let controler = document.getElementById('js-cyl-mount');
+    let accumulator = '';
+    for (i=0; i<hshMountings.length; i++) {
+        accumulator += `<option>${hshMountings[i]}</option>`
+    }
+    controler.innerHTML = accumulator;
+});
 
 
 
@@ -103,183 +316,6 @@ document.querySelectorAll(".js-radio-on").forEach((e, index) => {
 
 
 
-// function checkTubeODIn () {
-//     let conversionNumber = Number(document.querySelector(".js-tube-od-in").value)*25.4;
-//     if (conversionNumber<=Number(document.querySelector(".js-bore-mm").value)) {
-//         alert("Tube OD can not be less than or equal to bore.");
-//         offTubeODLength();
-//         document.getElementById('tubeODNo').checked = true;
-//         document.querySelector('.js-bore-in').focus();
-//     }
-// }
-
-// function checkTubeODMM () {
-//     let conversionNumber = Number(document.querySelector(".js-tube-od-mm").value)/25.4;
-//     if (conversionNumber<=Number(document.querySelector(".js-bore-in").value)) {
-//         alert("Tube OD can not be less than or equal to bore.");
-//         offTubeODLength();
-//         document.getElementById('tubeODNo').checked = true;
-//         document.querySelector('.js-bore-in').focus();
-//     }
-// }
-
-
-
-
-
-// function checkRodHollowIn () {
-//     let conversionNumber = Number(document.querySelector(".js-rod-hollow-in").value)*25.4;
-//     if (conversionNumber>=Number(document.querySelector(".js-rod-mm").value)) {
-//         alert("Inside diameter can not be greather than or equal to outside diameter");
-//         offRodHollowLength();
-//         document.getElementById('rodHollowNo').checked = true;
-//         document.querySelector('.js-rod-in').focus();
-//     }
-// }
-
-// function checkRodHollowMM () {
-//     let conversionNumber = Number(document.querySelector(".js-rod-hollow-mm").value)/25.4;
-//     if (conversionNumber>=Number(document.querySelector(".js-rod-in").value)) {
-//         alert("Inside diameter can not be greather than or equal to outside diameter");
-//         offRodHollowLength();
-//         document.getElementById('rodHollowNo').checked = true;
-//         document.querySelector('.js-rod-in').focus();
-//     }        
-// }
-
-
-//STOP TUBE FUNCTIONS
-
-
-// GROSS STROKE FUNCTIONS
-
-// function grossStrokeAddition () {
-//     let net = document.querySelector(".js-net-stroke-in");
-//     let stop = document.querySelector(".js-stop-tube-in");
-//     let gross = document.querySelector(".js-gross-stroke-in");
-//     let sum = (Number(net.value) + Number(stop.value)).toFixed(2);
-
-//     if (sum == '' || sum == 0) {
-//         gross.value = '';
-//     }
-//     else {
-//         gross.value = (Number(net.value) + Number(stop.value)).toFixed(2);
-//     }
-
-//     net = document.querySelector(".js-net-stroke-mm");
-//     stop = document.querySelector(".js-stop-tube-mm");
-//     gross = document.querySelector(".js-gross-stroke-mm");
-//     sum = gross.value = (Number(net.value) + Number(stop.value)).toFixed(2);
-
-//     if (sum = '' || sum == 0) {
-//         gross.value = '';
-//     }
-//     else {
-//         gross.value = (Number(net.value) + Number(stop.value)).toFixed(2);
-//     }
-// }
-
-// PUSH PRESSURE FUNCTIONS
-
-function pushPressureConversionFromPSI () {
-    let conversionNumber = Number(document.querySelector(".js-push-pressure-psi").value)/145.0377377;
-    document.querySelector(".js-push-pressure-mpa").value = conversionNumber.toFixed(2);
-    conversionNumber = conversionNumber*10;
-    document.querySelector(".js-push-pressure-bar").value = conversionNumber.toFixed(2);            
-}
-
-function pushPressureConversionFromMPa () {
-    let conversionNumber = Number(document.querySelector(".js-push-pressure-mpa").value)*145.0377377;
-    document.querySelector(".js-push-pressure-psi").value = conversionNumber.toFixed(2);
-    conversionNumber = Number(document.querySelector(".js-push-pressure-mpa").value)*10;
-    document.querySelector(".js-push-pressure-bar").value = conversionNumber.toFixed(2);
-}
-
-function pushPressureConversionFromBar () {
-    let conversionNumber = Number(document.querySelector(".js-push-pressure-bar").value)/10;
-    document.querySelector(".js-push-pressure-mpa").value = conversionNumber.toFixed(2);
-    conversionNumber = conversionNumber*145.0377377;
-    document.querySelector(".js-push-pressure-psi").value = conversionNumber.toFixed(2);            
-}
-
-function pullPressureConversionFromPSI () {
-    let conversionNumber = Number(document.querySelector(".js-pull-pressure-psi").value)/145.0377377;
-    document.querySelector(".js-pull-pressure-mpa").value = conversionNumber.toFixed(2);
-    conversionNumber = conversionNumber*10;
-    document.querySelector(".js-pull-pressure-bar").value = conversionNumber.toFixed(2);
-}
-
-function pullPressureConversionFromMPa () {
-    let conversionNumber = Number(document.querySelector(".js-pull-pressure-mpa").value)*145.0377377;
-    document.querySelector(".js-pull-pressure-psi").value = conversionNumber.toFixed(2);
-    conversionNumber = Number(document.querySelector(".js-pull-pressure-mpa").value)*10;
-    document.querySelector(".js-pull-pressure-bar").value = conversionNumber.toFixed(2);
-}
-
-function pullPressureConversionFromBar () {
-    let conversionNumber = Number(document.querySelector(".js-pull-pressure-bar").value)/10;
-    document.querySelector(".js-pull-pressure-mpa").value = conversionNumber.toFixed(2);
-    conversionNumber = conversionNumber*145.0377377;
-    document.querySelector(".js-pull-pressure-psi").value = conversionNumber.toFixed(2);
-}
-
-function pushForceConversionFromLBF () {
-    let conversionNumber = Number(document.querySelector(".js-push-force-lbf").value)*4.4482216153;
-    document.querySelector(".js-push-force-newton").value = conversionNumber.toFixed(2);
-    conversionNumber = conversionNumber/9.80665/1000;
-    document.querySelector(".js-push-force-ton-force").value = conversionNumber.toFixed(2);          
-}
-
-function pushForceConversionFromNewton () {
-
-    let conversionNumber = Number(document.querySelector(".js-push-force-newton").value)/4.4482216153;
-    document.querySelector(".js-push-force-lbf").value = conversionNumber.toFixed(2);
-
-    conversionNumber = Number(document.querySelector(".js-push-force-newton").value)/9.80665/1000;
-    document.querySelector(".js-push-force-ton-force").value = conversionNumber.toFixed(2);
-
-}
-
-function pushForceConversionFromTonForce () {
-
-    let conversionNumber = Number(document.querySelector(".js-push-force-ton-force").value)*9.80665*1000;
-    document.querySelector(".js-push-force-newton").value = conversionNumber.toFixed(2);
-
-    conversionNumber = conversionNumber/4.4482216153;
-    document.querySelector(".js-push-force-lbf").value = conversionNumber.toFixed(2);
-
-}
-
-function pullForceConversionFromLBF () {
-
-    let conversionNumber = Number(document.querySelector(".js-pull-force-lbf").value)*4.4482216153;
-    document.querySelector(".js-pull-force-newton").value = conversionNumber.toFixed(2);
-
-    conversionNumber = conversionNumber/9.80665/1000;
-    document.querySelector(".js-pull-force-ton-force").value = conversionNumber.toFixed(2);
-
-
-}
-
-function pullForceConversionFromNewton () {
-
-    let conversionNumber = Number(document.querySelector(".js-pull-force-newton").value)/4.4482216153;
-    document.querySelector(".js-pull-force-lbf").value = conversionNumber.toFixed(2);
-
-    conversionNumber = Number(document.querySelector(".js-pull-force-newton").value)/9.80665/1000;
-    document.querySelector(".js-pull-force-ton-force").value = conversionNumber.toFixed(2);
-
-}
-
-function pullForceConversionFromTonForce () {
-
-    let conversionNumber = Number(document.querySelector(".js-pull-force-ton-force").value)*9.80665*1000;
-    document.querySelector(".js-pull-force-newton").value = conversionNumber.toFixed(2);
-
-    conversionNumber = conversionNumber/4.4482216153;
-    document.querySelector(".js-pull-force-lbf").value = conversionNumber.toFixed(2);
-
-}
 
 function generateSummary () {
     let pushForcelbf = 0,
@@ -450,11 +486,6 @@ function generateSummary () {
             </table>                
         `
 }
-
-
-
-
-
 
 
 
