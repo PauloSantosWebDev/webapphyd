@@ -327,7 +327,9 @@ document.body.addEventListener('click', (event) => {
         let matrixSpecs = []; //Used to autogenerate the cylinder specs for the summary table. It is an array of arrays.
         let arrayPressuresRows = ['PUSH', 'PULL']; //Used to generate the row identifiers for cylinder pressures
         let accHTMLPressures = ''; //Used to accumulate the generated HTML for pressures
-        let arraySpecsRows = ['Bore', 'Barrel OD', 'Rod', 'Rod ID', 'Closed Centers', 'Gross Stroke', 'Stop tube', 'Net Stroke']; //Used to autogenerate the rows for cylinder specifications in the summary table.
+        let accHTMLForcesReq = ''; //Used to accumulate the generated HTML for required forces
+        let arrayForcesReqRow = ['REQUIRED - PUSH', 'REQUIRED - PULL']; //Used to generate the row identifiers for forces required
+        let arraySpecsRows = ['BORE', 'BARREL OD', 'ROD', 'ROD ID', 'CLOSED CENTERS', 'GROSS STROKE', 'STOP TUBE', 'NET STROKE']; //Used to autogenerate the rows for cylinder specifications in the summary table.
         let accHTMLSpecs = ''; //Used to accumulate the generated HTML elements for cylinder specs.
 
         //Finding values functions/methods/ways section
@@ -368,17 +370,31 @@ document.body.addEventListener('click', (event) => {
                                 </tr>`
         }
 
+        //Autogenerate forces required
+        for (i = 0; i < document.querySelectorAll(".js-lbf").length; i++) {
+            let arrayForces = [];
+            arrayForces[0] = Number(document.querySelectorAll(".js-lbf")[i].value).toFixed(2);
+            arrayForces[1] = Number(document.querySelectorAll(".js-newton")[i].value).toFixed(2);
+            arrayForces[2] = Number(document.querySelectorAll(".js-ton")[i].value).toFixed(2);
+            accHTMLForcesReq += `<tr>
+                                    <th colspan="3">${arrayForcesReqRow[i]}</th>
+                                    <td colspan="3">${arrayForces[0]}</td>
+                                    <td colspan="3">${arrayForces[1]}</td>
+                                    <td colspan="3">${arrayForces[2]}</td>
+                                </tr>`
+        }
+
         //Autogenerate cylinder specifications
         for (i = 0; i < document.querySelectorAll(".js-in-to-mm").length; i++) {
             let arraySpecs = [];
             arraySpecs[0] = Number(document.querySelectorAll(".js-in-to-mm")[i].value).toFixed(2);
             arraySpecs[1] = Number(document.querySelectorAll(".js-mm-to-in")[i].value).toFixed(2);
             matrixSpecs[i] = arraySpecs;
-            accHTMLSpecs = accHTMLSpecs + `<tr>
-                                    <th colspan="6">${arraySpecsRows[i]}</th>
-                                    <td colspan="3">${matrixSpecs[i][0]}</th>
-                                    <td colspan="3">${matrixSpecs[i][1]}</th>
-                                </tr>`;
+            accHTMLSpecs += `<tr>
+                                <th colspan="6">${arraySpecsRows[i]}</th>
+                                <td colspan="3">${matrixSpecs[i][0]}</th>
+                                <td colspan="3">${matrixSpecs[i][1]}</th>
+                            </tr>`;
         }
 
         //Give the summary table its content
@@ -411,7 +427,7 @@ document.body.addEventListener('click', (event) => {
                     <td colspan="3">${testPressure[2]}</td>
                 </tr>
                 <tr>
-                    <th colspan="12">THEORETICAL FORCES</th>
+                    <th colspan="12">FORCES</th>
                 </tr>
                 <tr>
                     <th colspan="3"></th>
@@ -420,17 +436,18 @@ document.body.addEventListener('click', (event) => {
                     <th colspan="3">TON-FORCE</th>
                 </tr>
                 <tr>
-                    <th colspan="3">PUSH</th>
+                    <th colspan="3">THEORETICAL - PUSH</th>
                     <td colspan="3">${forcesPushPull[0]}</td>
                     <td colspan="3">${forcesPushPull[1]}</td>
                     <td colspan="3">${forcesPushPull[2]}</td>
                 </tr>
                 <tr>
-                    <th colspan="3">PULL</th>
+                    <th colspan="3">THEORETICAL - PULL</th>
                     <td colspan="3">${forcesPushPull[3]}</td>
                     <td colspan="3">${forcesPushPull[4]}</td>
                     <td colspan="3">${forcesPushPull[5]}</td>
                 </tr>
+                ${accHTMLForcesReq}
                 <tr>
                     <th colspan="12">CYLINDER SPECIFICATIONS</th>
                 </tr>
