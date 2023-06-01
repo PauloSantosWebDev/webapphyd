@@ -325,8 +325,9 @@ document.body.addEventListener('click', (event) => {
         const boreArea = Number(Math.PI * Math.pow(document.getElementById("js-bore-in").value, 2) / 4); //It is the area of the barrel's bore. This area is reused many times.
         const rodArea = Number(Math.PI / 4 * Math.pow(document.getElementById("js-rod-in").value, 2)); //It is the area of the rod. Used to calcualte pull force.
         let matrixSpecs = []; //Used to autogenerate the cylinder specs for the summary table. It is an array of arrays.
-        //let arraySpecs = []; //Used to autogenerate the cylinders specs and feed the matrixSpecs.
-        
+        let arraySpecsRows = ['Bore', 'Barrel OD', 'Rod', 'Rod ID', 'Closed Centers', 'Gross Stroke', 'Stop tube', 'Net Stroke']; //Used to autogenerate the rows for cylinder specifications in the summary table.
+        let accHTML = ''; //Used to accumulate the generated HTML elements
+
         //Finding values functions/methods/ways section
         
         //Finding cylinder type
@@ -357,13 +358,14 @@ document.body.addEventListener('click', (event) => {
             arraySpecs[0] = document.querySelectorAll(".js-in-to-mm")[i].value;
             arraySpecs[1] = document.querySelectorAll(".js-mm-to-in")[i].value;
             matrixSpecs[i] = arraySpecs;
-            //matrixSpecs.push(arraySpecs);
-            console.log(arraySpecs);
-            console.log(arraySpecs[0]);
-            console.log(arraySpecs[1]);
-            console.log(matrixSpecs);
+            accHTML = accHTML + `<tr>
+                                    <th colspan="3">${arraySpecsRows[i]}</th>
+                                    <td colspan="3">${matrixSpecs[i][0]}</th>
+                                    <td colspan="3">${matrixSpecs[i][1]}</th>
+                                </tr>`;
         }
 
+        //Give the summary table its content
         controller.innerHTML = `
             <button id="js-btn-summary">Summary</button>
             <table>
@@ -417,217 +419,16 @@ document.body.addEventListener('click', (event) => {
                     <th colspan="3">Inches</th>
                     <th colspan="3">Millimeters</th>
                 </tr>
-                <tr>
-                    <th colspan="3">Bore</th>
-                    <td colspan="3">${matrixSpecs[0][0]}</th>
-                    <td colspan="3">${matrixSpecs[0][1]}</th>
-                </tr>
+                ${accHTML}
         `;
     }
 });
 
-// document.getElementById("js-btn-summary").addEventListener('click', (event) => {
-
-//     let controller = document.querySelector('.js-summary'); //Used to control the div tag's content.
-//     let cylType = ''; //Used to identify which cylinder type was selected
-    
-//     document.querySelectorAll(".js-cyl-type").forEach((e, index) => {
-//         if (e.checked) {
-//             cylType = e.value;
-//         }
-//     });
-//     controller.innerHTML = `
-//         <button id="js-btn-summary">Summary</button>
-//         <table>
-//             <tr>
-//                 <th colspan="5">Summary Table</th>
-//             </tr>
-//             <tr>
-//                 <th colspan="5">Cylinder Type</th>
-//             </tr>
-//             <tr>
-//                 <td colspan="5">${cylType}</td>
-//             </tr>
-//     `;
-// });
 
 
 
 
 
-
-
-
-
-function generateSummary () {
-    let pushForcelbf = 0,
-        pushForceNewton = 0,
-        pushForceTonForce = 0,
-        pullForcelbf = 0,
-        pullForceNewton = 0,
-        pullForceTonForce = 0,
-        testPressurePSI = 0
-        testPressureMPa = 0
-        testPressureBar = 0;
-
-    let boreIn = document.querySelector(".js-bore-in"),
-        boreMM = document.querySelector(".js-bore-mm"),
-        rodIn = document.querySelector(".js-rod-in"),
-        rodMM = document.querySelector(".js-rod-mm"),
-        ccIn = document.querySelector(".js-closed-centers-in"),
-        ccMM = document.querySelector(".js-closed-centers-mm"),
-        netIn = document.querySelector(".js-net-stroke-in"),
-        netMM = document.querySelector(".js-net-stroke-mm"),
-        stopIn = document.querySelector(".js-stop-tube-in"),
-        stopMM = document.querySelector(".js-stop-tube-mm"),
-        grossIn = document.querySelector(".js-gross-stroke-in"),
-        grossMM = document.querySelector(".js-gross-stroke-mm"),
-        pushPSI = document.querySelector(".js-push-pressure-psi"),
-        pushMPa = document.querySelector(".js-push-pressure-mpa"),
-        pushBar = document.querySelector(".js-push-pressure-bar"),
-        pullPSI = document.querySelector(".js-pull-pressure-psi"),
-        pullMPa = document.querySelector(".js-pull-pressure-mpa"),
-        pullBar = document.querySelector(".js-pull-pressure-bar");
-
-    let controler = document.querySelector(".js-summary");
-    
-    // Calculating push force
-    pushForcelbf = (Math.pow(Number(boreIn.value),2) * Math.PI/4) * Number(pushPSI.value);
-    pushForceNewton = pushForcelbf * 4.4482216153;
-    pushForceTonForce = pushForceNewton/9.80665/1000;
-
-
-    pushForcelbf = pushForcelbf.toFixed(2);
-    pushForceNewton = pushForceNewton.toFixed(2);
-    pushForceTonForce = pushForceTonForce.toFixed(2);
-
-    //Calcualting pull force
-    pullForcelbf = ((Math.pow(Number(boreIn.value),2)-Math.pow(Number(rodIn.value),2)) * Math.PI/4) * Number(pullPSI.value);
-    pullForceNewton = pullForcelbf * 4.4482216153;
-    pullForceTonForce = pullForceNewton/9.80665/1000;
-
-
-    pullForcelbf = pullForcelbf.toFixed(2);
-    pullForceNewton = pullForceNewton.toFixed(2);
-    pullForceTonForce = pullForceTonForce.toFixed(2);
-    
-    testPressurePSI = 1.5 * Math.max(pullPSI.value, pushPSI.value);
-    testPressureMPa = 1.5 * Math.max(pullMPa.value, pushMPa.value);
-    testPressureBar = testPressureMPa*10;
-
-    function cylinderTypeToTable () {
-        let cylinderType = 'Initial type';
-        if(document.getElementById('HSH').checked) {
-            cylinderType = document.getElementById('HSH').value;                    
-            return cylinderType;
-        }
-        else if (document.getElementById('HB').checked) {
-            cylinderType = document.getElementById('HB').value;                    
-            return cylinderType;
-        }
-        else if (document.getElementById('HHMI').checked) {
-            cylinderType = document.getElementById('HHMI').value;
-            return cylinderType;
-        }
-        else {
-            cylinderType = document.getElementById('HSMI').value;
-            return cylinderType;
-        }
-    }
-                
-    
-    controler.innerHTML = 
-        `
-            <button onclick="generateSummary()">Generate Summary</button>
-            <table>
-                <tr>
-                    <th>Cylinder type</th>
-                    <td>${cylinderTypeToTable()}</td>
-                </tr>
-                <tr><th></th></tr>
-                <tr>
-                    <th></th>
-                    <th>lbf</th>
-                    <th>Newton</th>
-                    <th>Ton-force</th>
-                </tr>
-                <tr>
-                    <th>Theoretical Push</th>
-                    <td>${pushForcelbf}</td>
-                    <td>${pushForceNewton}</td>
-                    <td>${pushForceTonForce}</td>
-                </tr>
-                <tr>
-                    <th>Theoretical Pull</th>
-                    <td>${pullForcelbf}</td>
-                    <td>${pullForceNewton}</td>
-                    <td>${pullForceTonForce}</td>
-                </tr>
-                <tr><th></th></tr>
-                <tr>
-                    <th></th>
-                    <th>PSI</th>
-                    <th>MPa</th>
-                    <th>Bar</th>
-                </tr>
-                <tr>
-                    <th>Push pressure</th>
-                    <td>${pushPSI.value}</td>
-                    <td>${pushMPa.value}</td>
-                    <td>${pushBar.value}</td>
-                </tr>
-                <tr>
-                    <th>Pull pressure</th>
-                    <td>${pullPSI.value}</td>
-                    <td>${pullMPa.value}</td>
-                    <td>${pullBar.value}</td>
-                </tr>                                                
-                <tr>
-                    <th>Test pressure</th>
-                    <td>${testPressurePSI}</td>
-                    <td>${testPressureMPa}</td>
-                    <td>${testPressureBar}</td>
-                </tr>
-                <tr><th></th></tr>
-                <tr>
-                    <th></th>
-                    <th>IN</th>
-                    <th>MM</th>
-                </tr>
-                <tr>
-                    <th>Bore</th>
-                    <td>${boreIn.value}</td>
-                    <td>${boreMM.value}</td>
-                </tr>
-                <tr>
-                    <th>Rod</th>
-                    <td>${rodIn.value}</td>
-                    <td>${rodMM.value}</td>
-                </tr>
-                <tr>
-                    <th>Closed Centers</th>
-                    <td>${ccIn.value}</td>
-                    <td>${ccMM.value}</td>
-                </tr>
-                <tr>
-                    <th>Gross Stroke</th>
-                    <td>${grossIn.value}</td>
-                    <td>${grossMM.value}</td>
-                </tr>
-                <tr>
-                    <th>Stop Tube</th>
-                    <td>${stopIn.value}</td>
-                    <td>${stopMM.value}</td>
-                </tr>
-                <tr>
-                    <th>Net Stroke</th>
-                    <td>${netIn.value}</td>
-                    <td>${netMM.value}</td>
-                </tr>
-
-            </table>                
-        `
-}
 
 
 
