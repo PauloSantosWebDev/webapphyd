@@ -325,8 +325,10 @@ document.body.addEventListener('click', (event) => {
         const boreArea = Number(Math.PI * Math.pow(document.getElementById("js-bore-in").value, 2) / 4); //It is the area of the barrel's bore. This area is reused many times.
         const rodArea = Number(Math.PI / 4 * Math.pow(document.getElementById("js-rod-in").value, 2)); //It is the area of the rod. Used to calcualte pull force.
         let matrixSpecs = []; //Used to autogenerate the cylinder specs for the summary table. It is an array of arrays.
+        let arrayPressuresRows = ['PUSH', 'PULL']; //Used to generate the row identifiers for cylinder pressures
+        let accHTMLPressures = ''; //Used to accumulate the generated HTML for pressures
         let arraySpecsRows = ['Bore', 'Barrel OD', 'Rod', 'Rod ID', 'Closed Centers', 'Gross Stroke', 'Stop tube', 'Net Stroke']; //Used to autogenerate the rows for cylinder specifications in the summary table.
-        let accHTML = ''; //Used to accumulate the generated HTML elements
+        let accHTMLSpecs = ''; //Used to accumulate the generated HTML elements for cylinder specs.
 
         //Finding values functions/methods/ways section
         
@@ -352,13 +354,27 @@ document.body.addEventListener('click', (event) => {
         forcesPushPull[5] = conversion(forcesPushPull[3], 10); //push force in ton-force
 
 
+        //Autogenerate cylinder pressures
+        for (i = 0; i < document.querySelectorAll(".js-psi").length; i++) {
+            let arrayPressures = [];
+            arrayPressures [0] = document.querySelectorAll(".js-psi")[i].value;
+            arrayPressures [1] = document.querySelectorAll(".js-mpa")[i].value;
+            arrayPressures [2] = document.querySelectorAll(".js-bar")[i].value;
+            accHTMLPressures += `<tr>
+                                    <th colspan="3">${arrayPressuresRows[i]}</th>
+                                    <td colspan="2">${arrayPressures[0]}</td>
+                                    <td colspan="2">${arrayPressures[1]}</td>
+                                    <td colspan="2">${arrayPressures[2]}</td>
+                                </tr>`
+        }
+
         //Autogenerate cylinder specifications
         for (i = 0; i < document.querySelectorAll(".js-in-to-mm").length; i++) {
             let arraySpecs = [];
             arraySpecs[0] = document.querySelectorAll(".js-in-to-mm")[i].value;
             arraySpecs[1] = document.querySelectorAll(".js-mm-to-in")[i].value;
             matrixSpecs[i] = arraySpecs;
-            accHTML = accHTML + `<tr>
+            accHTMLSpecs = accHTMLSpecs + `<tr>
                                     <th colspan="3">${arraySpecsRows[i]}</th>
                                     <td colspan="3">${matrixSpecs[i][0]}</th>
                                     <td colspan="3">${matrixSpecs[i][1]}</th>
@@ -379,16 +395,20 @@ document.body.addEventListener('click', (event) => {
                     <td colspan="9">${cylType}</td>
                 </tr>
                 <tr>
-                    <th colspan="9">TEST PRESSURE</th>
+                    <th colspan="9">PRESSURES</th>
                 </tr>
                 <tr>
-                    <th colspan="3">PSI</th>
-                    <th colspan="3">MPA</th>
-                    <th colspan="3">BAR</th>
+                    <th colspan="3"></th>
+                    <th colspan="2">PSI</th>
+                    <th colspan="2">MPA</th>
+                    <th colspan="2">BAR</th>
+                </tr>
+                ${accHTMLPressures}
                 <tr>
-                    <td colspan="3">${testPressure[0]}</td>
-                    <td colspan="3">${testPressure[1]}</td>
-                    <td colspan="3">${testPressure[2]}</td>
+                    <th colspan="3">TEST</th>
+                    <td colspan="2">${testPressure[0]}</td>
+                    <td colspan="2">${testPressure[1]}</td>
+                    <td colspan="2">${testPressure[2]}</td>
                 </tr>
                 <tr>
                     <th colspan="9">THEORETICAL FORCES</th>
@@ -398,7 +418,7 @@ document.body.addEventListener('click', (event) => {
                     <th colspan="2">LBF</th>
                     <th colspan="2">NEWTON</th>
                     <th colspan="2">TON-FORCE</th>
-                <tr>
+                </tr>
                 <tr>
                     <th colspan="3">PUSH</th>
                     <td colspan="2">${forcesPushPull[0]}</td>
@@ -419,7 +439,7 @@ document.body.addEventListener('click', (event) => {
                     <th colspan="3">Inches</th>
                     <th colspan="3">Millimeters</th>
                 </tr>
-                ${accHTML}
+                ${accHTMLSpecs}
         `;
     }
 });
