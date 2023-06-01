@@ -340,7 +340,7 @@ document.body.addEventListener('click', (event) => {
         });
 
         //Finding test pressures
-        testPressure[0] = (Math.max(Number(document.getElementById('js-push-psi').value), Number(document.getElementById('js-pull-psi').value)) * 1.5).toFixed(2);
+        testPressure[0] = Math.round((Math.max(Number(document.getElementById('js-push-psi').value), Number(document.getElementById('js-pull-psi').value)) * 1.5));
         testPressure[1] = (Math.max(Number(document.getElementById('js-push-mpa').value), Number(document.getElementById('js-pull-mpa').value)) * 1.5).toFixed(2);
         testPressure[2] = (Math.max(Number(document.getElementById('js-push-bar').value), Number(document.getElementById('js-pull-bar').value)) * 1.5).toFixed(2);
         
@@ -362,20 +362,20 @@ document.body.addEventListener('click', (event) => {
             arrayPressures [2] = document.querySelectorAll(".js-bar")[i].value;
             accHTMLPressures += `<tr>
                                     <th colspan="3">${arrayPressuresRows[i]}</th>
-                                    <td colspan="2">${arrayPressures[0]}</td>
-                                    <td colspan="2">${arrayPressures[1]}</td>
-                                    <td colspan="2">${arrayPressures[2]}</td>
+                                    <td colspan="3">${arrayPressures[0]}</td>
+                                    <td colspan="3">${arrayPressures[1]}</td>
+                                    <td colspan="3">${arrayPressures[2]}</td>
                                 </tr>`
         }
 
         //Autogenerate cylinder specifications
         for (i = 0; i < document.querySelectorAll(".js-in-to-mm").length; i++) {
             let arraySpecs = [];
-            arraySpecs[0] = document.querySelectorAll(".js-in-to-mm")[i].value;
-            arraySpecs[1] = document.querySelectorAll(".js-mm-to-in")[i].value;
+            arraySpecs[0] = Number(document.querySelectorAll(".js-in-to-mm")[i].value).toFixed(2);
+            arraySpecs[1] = Number(document.querySelectorAll(".js-mm-to-in")[i].value).toFixed(2);
             matrixSpecs[i] = arraySpecs;
             accHTMLSpecs = accHTMLSpecs + `<tr>
-                                    <th colspan="3">${arraySpecsRows[i]}</th>
+                                    <th colspan="6">${arraySpecsRows[i]}</th>
                                     <td colspan="3">${matrixSpecs[i][0]}</th>
                                     <td colspan="3">${matrixSpecs[i][1]}</th>
                                 </tr>`;
@@ -386,58 +386,58 @@ document.body.addEventListener('click', (event) => {
             <button id="js-btn-summary">Summary</button>
             <table>
                 <tr>
-                    <th colspan="9">SUMMARY TABLE</th>
+                    <th colspan="12">SUMMARY TABLE</th>
                 </tr>
                 <tr>
-                    <th colspan="9">CYLINDER TYPE</th>
+                    <th colspan="12">CYLINDER TYPE</th>
                 </tr>
                 <tr>
-                    <td colspan="9">${cylType}</td>
+                    <td colspan="12">${cylType}</td>
                 </tr>
                 <tr>
-                    <th colspan="9">PRESSURES</th>
+                    <th colspan="12">PRESSURES</th>
                 </tr>
                 <tr>
                     <th colspan="3"></th>
-                    <th colspan="2">PSI</th>
-                    <th colspan="2">MPA</th>
-                    <th colspan="2">BAR</th>
+                    <th colspan="3">PSI</th>
+                    <th colspan="3">MPA</th>
+                    <th colspan="3">BAR</th>
                 </tr>
                 ${accHTMLPressures}
                 <tr>
                     <th colspan="3">TEST</th>
-                    <td colspan="2">${testPressure[0]}</td>
-                    <td colspan="2">${testPressure[1]}</td>
-                    <td colspan="2">${testPressure[2]}</td>
+                    <td colspan="3">${testPressure[0]}</td>
+                    <td colspan="3">${testPressure[1]}</td>
+                    <td colspan="3">${testPressure[2]}</td>
                 </tr>
                 <tr>
-                    <th colspan="9">THEORETICAL FORCES</th>
+                    <th colspan="12">THEORETICAL FORCES</th>
                 </tr>
                 <tr>
                     <th colspan="3"></th>
-                    <th colspan="2">LBF</th>
-                    <th colspan="2">NEWTON</th>
-                    <th colspan="2">TON-FORCE</th>
+                    <th colspan="3">LBF</th>
+                    <th colspan="3">NEWTON</th>
+                    <th colspan="3">TON-FORCE</th>
                 </tr>
                 <tr>
                     <th colspan="3">PUSH</th>
-                    <td colspan="2">${forcesPushPull[0]}</td>
-                    <td colspan="2">${forcesPushPull[1]}</td>
-                    <td colspan="2">${forcesPushPull[2]}</td>
+                    <td colspan="3">${forcesPushPull[0]}</td>
+                    <td colspan="3">${forcesPushPull[1]}</td>
+                    <td colspan="3">${forcesPushPull[2]}</td>
                 </tr>
                 <tr>
                     <th colspan="3">PULL</th>
-                    <td colspan="2">${forcesPushPull[3]}</td>
-                    <td colspan="2">${forcesPushPull[4]}</td>
-                    <td colspan="2">${forcesPushPull[5]}</td>
+                    <td colspan="3">${forcesPushPull[3]}</td>
+                    <td colspan="3">${forcesPushPull[4]}</td>
+                    <td colspan="3">${forcesPushPull[5]}</td>
                 </tr>
                 <tr>
-                    <th colspan="9">CYLINDER SPECIFICATIONS</th>
+                    <th colspan="12">CYLINDER SPECIFICATIONS</th>
                 </tr>
                 <tr>
-                    <th colspan="3"></th>
-                    <th colspan="3">Inches</th>
-                    <th colspan="3">Millimeters</th>
+                    <th colspan="4"></th>
+                    <th colspan="4">Inches</th>
+                    <th colspan="4">Millimeters</th>
                 </tr>
                 ${accHTMLSpecs}
         `;
