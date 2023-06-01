@@ -310,6 +310,148 @@ window.addEventListener('load', () => {
 });
 
 
+//Functions to autogenerate summary
+
+document.body.addEventListener('click', (event) => {
+    // This if is used to gurantee that the summary is created only when the summary button is clicked.
+    // The if is necessary as the dynamically created button would not have any listener attached to it.
+    if (event.target.id == 'js-btn-summary') {
+        
+        //Variable/arrays creationg section
+        let controller = document.querySelector('.js-summary'); //Used to control the div tag's content.
+        let cylType = ''; //Used to identify which cylinder type was selected
+        let testPressure = []; //Used to show the test pressure as 1.5x the maximum working pressure
+        let forcesPushPull = []; //The first elements are for push and last ones for pull. 0, 1, and 2 = push. 3, 4, and 5 = pull.
+        const boreArea = Number(Math.PI * Math.pow(document.getElementById("js-bore-in").value, 2) / 4); //It is the area of the barrel's bore. This area is reused many times.
+        const rodArea = Number(Math.PI / 4 * Math.pow(document.getElementById("js-rod-in").value, 2)); //It is the area of the rod. Used to calcualte pull force.
+        let matrixSpecs = []; //Used to autogenerate the cylinder specs for the summary table. It is an array of arrays.
+        //let arraySpecs = []; //Used to autogenerate the cylinders specs and feed the matrixSpecs.
+        
+        //Finding values functions/methods/ways section
+        
+        //Finding cylinder type
+        document.querySelectorAll(".js-cyl-type").forEach((e, index) => {
+            if (e.checked) {
+                cylType = e.value;
+            }
+        });
+
+        //Finding test pressures
+        testPressure[0] = (Math.max(Number(document.getElementById('js-push-psi').value), Number(document.getElementById('js-pull-psi').value)) * 1.5).toFixed(2);
+        testPressure[1] = (Math.max(Number(document.getElementById('js-push-mpa').value), Number(document.getElementById('js-pull-mpa').value)) * 1.5).toFixed(2);
+        testPressure[2] = (Math.max(Number(document.getElementById('js-push-bar').value), Number(document.getElementById('js-pull-bar').value)) * 1.5).toFixed(2);
+        
+        //Finding theoretical forces
+        forcesPushPull[0] = Number(document.getElementById("js-push-psi").value * boreArea).toFixed(2); //Used to find push force in lbf
+        forcesPushPull[1] = conversion(forcesPushPull[0], 9); //push force in Newtons
+        forcesPushPull[2] = conversion(forcesPushPull[0], 10); //push force in ton-force
+        
+        forcesPushPull[3] = Number(document.getElementById("js-pull-psi").value * (boreArea - rodArea)).toFixed(2); //Used to find pull force in lbf
+        forcesPushPull[4] = conversion(forcesPushPull[3], 9); //push force in Newtons
+        forcesPushPull[5] = conversion(forcesPushPull[3], 10); //push force in ton-force
+
+
+        //Autogenerate cylinder specifications
+        for (i = 0; i < document.querySelectorAll(".js-in-to-mm").length; i++) {
+            let arraySpecs = [];
+            arraySpecs[0] = document.querySelectorAll(".js-in-to-mm")[i].value;
+            arraySpecs[1] = document.querySelectorAll(".js-mm-to-in")[i].value;
+            matrixSpecs[i] = arraySpecs;
+            //matrixSpecs.push(arraySpecs);
+            console.log(arraySpecs);
+            console.log(arraySpecs[0]);
+            console.log(arraySpecs[1]);
+            console.log(matrixSpecs);
+        }
+
+        controller.innerHTML = `
+            <button id="js-btn-summary">Summary</button>
+            <table>
+                <tr>
+                    <th colspan="9">SUMMARY TABLE</th>
+                </tr>
+                <tr>
+                    <th colspan="9">CYLINDER TYPE</th>
+                </tr>
+                <tr>
+                    <td colspan="9">${cylType}</td>
+                </tr>
+                <tr>
+                    <th colspan="9">TEST PRESSURE</th>
+                </tr>
+                <tr>
+                    <th colspan="3">PSI</th>
+                    <th colspan="3">MPA</th>
+                    <th colspan="3">BAR</th>
+                <tr>
+                    <td colspan="3">${testPressure[0]}</td>
+                    <td colspan="3">${testPressure[1]}</td>
+                    <td colspan="3">${testPressure[2]}</td>
+                </tr>
+                <tr>
+                    <th colspan="9">THEORETICAL FORCES</th>
+                </tr>
+                <tr>
+                    <th colspan="3"></th>
+                    <th colspan="2">LBF</th>
+                    <th colspan="2">NEWTON</th>
+                    <th colspan="2">TON-FORCE</th>
+                <tr>
+                <tr>
+                    <th colspan="3">PUSH</th>
+                    <td colspan="2">${forcesPushPull[0]}</td>
+                    <td colspan="2">${forcesPushPull[1]}</td>
+                    <td colspan="2">${forcesPushPull[2]}</td>
+                </tr>
+                <tr>
+                    <th colspan="3">PULL</th>
+                    <td colspan="2">${forcesPushPull[3]}</td>
+                    <td colspan="2">${forcesPushPull[4]}</td>
+                    <td colspan="2">${forcesPushPull[5]}</td>
+                </tr>
+                <tr>
+                    <th colspan="9">CYLINDER SPECIFICATIONS</th>
+                </tr>
+                <tr>
+                    <th colspan="3"></th>
+                    <th colspan="3">Inches</th>
+                    <th colspan="3">Millimeters</th>
+                </tr>
+                <tr>
+                    <th colspan="3">Bore</th>
+                    <td colspan="3">${matrixSpecs[0][0]}</th>
+                    <td colspan="3">${matrixSpecs[0][1]}</th>
+                </tr>
+        `;
+    }
+});
+
+// document.getElementById("js-btn-summary").addEventListener('click', (event) => {
+
+//     let controller = document.querySelector('.js-summary'); //Used to control the div tag's content.
+//     let cylType = ''; //Used to identify which cylinder type was selected
+    
+//     document.querySelectorAll(".js-cyl-type").forEach((e, index) => {
+//         if (e.checked) {
+//             cylType = e.value;
+//         }
+//     });
+//     controller.innerHTML = `
+//         <button id="js-btn-summary">Summary</button>
+//         <table>
+//             <tr>
+//                 <th colspan="5">Summary Table</th>
+//             </tr>
+//             <tr>
+//                 <th colspan="5">Cylinder Type</th>
+//             </tr>
+//             <tr>
+//                 <td colspan="5">${cylType}</td>
+//             </tr>
+//     `;
+// });
+
+
 
 
 
