@@ -103,6 +103,7 @@ function netStrokeCalc () {
     }
 }
 
+//Used to check if the inputs provided make sense and are satisfactory.
 function checkInput () {
     let isInputOk = false;
     
@@ -128,6 +129,7 @@ function checkInput () {
     isInputOk = Number(document.getElementById("js-bore-in").value) == 0 || Number(document.getElementById("js-rod-in").value) == 0 || Number(document.getElementById("js-cc-in").value) == 0
                 || Number(document.getElementById("js-gs-in").value) == 0 || Number(document.getElementById("js-push-psi").value) == 0 || Number(document.getElementById("js-pull-psi").value) == 0;
 
+    //Part of the function that really gives functionality to it. If the return is true the system will break out the function it is in. If it is false, it will keep the execution.
     if (isInputOk) {
         alert(`Please make sure that: \n - Bore, Rod, Closed Centers, and Push and Pull pressures were provided\n - The OD is bigger than bore when outer diameter is required.`+
                 `\n- The rod's ID is smaller than OD when working with hollow rods.\n - Rod diameter is smaller than bore.\n - Net stroke is greater than zero.`);
@@ -279,20 +281,29 @@ document.getElementById('js-st-in').addEventListener('focusout', () => netStroke
 //Used to calculate the net stroke. Triggered when changing Stop tube
 document.getElementById('js-st-mm').addEventListener('focusout', () => netStrokeCalc());
 
+//Used to trigger input check and change to the next page
+document.getElementById("js-btn-next").addEventListener('click', () => {
+    if (checkInput()) {
+        return;
+    }
+    else {
+        location.href="../../index.html"
+    }
+});
 
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------------------------------
-//HTML Generating Functions
+//HTML Generating Functions - Start
 
 
 //Generating rod end mountings
-let hshMountings = ['Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder'];
-let hbMountings = ['1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
+let hshMountings = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder'];
+let hbMountings = ['None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
                     '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
                     '14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing'];
-let hhmiMountings = ['Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
+let hhmiMountings = ['None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
 
 //Load hsh cylinder mountings when hsh radio button is clicked
 document.getElementById('js-hsh').addEventListener('click', () => {
@@ -365,6 +376,7 @@ document.body.addEventListener('click', (event) => {
         let arrayForcesReqRow = ['REQUIRED - PUSH', 'REQUIRED - PULL']; //Used to generate the row identifiers for forces required
         let arraySpecsRows = ['BORE', 'BARREL OD', 'ROD', 'ROD ID', 'CLOSED CENTERS', 'GROSS STROKE', 'STOP TUBE', 'NET STROKE']; //Used to autogenerate the rows for cylinder specifications in the summary table.
         let accHTMLSpecs = ''; //Used to accumulate the generated HTML elements for cylinder specs.
+        let mountingPin = ''; //Used to autogenerate the HTML for the summary table.
 
         //Checking if proper values are available to create the summary table.
 
@@ -438,7 +450,14 @@ document.body.addEventListener('click', (event) => {
                             </tr>`;
         }
 
-        //Give the summary table its content
+        //Find mounting pin required
+        document.querySelectorAll(".js-pin").forEach((e, index) => {
+            if (e.checked) {
+                mountingPin = e.value;
+            }
+        });
+
+        //Give the summary table its content.
         controller.innerHTML = `
             <button id="js-btn-summary">Summary</button>
             <table>
@@ -498,10 +517,28 @@ document.body.addEventListener('click', (event) => {
                     <th colspan="4">Millimeters</th>
                 </tr>
                 ${accHTMLSpecs}
+                <tr>
+                    <th colspan="12">MOUNTINGS</th>
+                </tr>
+                <tr>
+                    <th colspan="6">ROD END MOUNTING</th>
+                    <td colspan="6">${document.getElementById("js-rod-mount").value}</td>
+                </tr>
+                <tr>
+                    <th colspan="6">CYLINDER MOUNTING</th>
+                    <td colspan="6">${document.getElementById("js-cyl-mount").value}</td>
+                </tr>
+                <tr>
+                    <th colspan="6">MOUNTING PINS</th>
+                    <td colspan="6">${mountingPin}</td>
+                </tr>
+            </table>
         `;
     }
 });
 
+//HTML Generating Functions - End
+//--------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -509,20 +546,19 @@ document.body.addEventListener('click', (event) => {
 
 
 
+// function nextToCalcBuckling () {
 
-function nextToCalcBuckling () {
+//     let customer = {
+//         customerName: document.querySelector(".customerName").value,
+//         contactName: document.querySelector(".contactName").value,
+//         phoneNumber: document.querySelector(".phoneNumber").value,
+//         email: document.querySelector(".email").value
 
-    let customer = {
-        customerName: document.querySelector(".customerName").value,
-        contactName: document.querySelector(".contactName").value,
-        phoneNumber: document.querySelector(".phoneNumber").value,
-        email: document.querySelector(".email").value
+//     };
 
-    };
-
-    localStorage.setItem("customer", customer);
+//     localStorage.setItem("customer", customer);
     
-    location.href="cylinderspecs.html"
+//     location.href="cylinderspecs.html"
     // console.log(customer.customerName);
 
     // localStorage.clear("customer");
@@ -556,11 +592,6 @@ function nextToCalcBuckling () {
     // localStorage.clear("email");
 
 
-
-    
-
-
-
-}
+// }
 
 

@@ -182,8 +182,6 @@
                 <div>
                     <input class="offStop js-mm-to-in" id="js-ns-mm" type="number" name="netStrokeMillimiters" placeholder="in millimeters"> Millimeters
                 </div>
-
-
                 
                 <!--                    PUSH AND PULL PRESSURE DETAILS                   -->
 
@@ -235,32 +233,35 @@
                 </div>
 
                 <label>Rod End Mounting</label>
-                <select>
-                    <option value="rodClevis">Rod Clevis</option>
-                    <option value="rodKnuckle">Rod Knuckle</option>
-                    <option value="rksbrg">Rod Knuckle with Spherical Bearing</option>
+                <select id="js-rod-mount" title="Rod End Mountings">
+                    <option>None</option>
+                    <option>Rod Clevis</option>
+                    <option>Rod Knuckle</option>
+                    <option>Rod Knuckle with Spherical Bearing</option>
                 </select>
 
                 <label>Cylinder Mounting</label>                
-                <select id="js-cyl-mount"></select>
+                <select id="js-cyl-mount" title="Cylinder Mountings"></select>
+
+                <label>Mounting pins?</label>
+                    <input type="radio" class="js-pin" name="mountingPin" value="None" checked> None
+                    <input type="radio" class="js-pin" name="mountingPin" value="Front"> Front
+                    <input type="radio" class="js-pin" name="mountingPin" value="Rear"> Rear
+                    <input type="radio" class="js-pin" name="mountingPin" value="Both"> Both
 
             </form>
-            <!-- <button onclick="
-                nextCustomerSpecs();
-            ">Next</button> -->
+                    
+            <div>
+                <button id="js-btn-previous" type="button">Previous</button>
+                <button id="js-btn-next" type="button">Next</button>
+            </div>
+
         </div>
 
         <div class="sbs-panels js-summary">
-            <button id="js-btn-summary">Summary</button>
+            <button id="js-btn-summary" type="button">Summary</button>
         </div>
-        
-        <!-- <div class="js-summary">
-            <button onclick="generateSummary()">Generate Summary</button>
-        </div> -->
 
-        <!-- <button onclick="
-            nextToCalcBuckling();
-        ">Next</button> -->
     </main>
     <footer>
 
