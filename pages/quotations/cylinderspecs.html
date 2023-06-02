@@ -108,7 +108,7 @@
                     <input type="radio" class="js-radio-off" id="tubeODNo" name="tubeODSelection" value="No" checked> No <br>
                     <label>Outside diameter</label>
                     <div>
-                        <input class="offStop js-in-to-mm js-off-through-radio-in" type="number" name="tubeODInches" placeholder="in inches"> Inches
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" id="js-tube-od" type="number" name="tubeODInches" placeholder="in inches"> Inches
                     </div>
                     <div>
                         <input class="offStop js-mm-to-in js-off-through-radio-mm" type="number" name="tubeODMillimiters" placeholder="in millimeters"> Millimeters
@@ -131,7 +131,7 @@
                     <input type="radio" class="js-radio-off" id="rodHollowNo" name="rodHollowSelection" value="No" checked> No <br>
                     <label>Inside diameter</label>
                     <div>
-                        <input class="offStop js-in-to-mm js-off-through-radio-in" type="number" name="rodHollowInches" placeholder="in inches"> Inches
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" id="js-rod-id" type="number" name="rodHollowInches" placeholder="in inches"> Inches
                     </div>
                     <div>
                         <input class="offStop js-mm-to-in js-off-through-radio-mm" type="number" name="rodHollowMillimiters" placeholder="in millimeters"> Millimeters
@@ -142,13 +142,13 @@
 
                 <label>Closed Centers</label>
                 <div>
-                    <input class="js-in-to-mm" type="number" name="closedCentersInches" placeholder="in inches"> Inches
+                    <input class="js-in-to-mm" id="js-cc-in" type="number" name="closedCentersInches" placeholder="in inches"> Inches
                 </div>
                 <div>
                     <input class="js-mm-to-in" type="number" name="closedCentersMillimiters" placeholder="in millimeters"> Millimeters
                 </div>
 
-                <!--                    NET STROKE DETAILS                  -->
+                <!--                    GROSS STROKE DETAILS                  -->
 
                 <label>Gross stroke</label>
                 <div>
@@ -173,7 +173,7 @@
                     </div>
                 </form>
 
-                <!--                    GROSS STROKE DETAILS                    -->
+                <!--                    NET STROKE DETAILS                    -->
 
                 <label>Net stroke</label>
                 <div>

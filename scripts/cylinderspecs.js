@@ -103,6 +103,41 @@ function netStrokeCalc () {
     }
 }
 
+function checkInput () {
+    let isInputOk = false;
+    
+    //Check if the tube od is bigger than the bore
+    let checker = document.getElementById("tubeODYes");
+    if (checker.checked) {
+        isInputOk = Number(document.getElementById("js-tube-od").value) <= Number(document.getElementById("js-bore-in").value);
+    }
+
+    //Check if the rod id is smaller than the rod od
+    checker = document.getElementById("rodHollowYes");
+    if (checker.checked) {
+        isInputOk = Number(document.getElementById("js-rod-id").value) > Number(document.getElementById("js-rod-in").value);
+    }
+
+    //Check if the rod is smaller than the bore
+    isInputOk = Number(document.getElementById("js-bore-in").value) < Number(document.getElementById("js-rod-in").value);
+    
+    //Check if the net stroke is greater than zero
+    isInputOk = Number(document.getElementById("js-ns-in").value) <= 0;
+
+    //Check if all the values required were input
+    isInputOk = Number(document.getElementById("js-bore-in").value) == 0 || Number(document.getElementById("js-rod-in").value) == 0 || Number(document.getElementById("js-cc-in").value) == 0
+                || Number(document.getElementById("js-gs-in").value) == 0 || Number(document.getElementById("js-push-psi").value) == 0 || Number(document.getElementById("js-pull-psi").value) == 0;
+
+    if (isInputOk) {
+        alert(`Please make sure that: \n - Bore, Rod, Closed Centers, and Push and Pull pressures were provided\n - The OD is bigger than bore when outer diameter is required.`+
+                `\n- The rod's ID is smaller than OD when working with hollow rods.\n - Rod diameter is smaller than bore.\n - Net stroke is greater than zero.`);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 //General functions - End
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -309,14 +344,13 @@ window.addEventListener('load', () => {
     controler.innerHTML = accumulator;
 });
 
-
 //Functions to autogenerate summary
 
 document.body.addEventListener('click', (event) => {
     // This if is used to gurantee that the summary is created only when the summary button is clicked.
     // The if is necessary as the dynamically created button would not have any listener attached to it.
     if (event.target.id == 'js-btn-summary') {
-        
+                
         //Variable/arrays creationg section
         let controller = document.querySelector('.js-summary'); //Used to control the div tag's content.
         let cylType = ''; //Used to identify which cylinder type was selected
@@ -332,6 +366,13 @@ document.body.addEventListener('click', (event) => {
         let arraySpecsRows = ['BORE', 'BARREL OD', 'ROD', 'ROD ID', 'CLOSED CENTERS', 'GROSS STROKE', 'STOP TUBE', 'NET STROKE']; //Used to autogenerate the rows for cylinder specifications in the summary table.
         let accHTMLSpecs = ''; //Used to accumulate the generated HTML elements for cylinder specs.
 
+        //Checking if proper values are available to create the summary table.
+
+        if (checkInput()) {
+            controller.innerHTML = `<button id="js-btn-summary">Summary</button>`;
+            return;
+        }
+        
         //Finding values functions/methods/ways section
         
         //Finding cylinder type
