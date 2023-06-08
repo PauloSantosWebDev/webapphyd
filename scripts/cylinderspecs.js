@@ -512,9 +512,9 @@ document.body.addEventListener('click', (event) => {
                     <th colspan="12">CYLINDER SPECIFICATIONS</th>
                 </tr>
                 <tr>
-                    <th colspan="4"></th>
-                    <th colspan="4">Inches</th>
-                    <th colspan="4">Millimeters</th>
+                    <th colspan="6"></th>
+                    <th colspan="3">Inches</th>
+                    <th colspan="3">Millimeters</th>
                 </tr>
                 ${accHTMLSpecs}
                 <tr>
