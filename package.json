@@ -1,0 +1,18 @@
+{
+  "name": "webproject",
+  "version": "1.0.0",
+  "description": "Creating a full web app to help company's management team through quotes, registers, calculations, etc.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/PauloSantosWebDev/webapphyd.git"
+  },
+  "author": "Paulo Santos",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
