@@ -1,8 +1,22 @@
 const express = require('express');
 const db = require('./db');
-
+const path = require('path');
+const nunjucks = require('nunjucks');
 const app = express();
 const port = 3000;
+
+//Setting up view engine, templating and static files source
+nunjucks.configure('views', {
+  autoescape: true,
+  express: app
+})
+
+app.set('view engine', 'njk');
+
+app.use(express.static('node_modules/bootstrap/dist'));
+app.use(express.static('public'));
+
+
 
 db.run('CREATE TABLE IF NOT EXISTS customers (customer_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, bill_to TEXT, abn TEXT)');
 // db.run('INSERT INTO customers (name, bill_to, abn) VALUES (?, ?, ?)', ['Text1', 'Somewhere', '123456']);
@@ -16,12 +30,12 @@ db.all('SELECT * FROM customers', (err, rows) => {
   })
 })
 
-app.set('view engine', 'pug');
 
-app.set('views', 'H:/Algorithm/webproject' + '/views');
+
+
 
 app.get('/', (req,res) =>{
-    res.render('index');
+    res.render('index.njk');
 })
 
 app.listen(port, () => {
