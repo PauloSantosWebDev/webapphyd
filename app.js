@@ -54,7 +54,14 @@ app.post('/regcustomer', (req, res) =>{
   const postcode = req.body.inputPostCode;
   const country = req.body.inputCountry;
 
-  //Command to update the database
+  const contactName = req.body.inputName;
+  const email = req.body.inputEmail;
+  const phone = req.body.inputPhoneNumber;
+  const mobile = req.body.inputMobileNumber;
+
+  let cust_id = '';
+  
+  //Command to insert new customes to the customers table in the hydroil.sqlite database
   db.run('INSERT INTO customers (name, abn, address, city, state, postcode, country) VALUES (?, ?, ?, ?, ?, ?, ?)', [companyName, abn, address, city, state, postcode, country], (err) => {
     if (err) {
       console.error(err.message);
@@ -62,9 +69,72 @@ app.post('/regcustomer', (req, res) =>{
     } else {
       res.status(200);
       console.log('Data updated successfully.');
-      res.redirect('/regcustomer');
+      // res.redirect('/regcustomer');
+      // res.send('<script>alert("Processing completed successfully!");</script>');
     }
   });
+
+  db.get('SELECT customer_id FROM customers WHERE name = ?', [companyName], (err, row) => {
+    if (err) {
+      console.error(err.message);
+    }
+
+    cust_id = row.customer_id;
+    console.log('Customer ID is: ' + cust_id);
+  })
+
+  db.run('INSERT INTO contacts(customer_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [cust_id, contactName, email, phone, mobile], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Error updating data in the table.');
+    } else {
+      res.status(200);
+      console.log('Data updated successfully.');
+      res.redirect('/regcustomer');
+      // res.send('<script>alert("Processing completed successfully!");</script>');
+    }
+  });
+
+  db.all("PRAGMA table_info(contacts)", (err, rows) => {
+    if (err) {
+      throw err;
+    }
+
+    // Process the result set to display the schema information
+    console.log("Column Name\tData Type\tNullable\tDefault Value");
+    console.log("-----------\t---------\t--------\t-------------");
+    rows.forEach(row => {
+      console.log(`${row.name}\t\t${row.type}\t\t${row.notnull === 0 ? "YES" : "NO"}\t\t${row.dflt_value}`);
+    });
+  });
+
+  db.all('SELECT * FROM contacts', (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    rows.forEach(row => {
+      console.log(row.customer_id, row.name, row.email, row.phone_number, row.mobile_number);
+    })
+  })
+
+  db.all('SELECT * FROM customers', (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    rows.forEach(row => {
+      console.log(row.customer_id, row.name, row.abn, row.address, row.city, row.state, row.postcode, row.country);
+    })
+  })
+
+  db.all('SELECT * FROM contacts WHERE customer_id = 33', (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    rows.forEach(row => {
+      console.log(row.customer_id, row.name, row.email, row.phone_number, row.mobile_number);
+    })
+  })
+
 })
 
 app.listen(port, () => {
