@@ -1,0 +1,48 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+  <h2 class="registration-forms-title">CONTACTS REGISTRATION FORM</h2>
+  <h4 class="registration-forms-subtitle">Data origin</h4>
+  <form class="row g-3" action="/regcontacts" method="post">
+    
+    <div class="col-md-6">
+      <label for="inputCustomerSupplier" class="form-label">Customer or Supplier</label>
+      <select id="inputCustomerSupplier" name="inputCustomerSupplier" class="form-select">
+        <option selected>Customer</option>
+        <option>Supplier</option>
+      </select>
+    </div>
+    
+    <div class="col-md-6">
+      <label for="inputCompanyName" class="form-label">Company Name</label>
+      <select id="inputCompanyName" name="inputCompanyName" class="form-select">
+        <option selected>Choose...</option>
+        {{codeOptionsCompanyName}}
+      </select>
+    </div>
+
+    <h4 class="registration-forms-subtitle">Contact</h4>
+    <div class="col-md-6">
+      <label for="inputName" class="form-label">Name</label>
+      <input type="text" name="inputName" class="form-control" id="inputName" required>
+    </div>
+    <div class="col-md-6">
+      <label for="inputEmail" class="form-label">E-mail</label>
+      <input type="text" name="inputEmail" class="form-control" id="inputEmail" required>
+    </div>
+    <div class="col-md-6">
+      <label for="inputPhoneNumber" class="form-label">Phone number</label>
+      <input type="text" name="inputPhoneNumber" class="form-control" id="inputPhoneNumber">
+    </div>
+    <div class="col-md-6">
+      <label for="inputMobileNumber" class="form-label">Mobile number</label>
+      <input type="text" name="inputMobileNumber" class="form-control" id="inputMobileNumber">
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+
+  </form>
+{% endblock %}}
+
+

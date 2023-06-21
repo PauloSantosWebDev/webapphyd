@@ -26,10 +26,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Clearing database commands
 // db.run('DROP TABLE contacts');
 
+//----------------------------------------------------------------
 //Routes
 //Get methods
 app.get('/', (req, res) =>{
-    res.render('index.njk');
+    res.render('index.njk', {title: 'Home page'});
 })
 
 app.get('/quoteone', (req, res) =>{
@@ -37,9 +38,40 @@ app.get('/quoteone', (req, res) =>{
 })
 
 app.get('/regcustomer', (req, res) =>{
-  res.render('regcustomer.njk');
+  res.render('regcustomer.njk', {title: 'Customers Registration Form'});
 })
 
+app.get('/regcontacts', (req, res) => {
+  const optCustSupp = req.body.inputCustomerSupplier;
+  let accCompanyNameOpt = '';
+
+  console.log('optCustSupp is: ' + optCustSupp);
+
+
+  if (optCustSupp === 'Customer') {
+    db.all('', (err, rows) => {
+      
+      if (err) {
+        throw err;
+      }
+
+      rows.forEach(row => {
+        console.log('Customer name is: ' + row.name);
+        accCompanyNameOpt += `<option>${row.name}</option>`;
+      })
+
+      res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName: accCompanyNameOpt});
+      // res.redirect('/regcontacts', {title: 'Contacts Registration Form', codeOptionsCompanyName: accCompanyNameOpt});
+    
+    })
+  } else {
+    res.render('regcontacts.njk', {title: 'Contacts Registration Form'});
+  }
+  
+  // res.render('regcontacts.njk', {title: 'Contacts Registration Form'});
+})
+
+//-----------------------------------------------------
 //Post methods
 
 app.post('/regcustomer', (req, res) =>{
@@ -91,6 +123,31 @@ app.post('/regcustomer', (req, res) =>{
     });
   });
 });
+
+app.post('/regcontacts', (req, res) => {
+  const optCustSupp = req.body.inputCustomerSupplier;
+  let accCompanyNameOpt = '';
+
+  if (optCustSupp === 'Customer') {
+    db.all('', (err, rows) => {
+      
+      if (err) {
+        throw err;
+      }
+
+      rows.forEach(row => {
+        accCompanyNameOpt += `<option>${row.name}</option>`
+      })
+
+      res.redirect('/regcontacts', {title: 'Contacts Registration Form', codeOptionsCompanyName: accCompanyNameOpt});
+    
+    })
+  }
+})
+
+
+//-----------------------------------------------------------------------
+//Server listening
 
 app.listen(port, () => {
     console.log(`Example app lisntening on port ${port}`);
