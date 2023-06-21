@@ -1,0 +1,89 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+  <h2 class="registration-forms-title">CUSTOMER REGISTRATION FORM</h2>
+  <form class="row g-3">
+    <div class="col-md-6">
+      <label for="inputCompanyName" class="form-label">Company Name</label>
+      <input type="text" class="form-control" id="inputCompanyName" required>
+    </div>
+    <div class="col-md-6">
+      <label for="inputABN" class="form-label">ABN</label>
+      <input type="text" class="form-control" id="inputABN" placeholder="If an international company, write not applicable here" required>
+    </div>
+    {# <div class="col-md-6">
+      <label for="inputEmail4" class="form-label">Email</label>
+      <input type="email" class="form-control" id="inputEmail4">
+    </div>
+    <div class="col-md-6">
+      <label for="inputPassword4" class="form-label">Password</label>
+      <input type="password" class="form-control" id="inputPassword4">
+    </div> #}
+    <h4 class="registration-forms-subtitle">Bill to</h4>
+    <div class="col-12">
+      <label for="inputAddress" class="form-label">Address</label>
+      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    </div>
+    {# <div class="col-12">
+      <label for="inputAddress2" class="form-label">Address 2</label>
+      <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+    </div> #}
+    <div class="col-md-6">
+      <label for="inputCity" class="form-label">City</label>
+      <input type="text" class="form-control" id="inputCity">
+    </div>
+    <div class="col-md-4">
+      <label for="inputState" class="form-label">State</label>
+      <input type="text" class="form-control" id="inputState">
+    </div>
+    {# <div class="col-md-4">
+      <label for="inputState" class="form-label">State</label>
+      <select id="inputState" class="form-select">
+        <option selected>Choose...</option>
+        <option>ACT</option>
+        <option>NSW</option>
+        <option>NT</option>
+        <option>QLD</option>
+        <option>SA</option>
+        <option>TAS</option>
+        <option>VIC</option>
+        <option>WA</option>
+      </select>
+    </div> #}
+    <div class="col-md-2">
+      <label for="inputPostCode" class="form-label">Postcode</label>
+      <input type="text" class="form-control" id="inputPostCode">
+    </div>
+    <div class="col-md-6">
+      <label for="inputCountry" class="form-label">Country</label>
+      <input type="text" class="form-control" id="inputCountry">
+    </div>
+    <div class="col-md-4">
+      <label for="inputContact" class="form-label">Contact</label>
+      <select id="inputContact" class="form-select">
+        <option selected>Choose...</option>
+        <option>ACT</option>
+        <option>NSW</option>
+        <option>NT</option>
+        <option>QLD</option>
+        <option>SA</option>
+        <option>TAS</option>
+        <option>VIC</option>
+        <option>WA</option>
+      </select>
+    </div>
+    {# <div class="col-12">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="gridCheck">
+        <label class="form-check-label" for="gridCheck">
+          Check me out
+        </label>
+      </div>
+    </div> #}
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+  </form>
+{% endblock %}}
+
+

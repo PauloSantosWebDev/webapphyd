@@ -1,0 +1,193 @@
+{% extends 'layout.njk' %}
+
+{% block head %}
+<script src="javascripts/cylinderspecs.js"></script>
+{% endblock %}
+
+{% block content %}
+<main>
+        <div class="sbs-panels">
+            <h1>New Quotation</h1>
+            <h2>Cylinder Specifications</h2>
+            <form>
+                <form>
+                    <input type="radio" class="js-cyl-type" id="js-hsh" name="cylinderType" value="HSH" checked> HSH
+                    <input type="radio" class="js-cyl-type" id="js-hb" name="cylinderType" value="HB"> HB
+                    <input type="radio" class="js-cyl-type" id="js-hhmi" name="cylinderType" value="HHMI"> HHMI
+                    <input type="radio" class="js-cyl-type" id="js-hsmi" name="cylinderType" value="HSMI"> HSMI   
+                </form>
+                
+                <!--                    BORE DETAILS                    -->
+
+                <label>Bore</label>                
+                <div>
+                    <input class="js-in-to-mm" id="js-bore-in" type="number" name="boreInches" placeholder="in inches"> Inches
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="boreMillimiters" placeholder="in millimeters"> Millimeters
+                </div>
+                                
+                <form>
+                    <label>Outer diameter required by customer?</label>
+                    <input type="radio" class="js-radio-on" id="tubeODYes" name="tubeODSelection" value="Yes"> Yes
+                    <input type="radio" class="js-radio-off" id="tubeODNo" name="tubeODSelection" value="No" checked> No <br>
+                    <label>Outside diameter</label>
+                    <div>
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" id="js-tube-od" type="number" name="tubeODInches" placeholder="in inches"> Inches
+                    </div>
+                    <div>
+                        <input class="offStop js-mm-to-in js-off-through-radio-mm" type="number" name="tubeODMillimiters" placeholder="in millimeters"> Millimeters
+                    </div>
+                </form>
+                
+                <!--                    ROD DETAILS                 -->
+
+                <label>Rod</label>
+                <div>
+                    <input class="js-in-to-mm" id="js-rod-in" type="number" name="rodInches" placeholder="in inches"> Inches
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="rodMillimiters" placeholder="in millimeters"> Millimeters
+                </div>
+
+                <form>
+                    <label>Is the rod hollow?</label>
+                    <input type="radio" class="js-radio-on" id="rodHollowYes" name="rodHollowSelection" value="Yes"> Yes
+                    <input type="radio" class="js-radio-off" id="rodHollowNo" name="rodHollowSelection" value="No" checked> No <br>
+                    <label>Inside diameter</label>
+                    <div>
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" id="js-rod-id" type="number" name="rodHollowInches" placeholder="in inches"> Inches
+                    </div>
+                    <div>
+                        <input class="offStop js-mm-to-in js-off-through-radio-mm" type="number" name="rodHollowMillimiters" placeholder="in millimeters"> Millimeters
+                    </div>
+                </form>
+
+                <!--                    CLOSED CENTERS DETAILS                  -->
+
+                <label>Closed Centers</label>
+                <div>
+                    <input class="js-in-to-mm" id="js-cc-in" type="number" name="closedCentersInches" placeholder="in inches"> Inches
+                </div>
+                <div>
+                    <input class="js-mm-to-in" type="number" name="closedCentersMillimiters" placeholder="in millimeters"> Millimeters
+                </div>
+
+                <!--                    GROSS STROKE DETAILS                  -->
+
+                <label>Gross stroke</label>
+                <div>
+                    <input class="js-in-to-mm" id="js-gs-in" type="number" name="grossStrokeInches" placeholder="in inches"> Inches
+                </div>
+                <div>
+                    <input class="js-mm-to-in" id="js-gs-mm" type="number" name="grossStrokeMillimiters" placeholder="in millimeters"> Millimeters
+                </div>
+
+                <!--                    STOP TUBE DETAILS                   -->
+
+                <form>
+                    <label>Stop tube?</label>
+                    <input type="radio" class="js-radio-on" id="stopTubeYes" name="stopTubeSelection" value="Yes"> Yes
+                    <input type="radio" class="js-radio-off" id="stopTubeNo" name="stopTubeSelection" value="No" checked> No
+                    <label>Stop tube length</label>
+                    <div>
+                        <input class="offStop js-in-to-mm js-off-through-radio-in" id="js-st-in" type="number" name="stopTubeInches" placeholder="in inches"> Inches
+                    </div>
+                    <div>
+                        <input class="offStop js-mm-to-in js-off-through-radio-mm" id="js-st-mm" type="number" name="stopTubeMillimiters" placeholder="in millimeters"> Millimeters
+                    </div>
+                </form>
+
+                <!--                    NET STROKE DETAILS                    -->
+
+                <label>Net stroke</label>
+                <div>
+                    <input class="offStop js-in-to-mm" id="js-ns-in" type="number" name="netStrokeInches" placeholder="in inches"> Inches
+                </div>
+                <div>
+                    <input class="offStop js-mm-to-in" id="js-ns-mm" type="number" name="netStrokeMillimiters" placeholder="in millimeters"> Millimeters
+                </div>
+                
+                <!--                    PUSH AND PULL PRESSURE DETAILS                   -->
+
+                <label>Push pressure</label>
+                <div>
+                    <input class="js-psi" id="js-push-psi" type="number" name="pushPressurePSI" placeholder="in PSI"> PSI
+                </div>
+                <div>
+                    <input class="js-mpa" id="js-push-mpa" type="number" name="pushPressureMPa" placeholder="in MPa"> MPa
+                </div>
+                <div>
+                    <input class="js-bar" id="js-push-bar" type="number" name="pushPressureBar" placeholder="in Bar"> Bar
+                </div>
+                
+                <label>Pull pressure</label>
+                <div>
+                    <input class="js-psi" id="js-pull-psi" type="number" name="pullPressurePSI" placeholder="in PSI"> PSI
+                </div>
+                <div>
+                    <input class="js-mpa" id="js-pull-mpa" type="number" name="pullPressureMPa" placeholder="in MPa"> MPa
+                </div>
+                <div>
+                    <input class="js-bar" id="js-pull-bar" type="number" name="pullPressureBar" placeholder="in Bar"> Bar
+                </div>
+                
+                <!--                    PUSH AND PULL FORCE DETAILS                   -->
+
+                <label>Push force required by customer</label>
+                <div>
+                    <input class="js-lbf" type="number" name="pushForceLbf" placeholder="in lbf"> lbf                    
+                </div>
+                <div>
+                    <input class="js-newton" type="number" name="pushForceNewton" placeholder="in Newtons"> Newtons                    
+                </div>
+                <div>
+                    <input class="js-ton" type="number" name="pushForceNewton" placeholder="in ton-force"> ton-force                
+                </div>
+                
+                <label>Pull force required by customer</label>
+                <div>
+                    <input class="js-lbf" type="number" name="pullForceLbf" placeholder="in lbf"> lbf
+                </div>
+                <div>
+                    <input class="js-newton" type="number" name="pullForceNewton" placeholder="in Newtons"> Newtons
+                    
+                </div>
+                <div>
+                    <input class="js-ton" type="number" name="pullForceNewton" placeholder="in ton-force"> ton-force
+                </div>
+
+                <label>Rod End Mounting</label>
+                <select id="js-rod-mount" title="Rod End Mountings">
+                    <option>None</option>
+                    <option>Rod Clevis</option>
+                    <option>Rod Knuckle</option>
+                    <option>Rod Knuckle with Spherical Bearing</option>
+                </select>
+
+                <label>Cylinder Mounting</label>                
+                <select id="js-cyl-mount" title="Cylinder Mountings"></select>
+
+                <label>Mounting pins?</label>
+                    <input type="radio" class="js-pin" name="mountingPin" value="None" checked> None
+                    <input type="radio" class="js-pin" name="mountingPin" value="Front"> Front
+                    <input type="radio" class="js-pin" name="mountingPin" value="Rear"> Rear
+                    <input type="radio" class="js-pin" name="mountingPin" value="Both"> Both
+
+            </form>
+                    
+            <div>
+                <button id="js-btn-previous" type="button">Previous</button>
+                <button id="js-btn-next" type="button">Next</button>
+            </div>
+
+        </div>
+
+        <div class="sbs-panels js-summary">
+            <button id="js-btn-summary" type="button">Summary</button>
+        </div>
+
+    </main>
+{% endblock %}}
+
+
