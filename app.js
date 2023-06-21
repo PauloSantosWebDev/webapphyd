@@ -59,74 +59,75 @@ app.post('/regcustomer', (req, res) =>{
   const phone = req.body.inputPhoneNumber;
   const mobile = req.body.inputMobileNumber;
 
-  let cust_id = '';
+  let cust_id = null;
   
   //Command to insert new customes to the customers table in the hydroil.sqlite database
   db.run('INSERT INTO customers (name, abn, address, city, state, postcode, country) VALUES (?, ?, ?, ?, ?, ?, ?)', [companyName, abn, address, city, state, postcode, country], (err) => {
     if (err) {
       console.error(err.message);
-      res.status(500).send('Error updating data in the table.');
+      res.status(500).send('Error updating data in customer table.');
     } else {
       res.status(200);
-      console.log('Data updated successfully.');
+      console.log('Data updated successfully in customers table.');
       // res.redirect('/regcustomer');
-      // res.send('<script>alert("Processing completed successfully!");</script>');
     }
   });
 
+  //Used to find out the customer_id created for this customer so that it can be used in the contact table as a foreign key.
   db.get('SELECT customer_id FROM customers WHERE name = ?', [companyName], (err, row) => {
     if (err) {
       console.error(err.message);
     }
-
     cust_id = row.customer_id;
-    console.log('Customer ID is: ' + cust_id);
+    console.log('Customer ID in is: ' + cust_id);
+  
+    // console.log('Customer ID out is: ' + cust_id);
+
+    db.run('INSERT INTO contacts(customer_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [cust_id, contactName, email, phone, mobile], (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('Error updating data in contacts table.');
+      } else {
+        res.status(200);
+        console.log('Data updated successfully in contacts table.');
+        res.redirect('/regcustomer');
+      }
+    });
   })
 
-  db.run('INSERT INTO contacts(customer_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [cust_id, contactName, email, phone, mobile], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('Error updating data in the table.');
-    } else {
-      res.status(200);
-      console.log('Data updated successfully.');
-      res.redirect('/regcustomer');
-      // res.send('<script>alert("Processing completed successfully!");</script>');
-    }
-  });
+  // db.all("PRAGMA table_info(contacts)", (err, rows) => {
+  //   if (err) {
+  //     throw err;
+  //   }
 
-  db.all("PRAGMA table_info(contacts)", (err, rows) => {
-    if (err) {
-      throw err;
-    }
-
-    // Process the result set to display the schema information
-    console.log("Column Name\tData Type\tNullable\tDefault Value");
-    console.log("-----------\t---------\t--------\t-------------");
-    rows.forEach(row => {
-      console.log(`${row.name}\t\t${row.type}\t\t${row.notnull === 0 ? "YES" : "NO"}\t\t${row.dflt_value}`);
-    });
-  });
+  //   // Process the result set to display the schema information
+  //   console.log("Column Name\tData Type\tNullable\tDefault Value");
+  //   console.log("-----------\t---------\t--------\t-------------");
+  //   rows.forEach(row => {
+  //     console.log(`${row.name}\t\t${row.type}\t\t${row.notnull === 0 ? "YES" : "NO"}\t\t${row.dflt_value}`);
+  //   });
+  // });
 
   db.all('SELECT * FROM contacts', (err, rows) => {
     if (err) {
       throw err;
     }
     rows.forEach(row => {
-      console.log(row.customer_id, row.name, row.email, row.phone_number, row.mobile_number);
+      console.log(row);
+      // console.log(row.customer_id, row.name, row.email, row.phone_number, row.mobile_number);
     })
   })
 
-  db.all('SELECT * FROM customers', (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    rows.forEach(row => {
-      console.log(row.customer_id, row.name, row.abn, row.address, row.city, row.state, row.postcode, row.country);
-    })
-  })
+  // db.all('SELECT * FROM customers', (err, rows) => {
+  //   if (err) {
+  //     throw err;
+  //   }
+  //   rows.forEach(row => {
+  //     console.log(row.customer_id, row.name, row.abn, row.address, row.city, row.state, row.postcode, row.country);
+  //   })
+  // })
 
-  db.all('SELECT * FROM contacts WHERE customer_id = 33', (err, rows) => {
+  db.all("SELECT * FROM contacts WHERE name = 'Paulo330'", (err, rows) => {
     if (err) {
       throw err;
     }
