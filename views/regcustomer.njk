@@ -2,14 +2,14 @@
 
 {% block content %}
   <h2 class="registration-forms-title">CUSTOMER REGISTRATION FORM</h2>
-  <form class="row g-3">
+  <form class="row g-3" action="/regcustomer" method="post"> 
     <div class="col-md-6">
       <label for="inputCompanyName" class="form-label">Company Name</label>
-      <input type="text" class="form-control" id="inputCompanyName" required>
+      <input type="text" name="inputCompanyName" class="form-control" id="inputCompanyName" required>
     </div>
     <div class="col-md-6">
       <label for="inputABN" class="form-label">ABN</label>
-      <input type="text" class="form-control" id="inputABN" placeholder="If an international company, write not applicable here" required>
+      <input type="text" name="inputABN" class="form-control" id="inputABN" placeholder="If an international company, write not applicable here" required>
     </div>
     {# <div class="col-md-6">
       <label for="inputEmail4" class="form-label">Email</label>
@@ -22,7 +22,7 @@
     <h4 class="registration-forms-subtitle">Bill to</h4>
     <div class="col-12">
       <label for="inputAddress" class="form-label">Address</label>
-      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+      <input type="text" name="inputAddress" class="form-control" id="inputAddress" placeholder="1234 Main St">
     </div>
     {# <div class="col-12">
       <label for="inputAddress2" class="form-label">Address 2</label>
@@ -30,11 +30,11 @@
     </div> #}
     <div class="col-md-6">
       <label for="inputCity" class="form-label">City</label>
-      <input type="text" class="form-control" id="inputCity">
+      <input type="text" name="inputCity" class="form-control" id="inputCity">
     </div>
     <div class="col-md-4">
       <label for="inputState" class="form-label">State</label>
-      <input type="text" class="form-control" id="inputState">
+      <input type="text" name="inputState" class="form-control" id="inputState">
     </div>
     {# <div class="col-md-4">
       <label for="inputState" class="form-label">State</label>
@@ -52,25 +52,11 @@
     </div> #}
     <div class="col-md-2">
       <label for="inputPostCode" class="form-label">Postcode</label>
-      <input type="text" class="form-control" id="inputPostCode">
+      <input type="text" name="inputPostCode" class="form-control" id="inputPostCode">
     </div>
     <div class="col-md-6">
       <label for="inputCountry" class="form-label">Country</label>
-      <input type="text" class="form-control" id="inputCountry">
-    </div>
-    <div class="col-md-4">
-      <label for="inputContact" class="form-label">Contact</label>
-      <select id="inputContact" class="form-select">
-        <option selected>Choose...</option>
-        <option>ACT</option>
-        <option>NSW</option>
-        <option>NT</option>
-        <option>QLD</option>
-        <option>SA</option>
-        <option>TAS</option>
-        <option>VIC</option>
-        <option>WA</option>
-      </select>
+      <input type="text" name="inputCountry" class="form-control" id="inputCountry">
     </div>
     {# <div class="col-12">
       <div class="form-check">
