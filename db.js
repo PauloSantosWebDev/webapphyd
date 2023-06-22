@@ -15,6 +15,12 @@ db.run('CREATE TABLE IF NOT EXISTS customers (customer_id INTEGER PRIMARY KEY AU
 //Customers' contacts table
 db.run('CREATE TABLE IF NOT EXISTS contacts (customer_id INTEGER NOT NULL, contact_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, phone_number TEXT, mobile_number TEXT, FOREIGN KEY (customer_id) REFERENCES customers(customer_id))');
 
+//Suppliers table
+db.run('CREATE TABLE IF NOT EXISTS suppliers (supplier_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, abn TEXT, address TEXT, city TEXT, state TEXT, postcode TEXT, country TEXT)');
+
+//Suppliers' contacts table
+db.run('CREATE TABLE IF NOT EXISTS suppliers_contacts (supplier_id INTEGER NOT NULL, contact_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, phone_number TEXT, mobile_number TEXT, FOREIGN KEY (supplier_id) REFERENCES customers(supplier_id))');
+
 module.exports = db;
 
 //Useful code below
