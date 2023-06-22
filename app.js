@@ -42,33 +42,17 @@ app.get('/regcustomer', (req, res) =>{
 })
 
 app.get('/regcontacts', (req, res) => {
-  const optCustSupp = req.body.inputCustomerSupplier;
-  let accCompanyNameOpt = '';
 
-  console.log('optCustSupp is: ' + optCustSupp);
-
-
-  if (optCustSupp === 'Customer') {
-    db.all('', (err, rows) => {
-      
-      if (err) {
-        throw err;
-      }
-
-      rows.forEach(row => {
-        console.log('Customer name is: ' + row.name);
-        accCompanyNameOpt += `<option>${row.name}</option>`;
-      })
-
-      res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName: accCompanyNameOpt});
-      // res.redirect('/regcontacts', {title: 'Contacts Registration Form', codeOptionsCompanyName: accCompanyNameOpt});
+  db.all('SELECT * FROM customers', (err, rows) => {
     
-    })
-  } else {
-    res.render('regcontacts.njk', {title: 'Contacts Registration Form'});
-  }
-  
-  // res.render('regcontacts.njk', {title: 'Contacts Registration Form'});
+    if (err) {
+      throw err;
+    }
+
+    const codeOptionsCompanyName = rows.map(row => ({value: row.customer_id, label: row.name}));
+
+    res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName});
+  })
 })
 
 //-----------------------------------------------------

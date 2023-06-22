@@ -7,7 +7,7 @@
     
     <div class="col-md-6">
       <label for="inputCustomerSupplier" class="form-label">Customer or Supplier</label>
-      <select id="inputCustomerSupplier" name="inputCustomerSupplier" class="form-select">
+      <select id="js-input-customer-supplier" name="inputCustomerSupplier" class="form-select">
         <option selected>Customer</option>
         <option>Supplier</option>
       </select>
@@ -15,9 +15,11 @@
     
     <div class="col-md-6">
       <label for="inputCompanyName" class="form-label">Company Name</label>
-      <select id="inputCompanyName" name="inputCompanyName" class="form-select">
+      <select id="js-input-company-name" name="inputCompanyName" class="form-select">
         <option selected>Choose...</option>
-        {{codeOptionsCompanyName}}
+        {% for opt in codeOptionsCompanyName %}
+          <option value="{{ opt.value }}">{{ opt.label }}</option>
+        {% endfor %}
       </select>
     </div>
 
@@ -41,8 +43,9 @@
     <div class="col-12">
       <button type="submit" class="btn btn-primary">Register</button>
     </div>
-
   </form>
+
+  <script src="/javascripts/general.js"></script>
 {% endblock %}}
 
 
