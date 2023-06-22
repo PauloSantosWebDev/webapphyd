@@ -171,24 +171,9 @@ app.post('/regsupplier', (req, res) =>{
 
 
 app.post('/regcontacts', (req, res) => {
-  const optCustSupp = req.body.inputCustomerSupplier;
-  let accCompanyNameOpt = '';
-
-  if (optCustSupp === 'Customer') {
-    db.all('', (err, rows) => {
-      
-      if (err) {
-        throw err;
-      }
-
-      rows.forEach(row => {
-        accCompanyNameOpt += `<option>${row.name}</option>`
-      })
-
-      res.redirect('/regcontacts', {title: 'Contacts Registration Form', codeOptionsCompanyName: accCompanyNameOpt});
-    
-    })
-  }
+  const data = req.body.inputCustomerSupplier;
+  console.log('My request looks like: ' + data);
+  res.redirect('/regcontacts');
 })
 
 
