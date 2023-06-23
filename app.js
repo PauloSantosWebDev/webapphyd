@@ -14,6 +14,8 @@ nunjucks.configure('views', {
 
 app.set('view engine', 'njk');
 
+
+//Setting up static folders
 app.use(express.static('node_modules/bootstrap/dist'));
 app.use(express.static('public'));
 app.use(express.static('views'));
@@ -22,6 +24,7 @@ app.use(express.static('views'));
 //Middleware to parse request body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 //Clearing database commands
 // db.run('DROP TABLE contacts');
@@ -171,9 +174,57 @@ app.post('/regsupplier', (req, res) =>{
 
 
 app.post('/regcontacts', (req, res) => {
-  const data = req.body.inputCustomerSupplier;
-  console.log('My request looks like: ' + data);
-  res.redirect('/regcontacts');
+  // const data = req.body.inputCustomerSupplier;
+  const data = req.body;
+  console.log ('Data is: ' + JSON.stringify(data));
+  console.log ('Data is: ' + req.body.selection);
+  console.log ('Data is: ' + data.selection);
+  
+  if (data.selection === 'Customer') {
+    console.log('Inside if for Customer');
+    db.all('SELECT * FROM customers', (err, rows) => {
+    
+      if (err) {
+        throw err;
+      }
+  
+      const codeOptionsCompanyName = rows.map(row => ({value: row.customer_id, label: row.name}));
+      
+      console.log('Having a look at the codeOptionsCompanyName variable: ' + JSON.stringify(codeOptionsCompanyName));
+
+      res.json({
+        status: 'success',
+        body: codeOptionsCompanyName
+      });
+
+      // res.json({body: codeOptionsCompanyName});
+      
+
+    })
+
+  } else if (data.selection === 'Supplier') {
+    console.log('Inside if for Supplier');
+    db.all('SELECT * FROM suppliers', (err, rows) => {
+    
+      if (err) {
+        throw err;
+      }
+  
+      const codeOptionsCompanyName = rows.map(row => ({value: row.supplier_id, label: row.name}));
+      
+      console.log('Having a look at the codeOptionsCompanyName variable: ' + JSON.stringify(codeOptionsCompanyName));
+
+      res.json({
+        status: 'success',
+        body: codeOptionsCompanyName
+      });
+      // res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName});
+    })
+
+  } else {
+    res.send("Not working yet!");
+
+  }
 })
 
 
