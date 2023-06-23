@@ -174,14 +174,11 @@ app.post('/regsupplier', (req, res) =>{
 
 
 app.post('/regcontacts', (req, res) => {
-  // const data = req.body.inputCustomerSupplier;
+  
   const data = req.body;
-  console.log ('Data is: ' + JSON.stringify(data));
-  console.log ('Data is: ' + req.body.selection);
-  console.log ('Data is: ' + data.selection);
   
   if (data.selection === 'Customer') {
-    console.log('Inside if for Customer');
+
     db.all('SELECT * FROM customers', (err, rows) => {
     
       if (err) {
@@ -190,20 +187,15 @@ app.post('/regcontacts', (req, res) => {
   
       const codeOptionsCompanyName = rows.map(row => ({value: row.customer_id, label: row.name}));
       
-      console.log('Having a look at the codeOptionsCompanyName variable: ' + JSON.stringify(codeOptionsCompanyName));
-
       res.json({
         status: 'success',
         body: codeOptionsCompanyName
       });
 
-      // res.json({body: codeOptionsCompanyName});
-      
-
     })
 
   } else if (data.selection === 'Supplier') {
-    console.log('Inside if for Supplier');
+    
     db.all('SELECT * FROM suppliers', (err, rows) => {
     
       if (err) {
@@ -211,19 +203,16 @@ app.post('/regcontacts', (req, res) => {
       }
   
       const codeOptionsCompanyName = rows.map(row => ({value: row.supplier_id, label: row.name}));
-      
-      console.log('Having a look at the codeOptionsCompanyName variable: ' + JSON.stringify(codeOptionsCompanyName));
 
       res.json({
         status: 'success',
         body: codeOptionsCompanyName
       });
-      // res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName});
+
     })
 
   } else {
     res.send("Not working yet!");
-
   }
 })
 
@@ -232,5 +221,5 @@ app.post('/regcontacts', (req, res) => {
 //Server listening
 
 app.listen(port, () => {
-    console.log(`Example app lisntening on port ${port}`);
+    console.log(`Listening on port ${port}`);
 });
