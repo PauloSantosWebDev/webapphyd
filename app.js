@@ -220,7 +220,6 @@ app.post('/regcontacts', (req, res) => {
     const phone = req.body.inputPhoneNumber;
     const mobile = req.body.inputMobileNumber;
 
-    console.log('The company name selected is: ' + companyId);
     console.log(req.body);
 
     if (customerSupplierSelection === 'Customer') {
