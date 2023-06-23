@@ -179,7 +179,7 @@ app.post('/regcontacts', (req, res) => {
   
   if (data.selection === 'Customer') {
 
-    db.all('SELECT * FROM customers', (err, rows) => {
+    db.all('SELECT * FROM customers ORDER BY name', (err, rows) => {
     
       if (err) {
         throw err;
@@ -196,7 +196,7 @@ app.post('/regcontacts', (req, res) => {
 
   } else if (data.selection === 'Supplier') {
     
-    db.all('SELECT * FROM suppliers', (err, rows) => {
+    db.all('SELECT * FROM suppliers ORDER BY name', (err, rows) => {
     
       if (err) {
         throw err;
