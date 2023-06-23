@@ -54,7 +54,7 @@ app.get('/regsupplier', (req, res) =>{
 //Contacts registration form
 app.get('/regcontacts', (req, res) => {
 
-  db.all('SELECT * FROM customers', (err, rows) => {
+  db.all('SELECT * FROM customers ORDER BY name', (err, rows) => {
     
     if (err) {
       throw err;
@@ -212,7 +212,46 @@ app.post('/regcontacts', (req, res) => {
     })
 
   } else {
-    res.send("Not working yet!");
+
+    const customerSupplierSelection = req.body.inputCustomerSupplier;
+    const companyId = req.body.inputCompanyName;
+    const contactName = req.body.inputName;
+    const email = req.body.inputEmail;
+    const phone = req.body.inputPhoneNumber;
+    const mobile = req.body.inputMobileNumber;
+
+    console.log('The company name selected is: ' + companyId);
+    console.log(req.body);
+
+    if (customerSupplierSelection === 'Customer') {
+  
+      db.run('INSERT INTO contacts(customer_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [companyId, contactName, email, phone, mobile], (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send('Error updating data in contacts table.');
+        } else {
+          res.status(200);
+          console.log('Data updated successfully in contacts table.');
+          res.redirect('/regcontacts');
+        }
+      });
+
+    } else if (customerSupplierSelection === 'Supplier') {
+    
+      db.run('INSERT INTO suppliers_contacts(supplier_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [companyId, contactName, email, phone, mobile], (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).send('Error updating data in suplliers_contacts table.');
+        } else {
+          res.status(200);
+          console.log('Data updated successfully in suppliers_contacts table.');
+          res.redirect('/regcontacts');
+        }
+      });
+
+    } else {
+      res.send("Not working yet!");
+    }
   }
 })
 
