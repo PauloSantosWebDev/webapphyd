@@ -194,7 +194,9 @@ app.post('/regcontacts', (req, res) => {
 
     })
 
-  } else if (data.selection === 'Supplier') {
+  } 
+  
+  else if (data.selection === 'Supplier') {
     
     db.all('SELECT * FROM suppliers ORDER BY name', (err, rows) => {
     
@@ -211,7 +213,9 @@ app.post('/regcontacts', (req, res) => {
 
     })
 
-  } else {
+  } 
+  
+  else {
 
     const customerSupplierSelection = req.body.inputCustomerSupplier;
     const companyId = req.body.inputCompanyName;
@@ -220,9 +224,13 @@ app.post('/regcontacts', (req, res) => {
     const phone = req.body.inputPhoneNumber;
     const mobile = req.body.inputMobileNumber;
 
-    console.log(req.body);
+    if (companyId === 'Choose...') {
+      res.render('error.njk', {title: 'Invalid company name', errorMessage: 'Contact not registered! Please select a valid company name.', refLink: '/regcontacts'});
+      // res.redirect('/error.njk');
+      // {title: 'Invalid company name', errorMessage: 'Please select a valid company name', refLink: '/regcontacts'}
+    }
 
-    if (customerSupplierSelection === 'Customer') {
+    else if (customerSupplierSelection === 'Customer') {
   
       db.run('INSERT INTO contacts(customer_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [companyId, contactName, email, phone, mobile], (err) => {
         if (err) {
@@ -235,7 +243,9 @@ app.post('/regcontacts', (req, res) => {
         }
       });
 
-    } else if (customerSupplierSelection === 'Supplier') {
+    } 
+    
+    else if (customerSupplierSelection === 'Supplier') {
     
       db.run('INSERT INTO suppliers_contacts(supplier_id, name, email, phone_number, mobile_number) VALUES (?, ?, ?, ?, ?);', [companyId, contactName, email, phone, mobile], (err) => {
         if (err) {
@@ -248,7 +258,9 @@ app.post('/regcontacts', (req, res) => {
         }
       });
 
-    } else {
+    } 
+    
+    else {
       res.send("Not working yet!");
     }
   }

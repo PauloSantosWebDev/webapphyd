@@ -1,0 +1,10 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+{# <h2 style="color: red; text-align: center;">Error!!!</h2> #}
+<img src="/images/error.png" alt="error image" style="display: block; margin-left: auto; margin-right: auto;">
+<h3 style="color: red; text-align: center; margin-top: 3%;">{{errorMessage}}</h3>
+<a href={{refLink}} style="text-decoration: none"><button class="btn btn-danger" style="display: block; margin-left: auto; margin-right: auto; margin-top: 5%;">Back to page</button></a>
+{% endblock %}}
+
+

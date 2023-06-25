@@ -12,7 +12,7 @@
     const response = await fetch('/regcontacts', options);
     
     const data = await response.json();
-    
+
     return data.body;
   };
 
