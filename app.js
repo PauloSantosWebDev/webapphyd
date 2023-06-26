@@ -28,15 +28,15 @@ app.use(express.json());
 
 //Clearing database commands
 // db.run('DROP TABLE material_costs');
-db.all('SELECT * FROM resources', (err, rows) =>{
-  if (err) {
-    throw err;
-  }
+// db.all('SELECT * FROM resources', (err, rows) =>{
+//   if (err) {
+//     throw err;
+//   }
 
-  rows.forEach(row => {
-    console.log(row);
-  })
-})
+//   rows.forEach(row => {
+//     console.log(row);
+//   })
+// })
 
 //----------------------------------------------------------------
 //Routes

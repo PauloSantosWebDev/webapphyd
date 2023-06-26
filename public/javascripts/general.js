@@ -1,7 +1,7 @@
 //General functions - Start
 
 //Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
-export function elementsConversion (elementYouAre, otherElement, selector) { 
+function elementsConversion (elementYouAre, otherElement, selector) { 
   if (elementYouAre.value < 0 || elementYouAre.value === '') {
       emptyFields(elementYouAre, otherElement);
   }
