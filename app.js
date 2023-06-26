@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 //Clearing database commands
-// db.run('DROP TABLE contacts');
+// db.run('DROP TABLE labour');
 // db.all('SELECT * FROM labour', (err, rows) =>{
 //   if (err) {
 //     throw err;
@@ -284,9 +284,10 @@ app.post('/reglabour', (req, res) => {
   const w = req.body.inputW;
   const h = req.body.inputH;
   const assy = req.body.inputAssy;
+  const description = req.body.inputDescription;
   
-  //Command to insert new costs to the costs table in the hydroil.sqlite database
-  db.run('INSERT INTO labour (date, mc, ncctr, welding, honing, assembling) VALUES (?, ?, ?, ?, ?, ?)', [date, mc, ncctr, w, h, assy], (err) => {
+  //Command to insert new costs to the labour costs table in the hydroil.sqlite database
+  db.run('INSERT INTO labour (date, mc, ncctr, welding, honing, assembling, description) VALUES (?, ?, ?, ?, ?, ?, ?)', [date, mc, ncctr, w, h, assy, description], (err) => {
     if (err) {
       console.error(err.message);
       res.status(500).send('Error updating data in labour costs table.');
