@@ -21,6 +21,9 @@ db.run('CREATE TABLE IF NOT EXISTS suppliers (supplier_id INTEGER PRIMARY KEY AU
 //Suppliers' contacts table
 db.run('CREATE TABLE IF NOT EXISTS suppliers_contacts (supplier_id INTEGER NOT NULL, contact_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, phone_number TEXT, mobile_number TEXT, FOREIGN KEY (supplier_id) REFERENCES customers(supplier_id))');
 
+//Labour costs table
+db.run('CREATE TABLE IF NOT EXISTS labour (labour_id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, mc TEXT NOT NULL, ncctr TEXT NOT NULL, welding TEXT NOT NULL, honing TEXT NOT NULL, assembling TEXT NOT NULL)');
+
 module.exports = db;
 
 //Useful code below

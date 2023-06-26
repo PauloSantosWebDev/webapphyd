@@ -28,6 +28,15 @@ app.use(express.json());
 
 //Clearing database commands
 // db.run('DROP TABLE contacts');
+// db.all('SELECT * FROM labour', (err, rows) =>{
+//   if (err) {
+//     throw err;
+//   }
+
+//   rows.forEach(row => {
+//     console.log(row);
+//   })
+// })
 
 //----------------------------------------------------------------
 //Routes
@@ -65,6 +74,10 @@ app.get('/regcontacts', (req, res) => {
     res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName});
   })
 
+})
+
+app.get('/reglabour', (req, res) => {
+  res.render('reglabour.njk', {title: 'Labour costs registration form'});
 })
 
 //-----------------------------------------------------
@@ -172,7 +185,7 @@ app.post('/regsupplier', (req, res) =>{
 });
 
 
-
+//Working with contacts page. 
 app.post('/regcontacts', (req, res) => {
   
   const data = req.body;
@@ -226,8 +239,6 @@ app.post('/regcontacts', (req, res) => {
 
     if (companyId === 'Choose...') {
       res.render('error.njk', {title: 'Invalid company name', errorMessage: 'Contact not registered! Please select a valid company name.', refLink: '/regcontacts'});
-      // res.redirect('/error.njk');
-      // {title: 'Invalid company name', errorMessage: 'Please select a valid company name', refLink: '/regcontacts'}
     }
 
     else if (customerSupplierSelection === 'Customer') {
@@ -266,6 +277,27 @@ app.post('/regcontacts', (req, res) => {
   }
 })
 
+app.post('/reglabour', (req, res) => {
+  const date = req.body.inputDate;
+  const mc = req.body.inputMc;
+  const ncctr = req.body.inputNcCtr;
+  const w = req.body.inputW;
+  const h = req.body.inputH;
+  const assy = req.body.inputAssy;
+  
+  //Command to insert new costs to the costs table in the hydroil.sqlite database
+  db.run('INSERT INTO labour (date, mc, ncctr, welding, honing, assembling) VALUES (?, ?, ?, ?, ?, ?)', [date, mc, ncctr, w, h, assy], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Error updating data in labour costs table.');
+    } else {
+      res.status(200);
+      console.log('Data updated successfully in labour costs table.');
+      res.redirect('/reglabour');
+    }
+  });
+
+})
 
 //-----------------------------------------------------------------------
 //Server listening
