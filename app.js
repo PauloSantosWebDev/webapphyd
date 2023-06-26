@@ -83,7 +83,18 @@ app.get('/reglabour', (req, res) => {
 
 //Labour costs registration form
 app.get('/regmaterial', (req, res) => {
-  res.render('regmaterial.njk', {title: 'Material registration form'});
+  
+  db.all('SELECT * FROM suppliers ORDER BY name', (err, rows) => {
+    
+    if (err) {
+      throw err;
+    }
+
+    const lines = rows.map(row => ({value: row.supplier_id, label: row.name}));
+
+    res.render('regmaterial.njk', {title: 'Material registration form', lines});
+  })
+  // res.render('regmaterial.njk', {title: 'Material registration form'});
 })
 
 //-----------------------------------------------------

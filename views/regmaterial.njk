@@ -28,7 +28,10 @@
       <label for="inputSupplier" class="form-label">Supplier</label>
       <select id="inputSupplier" class="form-select">
         <option selected>Choose...</option>
-        <option>...</option>
+        {# <option>...</option> #}
+        {% for l in lines %}
+          <option value="{{l.value}}">{{l.label}}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="col-md-2">
