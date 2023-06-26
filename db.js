@@ -24,6 +24,23 @@ db.run('CREATE TABLE IF NOT EXISTS suppliers_contacts (supplier_id INTEGER NOT N
 //Labour costs table
 db.run('CREATE TABLE IF NOT EXISTS labour (labour_id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, mc TEXT NOT NULL, ncctr TEXT NOT NULL, welding TEXT NOT NULL, honing TEXT NOT NULL, assembling TEXT NOT NULL, description TEXT)');
 
+//Material related tables
+//Main table that will link to costs and mechanical properties tables
+db.run(`CREATE TABLE IF NOT EXISTS materials (material_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT NOT NULL, item TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, details TEXT, UNIQUE(hydroil_id))`);
+
+//Material costs table
+db.run(`CREATE TABLE IF NOT EXISTS material_costs (cost_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT, date TEXT NOT NULL, supplier TEXT NOT NULL, supplier_id INTEGER, cost REAL NOT NULL, unit TEXT NOT NULL, 
+FOREIGN KEY (hydroil_id) REFERENCES materials(hydroil_id), FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id))`);
+
+//Mechanical properties table
+db.run(`CREATE TABLE IF NOT EXISTS mechanical_properties (properties_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT, yield_mpa REAL, yield_psi REAL, uts_mpa REAL, uts_psi REAL, young REAL, FOREIGN KEY (hydroil_id) REFERENCES materials(hydroil_id))`);
+
+//Resources table - for big files
+db.run(`CREATE TABLE IF NOT EXISTS resources (resources_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT, file BLOB, FOREIGN KEY (hydroil_id) REFERENCES materials(hydroil_id))`);
+
+// db.run(`CREATE TABLE IF NOT EXISTS materials (material_id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, hydroil_id TEXT NOT NULL, item TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, supplier TEXT NOT NULL, supplier_id INTEGER, 
+//   cost REAL NOT NULL, unit TEXT NOT NULL, details TEXT, yield_mpa REAL, yield_psi REAL, uts_mpa REAL, uts_psi REAL, young REAL)`);
+
 module.exports = db;
 
 //Useful code below
