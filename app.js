@@ -28,7 +28,7 @@ app.use(express.json());
 
 //Clearing database commands
 // db.run('DROP TABLE material_costs');
-// db.all('SELECT * FROM resources', (err, rows) =>{
+// db.all('SELECT * FROM material_costs', (err, rows) =>{
 //   if (err) {
 //     throw err;
 //   }
@@ -324,7 +324,7 @@ app.post('/reglabour', (req, res) => {
 app.post('/regmaterial', (req, res) => {
   
   const date = req.body.inputDate;
-  const hydroiId = req.body.inputHydroilId;
+  const hydroilId = req.body.inputHydroilId;
   const item = req.body.inputItem;
   const description = req.body.inputDescription;
   const altDescription = req.body.inputAltDescription;
@@ -339,54 +339,93 @@ app.post('/regmaterial', (req, res) => {
   const young = req.body.inputYoungsModulus;
   const file = req.body.inputSourceFile;
 
-  // Command to insert new materials to the materials table in the hydroil.sqlite database
-  db.run('INSERT INTO materials (hydroil_id, item, description, alt_description, details) VALUES (?, ?, ?, ?, ?)', [hydroiId, item, description, altDescription, details], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('Error updating data in materials table.');
-    } else {
-      res.status(200);
-      console.log('Data updated successfully in materials table.');
-      // res.redirect('/regcustomer');
-    }
-  });
-
-  // Command to insert new materials to the materials table in the hydroil.sqlite database
-  db.run('INSERT INTO material_costs (hydroil_id, date, supplier_id, cost, unit) VALUES (?, ?, ?, ?, ?)', [hydroiId, date, supplier, cost, unit], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('Error updating data in material costs table.');
-    } else {
-      res.status(200);
-      console.log('Data updated successfully in material costs table.');
-      // res.redirect('/regcustomer');
-    }
-  });
-
-  // Command to insert new materials to the materials table in the hydroil.sqlite database
-  db.run('INSERT INTO mechanical_properties (hydroil_id, yield_mpa, yield_psi, uts_mpa, uts_psi, young) VALUES (?, ?, ?, ?, ?, ?)', [hydroiId, yieldMpa, yieldPsi, utsMpa, utsPsi, young], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('Error updating data in mechanical properties table.');
-    } else {
-      res.status(200);
-      console.log('Data updated successfully in mechanical properties table.');
-      // res.redirect('/regcustomer');
-    }
-  });
-
-  // Command to insert new materials to the materials table in the hydroil.sqlite database
-  db.run('INSERT INTO resources (hydroil_id, file) VALUES (?, ?)', [hydroiId, file], (err) => {
-    if (err) {
-      console.error(err.message);
-      res.status(500).send('Error updating data in resources table.');
-    } else {
-      res.status(200);
-      console.log('Data updated successfully in resources table.');
-      // res.redirect('/regcustomer');
-    }
-  });
+  console.log(supplier);
   
+  //Checking if valid supplier name was provided.
+  if (supplier === 'Choose...') {
+    res.render('error.njk', {title: 'Invalid supplier name', errorMessage: 'Material not registered! Please select a valid supplier.', refLink: '/regmaterial'});
+  }
+
+  else {
+  
+    //Used to find out the supplier_id created for this supplier so that it can be inserted in the suppliers_contacts table as a foreign key.
+    db.get('SELECT material_id FROM materials WHERE hydroil_id = ?', [hydroilId], (err, row) => {
+      
+      if (err) {
+        console.error(err.message);
+      }
+
+      console.log('Consoling the row: ' + row);
+
+      if (!row) {
+        
+        // Command to insert new materials to the materials table in the hydroil.sqlite database
+        db.run('INSERT INTO materials (hydroil_id, item, description, alt_description, details) VALUES (?, ?, ?, ?, ?)', [hydroilId, item, description, altDescription, details], (err) => {
+          if (err) {
+            console.error(err.message);
+            res.status(500).send('Error updating data in materials table.');
+          } else {
+            res.status(200);
+            console.log('Data updated successfully in materials table.');
+            // res.redirect('/regcustomer');
+          }
+        });
+
+      }
+      
+    });
+
+    
+    // // Command to insert new materials to the materials table in the hydroil.sqlite database
+    // db.run('INSERT INTO materials (hydroil_id, item, description, alt_description, details) VALUES (?, ?, ?, ?, ?)', [hydroilId, item, description, altDescription, details], (err) => {
+    //   if (err) {
+    //     console.error(err.message);
+    //     res.status(500).send('Error updating data in materials table.');
+    //   } else {
+    //     res.status(200);
+    //     console.log('Data updated successfully in materials table.');
+    //     // res.redirect('/regcustomer');
+    //   }
+    // });
+
+    // Command to insert new materials to the materials table in the hydroil.sqlite database
+    db.run('INSERT INTO material_costs (hydroil_id, date, supplier_id, cost, unit) VALUES (?, ?, ?, ?, ?)', [hydroilId, date, supplier, cost, unit], (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('Error updating data in material costs table.');
+      } else {
+        res.status(200);
+        console.log('Data updated successfully in material costs table.');
+        // res.redirect('/regcustomer');
+      }
+    });
+
+    // Command to insert new materials to the materials table in the hydroil.sqlite database
+    db.run('INSERT INTO mechanical_properties (hydroil_id, yield_mpa, yield_psi, uts_mpa, uts_psi, young) VALUES (?, ?, ?, ?, ?, ?)', [hydroilId, yieldMpa, yieldPsi, utsMpa, utsPsi, young], (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('Error updating data in mechanical properties table.');
+      } else {
+        res.status(200);
+        console.log('Data updated successfully in mechanical properties table.');
+        // res.redirect('/regcustomer');
+      }
+    });
+
+    // Command to insert new materials to the materials table in the hydroil.sqlite database
+    db.run('INSERT INTO resources (hydroil_id, file) VALUES (?, ?)', [hydroilId, file], (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('Error updating data in resources table.');
+      } else {
+        res.status(200);
+        console.log('Data updated successfully in resources table.');
+        // res.redirect('/regcustomer');
+      }
+    });
+    
+    res.redirect('/regmaterial');
+  }
 })
 
 //-----------------------------------------------------------------------
