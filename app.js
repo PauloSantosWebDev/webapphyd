@@ -82,7 +82,7 @@ app.get('/reglabour', (req, res) => {
   res.render('reglabour.njk', {title: 'Labour costs registration form'});
 })
 
-//Labour costs registration form
+//Materials registration form
 app.get('/regmaterial', (req, res) => {
   
   db.all('SELECT * FROM suppliers ORDER BY name', (err, rows) => {
@@ -97,6 +97,11 @@ app.get('/regmaterial', (req, res) => {
 
   })
 
+})
+
+//Services registration form
+app.get('/regservices', (req, res) => {
+  res.render('regservices.njk', {title: 'Services registration form'});
 })
 
 //-----------------------------------------------------
@@ -374,20 +379,7 @@ app.post('/regmaterial', (req, res) => {
       }
       
     });
-
-    
-    // // Command to insert new materials to the materials table in the hydroil.sqlite database
-    // db.run('INSERT INTO materials (hydroil_id, item, description, alt_description, details) VALUES (?, ?, ?, ?, ?)', [hydroilId, item, description, altDescription, details], (err) => {
-    //   if (err) {
-    //     console.error(err.message);
-    //     res.status(500).send('Error updating data in materials table.');
-    //   } else {
-    //     res.status(200);
-    //     console.log('Data updated successfully in materials table.');
-    //     // res.redirect('/regcustomer');
-    //   }
-    // });
-
+        
     // Command to insert new materials to the materials table in the hydroil.sqlite database
     db.run('INSERT INTO material_costs (hydroil_id, date, supplier_id, cost, unit) VALUES (?, ?, ?, ?, ?)', [hydroilId, date, supplier, cost, unit], (err) => {
       if (err) {
