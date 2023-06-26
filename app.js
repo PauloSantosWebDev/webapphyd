@@ -27,16 +27,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 //Clearing database commands
-// db.run('DROP TABLE labour');
-// db.all('SELECT * FROM labour', (err, rows) =>{
-//   if (err) {
-//     throw err;
-//   }
+// db.run('DROP TABLE material_costs');
+db.all('SELECT * FROM resources', (err, rows) =>{
+  if (err) {
+    throw err;
+  }
 
-//   rows.forEach(row => {
-//     console.log(row);
-//   })
-// })
+  rows.forEach(row => {
+    console.log(row);
+  })
+})
 
 //----------------------------------------------------------------
 //Routes
@@ -72,6 +72,7 @@ app.get('/regcontacts', (req, res) => {
     const codeOptionsCompanyName = rows.map(row => ({value: row.customer_id, label: row.name}));
 
     res.render('regcontacts.njk', {title: 'Contacts Registration Form', codeOptionsCompanyName});
+
   })
 
 })
@@ -93,8 +94,9 @@ app.get('/regmaterial', (req, res) => {
     const lines = rows.map(row => ({value: row.supplier_id, label: row.name}));
 
     res.render('regmaterial.njk', {title: 'Material registration form', lines});
+
   })
-  // res.render('regmaterial.njk', {title: 'Material registration form'});
+
 })
 
 //-----------------------------------------------------
@@ -294,6 +296,7 @@ app.post('/regcontacts', (req, res) => {
   }
 })
 
+//Inserting data into Labour costs table
 app.post('/reglabour', (req, res) => {
   const date = req.body.inputDate;
   const mc = req.body.inputMc;
@@ -315,6 +318,75 @@ app.post('/reglabour', (req, res) => {
     }
   });
 
+})
+
+//Inserting data into material, mechanical properties, costs and resources table
+app.post('/regmaterial', (req, res) => {
+  
+  const date = req.body.inputDate;
+  const hydroiId = req.body.inputHydroilId;
+  const item = req.body.inputItem;
+  const description = req.body.inputDescription;
+  const altDescription = req.body.inputAltDescription;
+  const supplier = req.body.inputSupplier;
+  const cost = req.body.inputCost;
+  const unit = req.body.inputMeasurement;
+  const details = req.body.inputDetails;
+  const yieldMpa = req.body.inputMinYieldMPa;
+  const yieldPsi = req.body.inputMinYieldPSI;
+  const utsMpa = req.body.inputMinUtsMPa;
+  const utsPsi = req.body.inputMinUTSPSI;
+  const young = req.body.inputYoungsModulus;
+  const file = req.body.inputSourceFile;
+
+  // Command to insert new materials to the materials table in the hydroil.sqlite database
+  db.run('INSERT INTO materials (hydroil_id, item, description, alt_description, details) VALUES (?, ?, ?, ?, ?)', [hydroiId, item, description, altDescription, details], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Error updating data in materials table.');
+    } else {
+      res.status(200);
+      console.log('Data updated successfully in materials table.');
+      // res.redirect('/regcustomer');
+    }
+  });
+
+  // Command to insert new materials to the materials table in the hydroil.sqlite database
+  db.run('INSERT INTO material_costs (hydroil_id, date, supplier_id, cost, unit) VALUES (?, ?, ?, ?, ?)', [hydroiId, date, supplier, cost, unit], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Error updating data in material costs table.');
+    } else {
+      res.status(200);
+      console.log('Data updated successfully in material costs table.');
+      // res.redirect('/regcustomer');
+    }
+  });
+
+  // Command to insert new materials to the materials table in the hydroil.sqlite database
+  db.run('INSERT INTO mechanical_properties (hydroil_id, yield_mpa, yield_psi, uts_mpa, uts_psi, young) VALUES (?, ?, ?, ?, ?, ?)', [hydroiId, yieldMpa, yieldPsi, utsMpa, utsPsi, young], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Error updating data in mechanical properties table.');
+    } else {
+      res.status(200);
+      console.log('Data updated successfully in mechanical properties table.');
+      // res.redirect('/regcustomer');
+    }
+  });
+
+  // Command to insert new materials to the materials table in the hydroil.sqlite database
+  db.run('INSERT INTO resources (hydroil_id, file) VALUES (?, ?)', [hydroiId, file], (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('Error updating data in resources table.');
+    } else {
+      res.status(200);
+      console.log('Data updated successfully in resources table.');
+      // res.redirect('/regcustomer');
+    }
+  });
+  
 })
 
 //-----------------------------------------------------------------------

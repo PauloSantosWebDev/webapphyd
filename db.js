@@ -29,7 +29,7 @@ db.run('CREATE TABLE IF NOT EXISTS labour (labour_id INTEGER PRIMARY KEY AUTOINC
 db.run(`CREATE TABLE IF NOT EXISTS materials (material_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT NOT NULL, item TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, details TEXT, UNIQUE(hydroil_id))`);
 
 //Material costs table
-db.run(`CREATE TABLE IF NOT EXISTS material_costs (cost_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT, date TEXT NOT NULL, supplier TEXT NOT NULL, supplier_id INTEGER, cost REAL NOT NULL, unit TEXT NOT NULL, 
+db.run(`CREATE TABLE IF NOT EXISTS material_costs (cost_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT, date TEXT NOT NULL, supplier_id INTEGER, cost REAL NOT NULL, unit TEXT NOT NULL, 
 FOREIGN KEY (hydroil_id) REFERENCES materials(hydroil_id), FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id))`);
 
 //Mechanical properties table

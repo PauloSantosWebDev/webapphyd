@@ -26,7 +26,7 @@
     </div>
     <div class="col-md-2">
       <label for="inputSupplier" class="form-label">Supplier</label>
-      <select id="inputSupplier" class="form-select">
+      <select id="inputSupplier" name="inputSupplier" class="form-select">
         <option selected>Choose...</option>
         {# <option>...</option> #}
         {% for l in lines %}
@@ -76,6 +76,8 @@
       <button type="submit" class="btn btn-primary" style="margin-top: 2em;">Register</button>
     </div>
   </form>
+
+  {# <script src="/javascripts/general.js"></script> #}
 {% endblock %}}
 
 
