@@ -76,8 +76,14 @@ app.get('/regcontacts', (req, res) => {
 
 })
 
+//Labour costs registration form
 app.get('/reglabour', (req, res) => {
   res.render('reglabour.njk', {title: 'Labour costs registration form'});
+})
+
+//Labour costs registration form
+app.get('/regmaterial', (req, res) => {
+  res.render('regmaterial.njk', {title: 'Material registration form'});
 })
 
 //-----------------------------------------------------
