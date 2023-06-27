@@ -2,50 +2,52 @@
 
 {% block content %}
 <h2 class="registration-forms-title">SERVICES REGISTRATION FORM</h2>
-{# <h4 class="registration-forms-title">MATERIAL SPECS</h4> #}
-
-<form class="row g-3">
+{# <h4 class="registration-forms-title">SERVICE SPECS</h4> #}
+<form class="row g-3" action="/regservices" method="post">
   <div class="col-md-2">
     <label for="inputDate" class="form-label">Date</label>
-    <input type="date" class="form-control" id="inputDate">
+    <input type="date" class="form-control" id="inputDate" name="inputDate" required>
   </div>
-  <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Password</label>
-    <input type="password" class="form-control" id="inputPassword4">
+  <div class="col-md-2">
+    <label for="inputServiceCode" class="form-label">Service code</label>
+    <input type="text" class="form-control" id="inputServiceCode" name="inputServiceCode" required>
   </div>
-  <div class="col-12">
-    <label for="inputAddress" class="form-label">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+  <div class="col-md-2">
+    <label for="inputService" class="form-label">Service</label>
+    <input type="text" class="form-control" id="inputService" name="inputService" required>
   </div>
-  <div class="col-12">
-    <label for="inputAddress2" class="form-label">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+  <div class="col-md-3">
+    <label for="inputDescription" class="form-label">Description</label>
+    <input type="text" class="form-control" id="inputDescription" name="inputDescription" required>
   </div>
-  <div class="col-md-6">
-    <label for="inputCity" class="form-label">City</label>
-    <input type="text" class="form-control" id="inputCity">
+  <div class="col-md-3">
+    <label for="inputAltDescription" class="form-label">Alternative Description</label>
+    <input type="text" class="form-control" id="inputAltDescription" name="inputAltDescription">
   </div>
-  <div class="col-md-4">
-    <label for="inputState" class="form-label">State</label>
-    <select id="inputState" class="form-select">
+  <div class="col-md-2">
+    <label for="inputSupplier" class="form-label">Supplier</label>
+    <select id="inputSupplier" name="inputSupplier" class="form-select">
       <option selected>Choose...</option>
-      <option>...</option>
+      {# <option>...</option> #}
+      {% for l in lines %}
+        <option value="{{l.value}}">{{l.label}}</option>
+      {% endfor %}
     </select>
   </div>
   <div class="col-md-2">
-    <label for="inputZip" class="form-label">Zip</label>
-    <input type="text" class="form-control" id="inputZip">
+    <label for="inputCost" class="form-label">Cost</label>
+    <input type="number" min="0.00" step="0.01" class="form-control" id="inputCost" name="inputCost" required>
+  </div>
+  <div class="col-md-2">
+    <label for="inputMeasurement" class="form-label">Measurement Unit</label>
+    <input type="text" class="form-control" id="inputMeasurement" name="inputMeasurement" required>
+  </div>
+  <div class="col-md-6">
+    <label for="inputDetails" class="form-label">Details</label>
+    <input type="text" class="form-control" id="inputDetails" name="inputDetails">
   </div>
   <div class="col-12">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Sign in</button>
+    <button type="submit" class="btn btn-primary" style="margin-top: 2em;">Register</button>
   </div>
 </form>
 

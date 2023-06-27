@@ -38,6 +38,14 @@ db.run(`CREATE TABLE IF NOT EXISTS mechanical_properties (properties_id INTEGER 
 //Resources table - for big files
 db.run(`CREATE TABLE IF NOT EXISTS resources (resources_id INTEGER PRIMARY KEY AUTOINCREMENT, hydroil_id TEXT, file BLOB, FOREIGN KEY (hydroil_id) REFERENCES materials(hydroil_id))`);
 
+//Services related tables
+//Main table that will link to costs table
+db.run(`CREATE TABLE IF NOT EXISTS ext_services (service_id INTEGER PRIMARY KEY AUTOINCREMENT, service_code TEXT NOT NULL, service TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, details TEXT, UNIQUE(service_code))`);
+
+//Material costs table
+db.run(`CREATE TABLE IF NOT EXISTS ext_services_costs (cost_id INTEGER PRIMARY KEY AUTOINCREMENT, service_code TEXT, date TEXT NOT NULL, supplier_id INTEGER, cost REAL NOT NULL, unit TEXT NOT NULL, 
+FOREIGN KEY (service_code) REFERENCES ext_services(service_code), FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id))`);
+
 // db.run(`CREATE TABLE IF NOT EXISTS materials (material_id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, hydroil_id TEXT NOT NULL, item TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, supplier TEXT NOT NULL, supplier_id INTEGER, 
 //   cost REAL NOT NULL, unit TEXT NOT NULL, details TEXT, yield_mpa REAL, yield_psi REAL, uts_mpa REAL, uts_psi REAL, young REAL)`);
 

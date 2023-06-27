@@ -28,7 +28,7 @@ app.use(express.json());
 
 //Clearing database commands
 // db.run('DROP TABLE material_costs');
-// db.all('SELECT * FROM material_costs', (err, rows) =>{
+// db.all('SELECT * FROM ext_services', (err, rows) =>{
 //   if (err) {
 //     throw err;
 //   }
@@ -101,7 +101,18 @@ app.get('/regmaterial', (req, res) => {
 
 //Services registration form
 app.get('/regservices', (req, res) => {
-  res.render('regservices.njk', {title: 'Services registration form'});
+
+  db.all('SELECT * FROM suppliers ORDER BY name', (err, rows) => {
+    
+    if (err) {
+      throw err;
+    }
+
+    const lines = rows.map(row => ({value: row.supplier_id, label: row.name}));
+    res.render('regservices.njk', {title: 'Services registration form', lines});
+
+  })
+
 })
 
 //-----------------------------------------------------
@@ -343,8 +354,6 @@ app.post('/regmaterial', (req, res) => {
   const utsPsi = req.body.inputMinUTSPSI;
   const young = req.body.inputYoungsModulus;
   const file = req.body.inputSourceFile;
-
-  console.log(supplier);
   
   //Checking if valid supplier name was provided.
   if (supplier === 'Choose...') {
@@ -352,15 +361,14 @@ app.post('/regmaterial', (req, res) => {
   }
 
   else {
-  
-    //Used to find out the supplier_id created for this supplier so that it can be inserted in the suppliers_contacts table as a foreign key.
+    
+    //Used to protect against the UNIQUE constraint for the hydroilId column.
+    //Used to find out the supplier_id created for this supplier so that it can be inserted in the material_costs table as a foreign key.
     db.get('SELECT material_id FROM materials WHERE hydroil_id = ?', [hydroilId], (err, row) => {
       
       if (err) {
         console.error(err.message);
       }
-
-      console.log('Consoling the row: ' + row);
 
       if (!row) {
         
@@ -417,6 +425,72 @@ app.post('/regmaterial', (req, res) => {
     });
     
     res.redirect('/regmaterial');
+  }
+})
+
+//Insert data into ext_services and ext_services_costs tables
+app.post('/regservices', (req, res) => {
+  const date = req.body.inputDate;
+  const serviceCode = req.body.inputServiceCode;
+  const service = req.body.inputService;
+  const description = req.body.inputDescription;
+  const altDescription = req.body.inputAltDescription;
+  const supplier = req.body.inputSupplier;
+  const cost = req.body.inputCost;
+  const unit = req.body.inputMeasurement;
+  const details = req.body.inputDetails;
+
+  console.log(supplier);
+  console.log(req.body);
+  
+  //Checking if valid supplier name was provided.
+  if (supplier === 'Choose...') {
+    res.render('error.njk', {title: 'Invalid supplier name', errorMessage: 'Service not registered! Please select a valid supplier.', refLink: '/regservices'});
+  }
+
+  else {
+  
+    //Used to protect against the UNIQUE constraint for the supplier_code column.
+    //Used to find out the supplier_id created for this supplier so that it can be inserted in the ext_services table as a foreign key.
+    db.get('SELECT service_id FROM ext_services WHERE service_code = ?', [serviceCode], (err, row) => {
+      
+      if (err) {
+        console.error(err.message);
+      }
+
+      console.log('Consoling the row: ' + row);
+
+      if (!row) {
+        
+        // Command to insert new materials to the materials table in the hydroil.sqlite database
+        db.run('INSERT INTO ext_services (service_code, service, description, alt_description, details) VALUES (?, ?, ?, ?, ?)', [serviceCode, service, description, altDescription, details], (err) => {
+          if (err) {
+            console.error(err.message);
+            res.status(500).send('Error updating data in ext_services table.');
+          } else {
+            res.status(200);
+            console.log('Data updated successfully in ext_services table.');
+            // res.redirect('/regcustomer');
+          }
+        });
+
+      }
+      
+    });
+        
+    // Command to insert new materials to the materials table in the hydroil.sqlite database
+    db.run('INSERT INTO ext_services_costs (service_code, date, supplier_id, cost, unit) VALUES (?, ?, ?, ?, ?)', [serviceCode, date, supplier, cost, unit], (err) => {
+      if (err) {
+        console.error(err.message);
+        res.status(500).send('Error updating data in material costs table.');
+      } else {
+        res.status(200);
+        console.log('Data updated successfully in material costs table.');
+        // res.redirect('/regcustomer');
+      }
+    });
+    
+    res.redirect('/regservices');
   }
 })
 
