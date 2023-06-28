@@ -497,10 +497,14 @@ app.post('/regservices', (req, res) => {
 
 //Main goal, submit the data to the database
 //Second goal, update the page according to the radio button checked
-app.post('quoteone', (req, res) => {
+app.post('/quoteone', (req, res) => {
+  const data = req.body;
+  console.log(data.selection);
   console.log(req.body);
+
   res.json({
-    status: 'success'
+    status: 'success',
+    body: data.selection
   })
 })
 
