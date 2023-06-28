@@ -29,15 +29,15 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
   e.addEventListener('change', async () => {
       console.log(e.value);
       const radioOpt = await updatePageRadio(e.value);
-      const contentChanger = document.getElementById('js-page-content');
+      const contentChanger = document.getElementById('js-page-content-first');
       if (radioOpt === 'option1') {
-        contentChanger.innerHTML = `<h2>STILL OPTION 1 WORKING</h2>`
+        contentChanger.innerHTML = generateNewCylinderPage();
       } 
       else if (radioOpt === 'option2') {
-        contentChanger.innerHTML = `<h2>OPTION 2 WORKING</h2>`
+        contentChanger.innerHTML = generateRepairPage();
       }
       else if (radioOpt === 'option3') {
-        contentChanger.innerHTML = `<h2>OPTION 3 WORKING</h2>`
+        contentChanger.innerHTML = generateRepeatCylinderPage();
       }
       else {
         contentChanger.innerHTML = `<h2>SOMETHING ELSE WORKING</h2>`
@@ -50,6 +50,21 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
 
 //--------------------------------------------------------------------------------------------------------------------------
 //HTML Generating Functions - Start
+
+function generateNewCylinderPage() {
+  const res = `<h2>STILL OPTION 1 WORKING</h2>`;
+  return res;
+}
+
+function generateRepairPage() {
+  const res = `<h2>OPTION 2 WORKING</h2>`;
+  return res;
+}
+
+function generateRepeatCylinderPage() {
+  const res = `<h2>OPTION 3 WORKING</h2>`;
+  return res;
+}
 
 //HTML Generating Functions - End
 //--------------------------------------------------------------------------------------------------------------------------
