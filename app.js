@@ -47,6 +47,7 @@ app.get('/', (req, res) =>{
 
 //Quote first page
 app.get('/quoteone', (req, res) =>{
+  console.log(req.body);
   res.render('quoteone.njk');
 })
 
@@ -492,6 +493,15 @@ app.post('/regservices', (req, res) => {
     
     res.redirect('/regservices');
   }
+})
+
+//Main goal, submit the data to the database
+//Second goal, update the page according to the radio button checked
+app.post('quoteone', (req, res) => {
+  console.log(req.body);
+  res.json({
+    status: 'success'
+  })
 })
 
 //-----------------------------------------------------------------------
