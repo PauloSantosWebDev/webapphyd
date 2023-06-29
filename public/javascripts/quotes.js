@@ -71,24 +71,24 @@ function emptyFields (first, second) {
 
 //--------------------------------------------------------------------------------------------------------------------------
 //Fetch and async functions - start
-async function updatePageRadio (selection) {
-  const options = {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({selection})
-  }
+// async function updatePageRadio (selection) {
+//   const options = {
+//     method: 'post',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({selection})
+//   }
 
-  const response = await fetch('/quoteone', options);
+//   const response = await fetch('/quoteone', options);
 
-  const data = await response.json();
-  console.log(data);
-  console.log(data.status);
-  console.log(data.body);
+//   const data = await response.json();
+//   console.log(data);
+//   console.log(data.status);
+//   console.log(data.body);
 
-  return data.body;
-}
+//   return data.body;
+// }
 
 //Fetch and async functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -99,9 +99,9 @@ async function updatePageRadio (selection) {
 //Change the content of js-page-content-first div, autogenerating the HTML.
 //Create event listeners for all radios with class of js-radio-quote-for
 document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
-  e.addEventListener('change', async () => {
-      console.log(e.value);
-      const radioOpt = await updatePageRadio(e.value);
+  e.addEventListener('change', () => {
+      // const radioOpt = await updatePageRadio(e.value);
+      const radioOpt = e.value;
       const contentChanger = document.getElementById('js-page-content-first');
       if (radioOpt === 'option1') {
         contentChanger.innerHTML = generateNewCylinderPage();
@@ -118,7 +118,38 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
   });
 });
 
-//
+//Change the content of js-page-content-second div, autogenerating the HTML.
+//Create event listener inner type input field.
+document.body.addEventListener('click', (event) => {
+  if (event.target.id == 'inputInnerType') {
+    const quoteForRadioChecker = document.getElementById('js-radio-new-cyl');
+    const controllerHTML = document.getElementById('js-page-content-second');
+    if (quoteForRadioChecker.value === 'option1') {
+      const innerType = document.getElementById('inputInnerType');
+      innerType.addEventListener('change', () =>{
+        if (innerType.value === 'doubleEnded') {
+          controllerHTML.innerHTML='<h2>Double-ended</h2>';
+        }
+        else if (innerType.value === 'telescopic') {
+          controllerHTML.innerHTML=`<h2>Telescopic${innerType.value}</h2>`;
+        }
+        else if (innerType.value === 'spring') {
+          controllerHTML.innerHTML='<h2>spring</h2>';
+        }
+        else if (innerType.value === 'displacement') {
+          controllerHTML.innerHTML='<h2>Displacement</h2>';
+        }
+        else {
+          controllerHTML.innerHTML='<h2>Standard</h2>';
+        }
+
+      })
+    }
+  }
+})
+
+
+
 //General - It changes values from psi to mpa and bar
 document.querySelectorAll(".js-psi").forEach((e, index) => {
   let mpaElement = document.querySelectorAll(".js-mpa")[index];
@@ -210,7 +241,138 @@ document.querySelectorAll(".js-ton").forEach((e, index) => {
 //HTML Generating Functions - Start
 
 function generateNewCylinderPage() {
-  const res = `<h2>STILL OPTION 1 WORKING</h2>`;
+  const res = `<form class="row g-3">
+  <h4 class="registration-forms-subtitle">CYLINDER SPECS</h4>
+  
+  <div class="col-md-3">
+    <label for="inputBodyType" class="form-label">Body type</label>
+    <select id="inputBodyType" name="inputBodyType" class="form-select">
+      <option selected value="HSH">HSH</option>
+      <option value="HB">HB</option>
+      <option value="HHMI">HHMI</option>
+      <option value="HSMI">HSMI</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label for="inputInnerType" class="form-label">Inner type</label>
+    <select id="inputInnerType" name="inputInnerType" class="form-select">
+      <option selected value="standard">Standard</option>
+      <option value="doubleEnded">Double-ended</option>
+      <option value="telescopic">Telescopic</option>
+      <option value="spring">Spring</option>
+      <option valeu="displacement">Displacement</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label for="inputForceGenerator" class="form-label">Force generator</label>
+    <select id="inputForceGenerator" name="inputForceGenerator" class="form-select">
+      <option selected value="hydraulic">Hydraulic</option>
+      <option value="pneumatic">Pneumatic</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label for="inputActingType" class="form-label">Acting type</label>
+    <select id="inputActingType" name="inputActingType" class="form-select">
+      <option selected value="doubleActing">Double acting</option>
+      <option value="singleActing">Single acting</option>
+    </select>
+  </div>
+  
+  <h5 class="registration-forms-subtitle">Pull Pressure</h5>
+  <div class="col-md-4">
+    <label for="inputPullPressurePsi" class="form-label">Pull pressure - psi</label>
+    <input type="number" min="0.0" class="form-control js-psi" id="inputPullPressurePsi" name="inputPullPressurePsi">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPullPressureMpa" class="form-label">Pull pressure - MPa</label>
+    <input type="number" min="0.0" class="form-control js-mpa" id="inputPullPressureMpa" name="inputPullPressureMpa">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPullPressureBar" class="form-label">Pull pressure - bar</label>
+    <input type="number" min="0.0" class="form-control js-bar" id="inputPullPressureBar" name="inputPullPressureBar">
+  </div>
+  <h5 class="registration-forms-subtitle">Push Pressure</h5>
+  <div class="col-md-4">
+    <label for="inputPushPressurePsi" class="form-label">Push pressure - psi</label>
+    <input type="number" min="0.0" class="form-control js-psi" id="inputPushPressurePsi" name="inputPushPressurePsi">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPushPressureMpa" class="form-label">Push pressure - MPa</label>
+    <input type="number" min="0.0" class="form-control js-mpa" id="inputPushPressureMpa" name="inputPushPressureMpa">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPushPressureBar" class="form-label">Push pressure - bar</label>
+    <input type="number" min="0.0" class="form-control  js-bar" id="inputPushPressureBar" name="inputPushPressureBar">
+  </div>
+  <h5 class="registration-forms-subtitle">Pull Force - Required</h5>
+  <div class="col-md-4">
+    <label for="inputPullForceLbf" class="form-label">Pull force - lbf</label>
+    <input type="number" min="0.0" class="form-control js-lbf" id="inputPullForceLbf" name="inputPullForceLbf">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPullForceNewton" class="form-label">Pull force - Newton</label>
+    <input type="number" min="0.0" class="form-control js-newton" id="inputPullForceNewton" name="inputPullForceNewton">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPullForceTon" class="form-label">Pull force - ton-force</label>
+    <input type="number" min="0.0" class="form-control js-ton" id="inputPullForceTon" name="inputPullForceTon">
+  </div>
+  <h5 class="registration-forms-subtitle">Push Force - Required</h5>
+  <div class="col-md-4">
+    <label for="inputPushForceLbf" class="form-label">Push force - lbf</label>
+    <input type="number" min="0.0" class="form-control js-lbf" id="inputPushForceLbf" name="inputPushForceLbf">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPushForceNewton" class="form-label">Push force - Newton</label>
+    <input type="number" min="0.0" class="form-control js-newton" id="inputPushForceNewton" name="inputPushForceNewton">
+  </div>
+  <div class="col-md-4">
+    <label for="inputPushForceTon" class="form-label">Push force - ton-force</label>
+    <input type="number" min="0.0" class="form-control js-ton" id="inputPushForceTon" name="inputPushForceTon">
+  </div>
+</form>
+
+
+<div id="js-page-content-second">
+  
+  <form class="row g-3">
+    <h4 class="registration-forms-subtitle">Seoncond autogenerated part</h4>
+    
+    <div class="col-md-3">
+      <label for="inputBodyType" class="form-label">Body type</label>
+      <select id="inputBodyType" name="inputBodyType" class="form-select">
+        <option selected value="HSH">HSH</option>
+        <option value="HB">HB</option>
+        <option value="HHMI">HHMI</option>
+        <option value="HSMI">HSMI</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="inputInnerType" class="form-label">Inner type</label>
+      <select id="inputInnerType" name="inputInnerType" class="form-select">
+        <option selected value="standard">Standard</option>
+        <option value="doubleEnded">Double-ended</option>
+        <option value="telescopic">Telescopic</option>
+        <option value="spring">Spring</option>
+        <option valeu="displacement">Displacement</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="inputForceGenerator" class="form-label">Force generator</label>
+      <select id="inputForceGenerator" name="inputForceGenerator" class="form-select">
+        <option selected value="hydraulic">Hydraulic</option>
+        <option value="pneumatic">Pneumatic</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="inputActingType" class="form-label">Acting type</label>
+      <select id="inputActingType" name="inputActingType" class="form-select">
+        <option selected value="doubleActing">Double acting</option>
+        <option value="singleActing">Single acting</option>
+      </select>
+    </div>
+  </form>
+</div>`;
   return res;
 }
 
