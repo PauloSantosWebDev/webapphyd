@@ -124,9 +124,6 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
       else if (radioOpt === 'option3') {
         contentChanger.innerHTML = generateRepeatCylinderPage();
       }
-      // else {
-      //   contentChanger.innerHTML = `<h2>SOMETHING ELSE WORKING</h2>`
-      // }
       conversionListener();
   });
 });
@@ -143,23 +140,28 @@ document.body.addEventListener('click', (event) => {
         if (innerType.value === 'doubleEnded') {
           const content = await getHtmlContent('../pages/doubleended.html');
           controllerHTML.innerHTML = content;
+          conversionListener();
         }
         else if (innerType.value === 'telescopic') {
           const content = await getHtmlContent('../pages/telescopic.html');
           controllerHTML.innerHTML = content;
           // controllerHTML.innerHTML=`<h2>Telescopic${innerType.value}</h2>`;
+          conversionListener();
         }
         else if (innerType.value === 'spring') {
           const content = await getHtmlContent('../pages/spring.html');
           controllerHTML.innerHTML = content;
+          conversionListener();
         }
         else if (innerType.value === 'displacement') {
           const content = await getHtmlContent('../pages/displacement.html');
           controllerHTML.innerHTML = content;
+          conversionListener();
         }
         else {
           const content = await getHtmlContent('../pages/standard.html');
           controllerHTML.innerHTML = content;
+          conversionListener();
         }
       })
     }
@@ -252,6 +254,29 @@ function conversionListener() {
         elementsConversion(e, newtonElement, 14);
     });
   });
+
+  //General - Changing values from inches to millimeters
+document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
+  let other = document.querySelectorAll(".js-mm-to-in")[index];
+  e.addEventListener('keyup', () => {
+      elementsConversion(e, other, 1);
+  });
+  e.addEventListener('change', () => {
+      elementsConversion(e, other, 1);
+  });
+});
+
+//General - Changing values from millimeters to inches
+document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
+  let other = document.querySelectorAll(".js-in-to-mm")[index];
+  e.addEventListener('keyup', () => {
+      elementsConversion(e, other, 2);
+  });
+  e.addEventListener('change', () => {
+      elementsConversion(e, other, 2);
+  });
+});
+
 }
 //Event listeners setction - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
