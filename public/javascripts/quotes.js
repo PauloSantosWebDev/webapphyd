@@ -90,6 +90,18 @@ function emptyFields (first, second) {
 //   return data.body;
 // }
 
+async function getHtmlContent (path) {
+  // const options = {
+  //   method: 'get'
+  // }
+  const response = await fetch(path);
+  const data = await response.text();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(data, 'text/html');
+  const docBody = doc.body.innerHTML;
+  return docBody;
+}
+
 //Fetch and async functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -126,9 +138,11 @@ document.body.addEventListener('click', (event) => {
     const controllerHTML = document.getElementById('js-page-content-second');
     if (quoteForRadioChecker.value === 'option1') {
       const innerType = document.getElementById('inputInnerType');
-      innerType.addEventListener('change', () =>{
+      innerType.addEventListener('change', async () =>{
         if (innerType.value === 'doubleEnded') {
-          controllerHTML.innerHTML='<h2>Double-ended</h2>';
+          const content = await getHtmlContent('../pages/standard.html');
+          controllerHTML.innerHTML = content;
+
         }
         else if (innerType.value === 'telescopic') {
           controllerHTML.innerHTML=`<h2>Telescopic${innerType.value}</h2>`;
@@ -141,6 +155,22 @@ document.body.addEventListener('click', (event) => {
         }
         else {
           controllerHTML.innerHTML='<h2>Standard</h2>';
+          fetch('../pages/standard.html')
+            .then(response => {
+              return response.text()
+            })
+            .then (html => {
+              //Initialize the DOM parser
+              var parser = new DOMParser();
+
+              //Parse the text
+              var doc = parser.parseFromString(html, "text/html");
+              
+              console.log(doc);
+            })
+            .catch(err => {
+              console.log('Failed to fetch page: ', err);
+            })
         }
 
       })
