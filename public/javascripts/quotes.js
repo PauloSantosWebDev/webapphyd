@@ -117,6 +117,7 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
       const contentChanger = document.getElementById('js-page-content-first');
       if (radioOpt === 'option1') {
         contentChanger.innerHTML = await generateNewCylinderPage();
+        mountingsList();
       } 
       else if (radioOpt === 'option2') {
         contentChanger.innerHTML = generateRepairPage();
@@ -125,7 +126,6 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
         contentChanger.innerHTML = generateRepeatCylinderPage();
       }
       conversionListener();
-      mountingsList();
   });
 });
 
@@ -260,52 +260,36 @@ function conversionListener() {
   });
 
   //General - Changing values from inches to millimeters
-document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
-  let other = document.querySelectorAll(".js-mm-to-in")[index];
-  e.addEventListener('keyup', () => {
-      elementsConversion(e, other, 1);
+  document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-mm-to-in")[index];
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, other, 1);
+    });
+    e.addEventListener('change', () => {
+        elementsConversion(e, other, 1);
+    });
   });
-  e.addEventListener('change', () => {
-      elementsConversion(e, other, 1);
-  });
-});
 
-//General - Changing values from millimeters to inches
-document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
-  let other = document.querySelectorAll(".js-in-to-mm")[index];
-  e.addEventListener('keyup', () => {
-      elementsConversion(e, other, 2);
+  //General - Changing values from millimeters to inches
+  document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-in-to-mm")[index];
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, other, 2);
+    });
+    e.addEventListener('change', () => {
+        elementsConversion(e, other, 2);
+    });
   });
-  e.addEventListener('change', () => {
-      elementsConversion(e, other, 2);
-  });
-});
-
 }
 
-function mountingsList() {
-  let hshMountings = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder'];
-  let hbMountings = ['None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
-                    '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
-                    '14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing'];
-  let hhmiMountings = ['None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
 
-  const controller = document.getElementById('inputCylMounting');
-  const checker = document.getElementById('inputBodyType');
-  if (checker.value === 'HSH') {
-    controller.innerHTML = hshMountings;
-  }
-  else if (checker.value === 'HB') {
-    controller.innerHTML = hbMountings;
-  }
-
-}
 //Event listeners setction - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 //--------------------------------------------------------------------------------------------------------------------------
 //HTML Generating Functions - Start
 
+//Autogenerate Standard section for new cylinder specs.
 async function generateNewCylinderPage() {
   const res = await getHtmlContent('../pages/newcylinder.html');
   return res;
@@ -321,6 +305,32 @@ function generateRepeatCylinderPage() {
   return res;
 }
 
+//Autogenerate Cylinder mountings options
+function mountingsList() {
+  let hshMountings = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder'];
+  let hbMountings = ['None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
+                    '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
+                    '14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing'];
+  let hhmiMountings = ['None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
+
+  const controller = document.getElementById('inputCylMounting');
+  console.log('Controller is: ' + controller);
+  const checker = document.getElementById('inputBodyType');
+  console.log('Checker is: ' + checker.value);
+  let accumulator = '';
+  if (checker.value === 'HSH') {
+    hshMountings.forEach((e, i) => {
+      accumulator += `<option value='${i}'>${e}</option>`;
+    })
+    controller.innerHTML = accumulator;
+  }
+  else if (checker.value === 'HB') {
+    hbMountings.forEach((e, i) => {
+      accumulator += `<option value='${i}'>${e}</option>`;
+    })
+    controller.innerHTML = accumulator;
+  }
+}
 //HTML Generating Functions - End
 //--------------------------------------------------------------------------------------------------------------------------
 
