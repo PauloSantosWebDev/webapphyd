@@ -111,12 +111,12 @@ async function getHtmlContent (path) {
 //Change the content of js-page-content-first div, autogenerating the HTML.
 //Create event listeners for all radios with class of js-radio-quote-for
 document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
-  e.addEventListener('change', () => {
+  e.addEventListener('change', async () => {
       // const radioOpt = await updatePageRadio(e.value);
       const radioOpt = e.value;
       const contentChanger = document.getElementById('js-page-content-first');
       if (radioOpt === 'option1') {
-        contentChanger.innerHTML = generateNewCylinderPage();
+        contentChanger.innerHTML = await generateNewCylinderPage();
       } 
       else if (radioOpt === 'option2') {
         contentChanger.innerHTML = generateRepairPage();
@@ -258,189 +258,190 @@ document.querySelectorAll(".js-ton").forEach((e, index) => {
 //--------------------------------------------------------------------------------------------------------------------------
 //HTML Generating Functions - Start
 
-function generateNewCylinderPage() {
-  const res = `<form class="row g-3">
-  <h4 class="registration-forms-subtitle">CYLINDER SPECS</h4>
+async function generateNewCylinderPage() {
+  const res = await getHtmlContent('../pages/newcylinder.html');
+  //   const res = `<form class="row g-3">
+//   <h4 class="registration-forms-subtitle">CYLINDER SPECS</h4>
   
-  <div class="col-md-3">
-    <label for="inputBodyType" class="form-label">Body type</label>
-    <select id="inputBodyType" name="inputBodyType" class="form-select">
-      <option selected value="HSH">HSH</option>
-      <option value="HB">HB</option>
-      <option value="HHMI">HHMI</option>
-      <option value="HSMI">HSMI</option>
-    </select>
-  </div>
-  <div class="col-md-3">
-    <label for="inputInnerType" class="form-label">Inner type</label>
-    <select id="inputInnerType" name="inputInnerType" class="form-select">
-      <option selected value="standard">Standard</option>
-      <option value="doubleEnded">Double-ended</option>
-      <option value="telescopic">Telescopic</option>
-      <option value="spring">Spring</option>
-      <option valeu="displacement">Displacement</option>
-    </select>
-  </div>
-  <div class="col-md-3">
-    <label for="inputForceGenerator" class="form-label">Force generator</label>
-    <select id="inputForceGenerator" name="inputForceGenerator" class="form-select">
-      <option selected value="hydraulic">Hydraulic</option>
-      <option value="pneumatic">Pneumatic</option>
-    </select>
-  </div>
-  <div class="col-md-3">
-    <label for="inputActingType" class="form-label">Acting type</label>
-    <select id="inputActingType" name="inputActingType" class="form-select">
-      <option selected value="doubleActing">Double acting</option>
-      <option value="singleActing">Single acting</option>
-    </select>
-  </div>
+//   <div class="col-md-3">
+//     <label for="inputBodyType" class="form-label">Body type</label>
+//     <select id="inputBodyType" name="inputBodyType" class="form-select">
+//       <option selected value="HSH">HSH</option>
+//       <option value="HB">HB</option>
+//       <option value="HHMI">HHMI</option>
+//       <option value="HSMI">HSMI</option>
+//     </select>
+//   </div>
+//   <div class="col-md-3">
+//     <label for="inputInnerType" class="form-label">Inner type</label>
+//     <select id="inputInnerType" name="inputInnerType" class="form-select">
+//       <option selected value="standard">Standard</option>
+//       <option value="doubleEnded">Double-ended</option>
+//       <option value="telescopic">Telescopic</option>
+//       <option value="spring">Spring</option>
+//       <option valeu="displacement">Displacement</option>
+//     </select>
+//   </div>
+//   <div class="col-md-3">
+//     <label for="inputForceGenerator" class="form-label">Force generator</label>
+//     <select id="inputForceGenerator" name="inputForceGenerator" class="form-select">
+//       <option selected value="hydraulic">Hydraulic</option>
+//       <option value="pneumatic">Pneumatic</option>
+//     </select>
+//   </div>
+//   <div class="col-md-3">
+//     <label for="inputActingType" class="form-label">Acting type</label>
+//     <select id="inputActingType" name="inputActingType" class="form-select">
+//       <option selected value="doubleActing">Double acting</option>
+//       <option value="singleActing">Single acting</option>
+//     </select>
+//   </div>
   
-  <h5 class="registration-forms-subtitle">Pull Pressure</h5>
-  <div class="col-md-4">
-    <label for="inputPullPressurePsi" class="form-label">Pull pressure - psi</label>
-    <input type="number" min="0.0" class="form-control js-psi" id="inputPullPressurePsi" name="inputPullPressurePsi">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPullPressureMpa" class="form-label">Pull pressure - MPa</label>
-    <input type="number" min="0.0" class="form-control js-mpa" id="inputPullPressureMpa" name="inputPullPressureMpa">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPullPressureBar" class="form-label">Pull pressure - bar</label>
-    <input type="number" min="0.0" class="form-control js-bar" id="inputPullPressureBar" name="inputPullPressureBar">
-  </div>
-  <h5 class="registration-forms-subtitle">Push Pressure</h5>
-  <div class="col-md-4">
-    <label for="inputPushPressurePsi" class="form-label">Push pressure - psi</label>
-    <input type="number" min="0.0" class="form-control js-psi" id="inputPushPressurePsi" name="inputPushPressurePsi">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPushPressureMpa" class="form-label">Push pressure - MPa</label>
-    <input type="number" min="0.0" class="form-control js-mpa" id="inputPushPressureMpa" name="inputPushPressureMpa">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPushPressureBar" class="form-label">Push pressure - bar</label>
-    <input type="number" min="0.0" class="form-control  js-bar" id="inputPushPressureBar" name="inputPushPressureBar">
-  </div>
-  <h5 class="registration-forms-subtitle">Pull Force - Required</h5>
-  <div class="col-md-4">
-    <label for="inputPullForceLbf" class="form-label">Pull force - lbf</label>
-    <input type="number" min="0.0" class="form-control js-lbf" id="inputPullForceLbf" name="inputPullForceLbf">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPullForceNewton" class="form-label">Pull force - Newton</label>
-    <input type="number" min="0.0" class="form-control js-newton" id="inputPullForceNewton" name="inputPullForceNewton">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPullForceTon" class="form-label">Pull force - ton-force</label>
-    <input type="number" min="0.0" class="form-control js-ton" id="inputPullForceTon" name="inputPullForceTon">
-  </div>
-  <h5 class="registration-forms-subtitle">Push Force - Required</h5>
-  <div class="col-md-4">
-    <label for="inputPushForceLbf" class="form-label">Push force - lbf</label>
-    <input type="number" min="0.0" class="form-control js-lbf" id="inputPushForceLbf" name="inputPushForceLbf">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPushForceNewton" class="form-label">Push force - Newton</label>
-    <input type="number" min="0.0" class="form-control js-newton" id="inputPushForceNewton" name="inputPushForceNewton">
-  </div>
-  <div class="col-md-4">
-    <label for="inputPushForceTon" class="form-label">Push force - ton-force</label>
-    <input type="number" min="0.0" class="form-control js-ton" id="inputPushForceTon" name="inputPushForceTon">
-  </div>
-</form>
+//   <h5 class="registration-forms-subtitle">Pull Pressure</h5>
+//   <div class="col-md-4">
+//     <label for="inputPullPressurePsi" class="form-label">Pull pressure - psi</label>
+//     <input type="number" min="0.0" class="form-control js-psi" id="inputPullPressurePsi" name="inputPullPressurePsi">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPullPressureMpa" class="form-label">Pull pressure - MPa</label>
+//     <input type="number" min="0.0" class="form-control js-mpa" id="inputPullPressureMpa" name="inputPullPressureMpa">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPullPressureBar" class="form-label">Pull pressure - bar</label>
+//     <input type="number" min="0.0" class="form-control js-bar" id="inputPullPressureBar" name="inputPullPressureBar">
+//   </div>
+//   <h5 class="registration-forms-subtitle">Push Pressure</h5>
+//   <div class="col-md-4">
+//     <label for="inputPushPressurePsi" class="form-label">Push pressure - psi</label>
+//     <input type="number" min="0.0" class="form-control js-psi" id="inputPushPressurePsi" name="inputPushPressurePsi">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPushPressureMpa" class="form-label">Push pressure - MPa</label>
+//     <input type="number" min="0.0" class="form-control js-mpa" id="inputPushPressureMpa" name="inputPushPressureMpa">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPushPressureBar" class="form-label">Push pressure - bar</label>
+//     <input type="number" min="0.0" class="form-control  js-bar" id="inputPushPressureBar" name="inputPushPressureBar">
+//   </div>
+//   <h5 class="registration-forms-subtitle">Pull Force - Required</h5>
+//   <div class="col-md-4">
+//     <label for="inputPullForceLbf" class="form-label">Pull force - lbf</label>
+//     <input type="number" min="0.0" class="form-control js-lbf" id="inputPullForceLbf" name="inputPullForceLbf">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPullForceNewton" class="form-label">Pull force - Newton</label>
+//     <input type="number" min="0.0" class="form-control js-newton" id="inputPullForceNewton" name="inputPullForceNewton">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPullForceTon" class="form-label">Pull force - ton-force</label>
+//     <input type="number" min="0.0" class="form-control js-ton" id="inputPullForceTon" name="inputPullForceTon">
+//   </div>
+//   <h5 class="registration-forms-subtitle">Push Force - Required</h5>
+//   <div class="col-md-4">
+//     <label for="inputPushForceLbf" class="form-label">Push force - lbf</label>
+//     <input type="number" min="0.0" class="form-control js-lbf" id="inputPushForceLbf" name="inputPushForceLbf">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPushForceNewton" class="form-label">Push force - Newton</label>
+//     <input type="number" min="0.0" class="form-control js-newton" id="inputPushForceNewton" name="inputPushForceNewton">
+//   </div>
+//   <div class="col-md-4">
+//     <label for="inputPushForceTon" class="form-label">Push force - ton-force</label>
+//     <input type="number" min="0.0" class="form-control js-ton" id="inputPushForceTon" name="inputPushForceTon">
+//   </div>
+// </form>
 
-<hr style="margin-top: 2em;">
+// <hr style="margin-top: 2em;">
 
-<div id="js-page-content-second">
-  <h4 class="registration-forms-subtitle" style="margin-bottom: 1.5em;">Standard</h4>
-  <form class="row g-3">
-    <div class="col-md-3">
-      <label for="inputBoreIn" class="form-label">Bore - inches</label>
-      <input type="number" min="0.00" class="form-control" id="inputBoreIn" name="inputBoreIn">
-    </div>
-    <div class="col-md-3">
-      <label for="inputBoreMM" class="form-label">Bore - millimiters</label>
-      <input type="number" min="0.00" class="form-control" id="inputBoreMM" name="inputBoreMM">
-    </div>
-    <div class="col-md-3">
-      <label for="inputRodIn" class="form-label">Rod - inches</label>
-      <input type="number" min="0.00" class="form-control" id="inputRodIn" name="inputRodIn">
-    </div>
-    <div class="col-md-3">
-      <label for="inputRodMM" class="form-label">Rod - millimiters</label>
-      <input type="number" min="0.00" class="form-control" id="inputRodMM" name="inputRodMM">
-    </div>
-    <div class="col-md-3">
-      <label for="inputGrossStrokeIn" class="form-label">Gross stroke - inches</label>
-      <input type="number" min="0.00" class="form-control" id="inputGrossStrokeIn" name="inputGrossStrokeIn">
-    </div>
-    <div class="col-md-3">
-      <label for="inputGrossStrokeMM" class="form-label">Gross stroke - millimiters</label>
-      <input type="number" min="0.00" class="form-control" id="inputGrossStrokeMM" name="inputGrossStrokeMM">
-    </div>
-    <div class="col-md-3">
-      <label for="inputStopTubeIn" class="form-label">Stop tube - inches</label>
-      <input type="number" min="0.00" class="form-control" id="inputStopTubeIn" name="inputStopTubeIn">
-    </div>
-    <div class="col-md-3">
-      <label for="inputStopTubeMM" class="form-label">Stop tube - millimiters</label>
-      <input type="number" min="0.00" class="form-control" id="inputStopTubeMM" name="inputStopTubeMM">
-    </div>
-    <div class="col-md-3">
-      <label for="inputNetStrokeIn" class="form-label">Net stroke - inches</label>
-      <input type="number" min="0.00" class="form-control" id="inputNetStrokeIn" name="inputNetStrokeIn">
-    </div>
-    <div class="col-md-3">
-      <label for="inputNetStrokeMM" class="form-label">Net stroke - millimiters</label>
-      <input type="number" min="0.00" class="form-control" id="inputNetStrokeMM" name="inputNetStrokeMM">
-    </div>
-    <div class="col-md-3">
-      <label for="inputClosedCentersIn" class="form-label">Closed centers - inches</label>
-      <input type="number" min="0.00" class="form-control" id="inputClosedCentersIn" name="inputClosedCentersIn">
-    </div>
-    <div class="col-md-3">
-      <label for="inputClosedCentersMM" class="form-label">Closed centers - millimiters</label>
-      <input type="number" min="0.00" class="form-control" id="inputClosedCentersMM" name="inputClosedCentersMM">
-    </div>
-    <div class="col-md-3">
-      <label for="inputCylMounting" class="form-label">Cylinder mounting</label>
-      <select id="inputCylMounting" name="inputCylMounting" class="form-select">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <label for="inputRodMounting" class="form-label">Rod end mounting</label>
-      <select id="inputRodMounting" name="inputRodMounting" class="form-select">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <label for="inputCushion" class="form-label">Cushions</label>
-      <select id="inputCushion" name="inputCushion" class="form-select">
-        <option selected value="cushionNone">None</option>
-        <option value="cushionBoth">Both</option>
-        <option value="cushionFront">Front</option>
-        <option value="cushionRear">Rear</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <label for="inputPin" class="form-label">Pins</label>
-      <select id="inputPin" name="inputPin" class="form-select">
-        <option selected value="pinNone">None</option>
-        <option value="pinBoth">Both</option>
-        <option value="pinFront">Front</option>
-        <option value="pinRear">Rear</option>
-      </select>
-    </div>
+// <div id="js-page-content-second">
+//   <h4 class="registration-forms-subtitle" style="margin-bottom: 1.5em;">Standard</h4>
+//   <form class="row g-3">
+//     <div class="col-md-3">
+//       <label for="inputBoreIn" class="form-label">Bore - inches</label>
+//       <input type="number" min="0.00" class="form-control" id="inputBoreIn" name="inputBoreIn">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputBoreMM" class="form-label">Bore - millimiters</label>
+//       <input type="number" min="0.00" class="form-control" id="inputBoreMM" name="inputBoreMM">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputRodIn" class="form-label">Rod - inches</label>
+//       <input type="number" min="0.00" class="form-control" id="inputRodIn" name="inputRodIn">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputRodMM" class="form-label">Rod - millimiters</label>
+//       <input type="number" min="0.00" class="form-control" id="inputRodMM" name="inputRodMM">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputGrossStrokeIn" class="form-label">Gross stroke - inches</label>
+//       <input type="number" min="0.00" class="form-control" id="inputGrossStrokeIn" name="inputGrossStrokeIn">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputGrossStrokeMM" class="form-label">Gross stroke - millimiters</label>
+//       <input type="number" min="0.00" class="form-control" id="inputGrossStrokeMM" name="inputGrossStrokeMM">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputStopTubeIn" class="form-label">Stop tube - inches</label>
+//       <input type="number" min="0.00" class="form-control" id="inputStopTubeIn" name="inputStopTubeIn">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputStopTubeMM" class="form-label">Stop tube - millimiters</label>
+//       <input type="number" min="0.00" class="form-control" id="inputStopTubeMM" name="inputStopTubeMM">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputNetStrokeIn" class="form-label">Net stroke - inches</label>
+//       <input type="number" min="0.00" class="form-control" id="inputNetStrokeIn" name="inputNetStrokeIn">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputNetStrokeMM" class="form-label">Net stroke - millimiters</label>
+//       <input type="number" min="0.00" class="form-control" id="inputNetStrokeMM" name="inputNetStrokeMM">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputClosedCentersIn" class="form-label">Closed centers - inches</label>
+//       <input type="number" min="0.00" class="form-control" id="inputClosedCentersIn" name="inputClosedCentersIn">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputClosedCentersMM" class="form-label">Closed centers - millimiters</label>
+//       <input type="number" min="0.00" class="form-control" id="inputClosedCentersMM" name="inputClosedCentersMM">
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputCylMounting" class="form-label">Cylinder mounting</label>
+//       <select id="inputCylMounting" name="inputCylMounting" class="form-select">
+//         <option selected>Choose...</option>
+//         <option>...</option>
+//       </select>
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputRodMounting" class="form-label">Rod end mounting</label>
+//       <select id="inputRodMounting" name="inputRodMounting" class="form-select">
+//         <option selected>Choose...</option>
+//         <option>...</option>
+//       </select>
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputCushion" class="form-label">Cushions</label>
+//       <select id="inputCushion" name="inputCushion" class="form-select">
+//         <option selected value="cushionNone">None</option>
+//         <option value="cushionBoth">Both</option>
+//         <option value="cushionFront">Front</option>
+//         <option value="cushionRear">Rear</option>
+//       </select>
+//     </div>
+//     <div class="col-md-3">
+//       <label for="inputPin" class="form-label">Pins</label>
+//       <select id="inputPin" name="inputPin" class="form-select">
+//         <option selected value="pinNone">None</option>
+//         <option value="pinBoth">Both</option>
+//         <option value="pinFront">Front</option>
+//         <option value="pinRear">Rear</option>
+//       </select>
+//     </div>
 
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Register</button>
-    </div>
-  </form>
-</div>`;
+//     <div class="col-12">
+//       <button type="submit" class="btn btn-primary">Register</button>
+//     </div>
+//   </form>
+// </div>`;
   return res;
 }
 
