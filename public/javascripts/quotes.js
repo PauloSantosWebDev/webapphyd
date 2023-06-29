@@ -125,6 +125,7 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
         contentChanger.innerHTML = generateRepeatCylinderPage();
       }
       conversionListener();
+      mountingsList();
   });
 });
 
@@ -168,7 +169,10 @@ document.body.addEventListener('click', (event) => {
   }
 })
 
-window.addEventListener('load', () => conversionListener());
+window.addEventListener('load', () => {
+  conversionListener();
+  mountingsList();
+});
 
 function conversionListener() {
   //General - It changes values from psi to mpa and bar
@@ -276,6 +280,24 @@ document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
       elementsConversion(e, other, 2);
   });
 });
+
+}
+
+function mountingsList() {
+  let hshMountings = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder'];
+  let hbMountings = ['None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
+                    '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
+                    '14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing'];
+  let hhmiMountings = ['None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
+
+  const controller = document.getElementById('inputCylMounting');
+  const checker = document.getElementById('inputBodyType');
+  if (checker.value === 'HSH') {
+    controller.innerHTML = hshMountings;
+  }
+  else if (checker.value === 'HB') {
+    controller.innerHTML = hbMountings;
+  }
 
 }
 //Event listeners setction - End
