@@ -84,10 +84,18 @@ function newCylStd () {
       arrayArrays[i].push(e.value);
     })
   }
+
+  const theoreticalPush = Number(arrayMpa[1] * (Math.PI/4) * Math.pow(arrayMM[0], 2));
+  console.log(theoreticalPush);
   
-  for (i = 0; i < inputId.length; i++) {
-    console.log(arrayArrays[i]);  
-  }
+  const theoreticalPull = Number(arrayMpa[0] * (Math.PI/4) * (Math.pow(arrayMM[0], 2) - Math.pow(arrayMM[1], 2)));
+  console.log(theoreticalPull);
+
+  //NEXT STEP: CHECK THEORETICAL AGAINST REQUIRED
+
+  // for (i = 0; i < inputId.length; i++) {
+  //   console.log(arrayArrays[i]);  
+  // }
 
 }
 
@@ -104,10 +112,8 @@ function netStrokeCalc () {
   {
       let result = document.getElementById('inputNetStrokeIn');
       result.value = (gsElementIn.value - stElementIn.value).toFixed(2);
-      // result.value = twoNumberSubtraction(gsElementIn, stElementIn);
       result = document.getElementById('inputNetStrokeMM');
       result.value = (gsElementMM.value - stElementMM.value).toFixed(2);
-      // result.value = twoNumberSubtraction(gsElementMM, stElementMM);
   }
 }
 
