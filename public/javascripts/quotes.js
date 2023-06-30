@@ -91,6 +91,27 @@ function newCylStd () {
 
 }
 
+//Used to calculate the net stroke. Difference btw gross stroke and stop tube length.
+function netStrokeCalc () {
+  let gsElementIn = document.getElementById('inputGrossStrokeIn');
+  let stElementIn = document.getElementById('inputStopTubeIn');
+  let gsElementMM = document.getElementById('inputGrossStrokeMM');
+  let stElementMM = document.getElementById('inputStopTubeMM');
+  if (gsElementIn.value == '' && stElementIn.value == '') {
+      emptyFields(document.getElementById('inputNetStrokeIn'), document.getElementById('inputNetStrokeMM'));
+  }
+  else
+  {
+      let result = document.getElementById('inputNetStrokeIn');
+      result.value = (gsElementIn.value - stElementIn.value).toFixed(2);
+      // result.value = twoNumberSubtraction(gsElementIn, stElementIn);
+      result = document.getElementById('inputNetStrokeMM');
+      result.value = (gsElementMM.value - stElementMM.value).toFixed(2);
+      // result.value = twoNumberSubtraction(gsElementMM, stElementMM);
+  }
+}
+
+
 //General functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -140,6 +161,7 @@ document.querySelectorAll(".js-radio-quote-for").forEach((e, index) => {
       if (radioOpt === 'option1') {
         contentChanger.innerHTML = await generateNewCylinderPage();
         mountingsList();
+        netStrokeListener();
       } 
       else if (radioOpt === 'option2') {
         contentChanger.innerHTML = generateRepairPage();
@@ -187,6 +209,7 @@ document.body.addEventListener('click', (event) => {
           controllerHTML.innerHTML = content;
           conversionListener();
           mountingsList();
+          netStrokeListener ();
         }
       })
     }
@@ -199,6 +222,7 @@ document.body.addEventListener('click', (event) => {
 window.addEventListener('load', () => {
   conversionListener();
   mountingsList();
+  netStrokeListener ();
 });
 
 function conversionListener() {
@@ -307,6 +331,20 @@ function conversionListener() {
         elementsConversion(e, other, 2);
     });
   });
+}
+
+//Add listeners to the gross stroke and stop tube changes
+//It is used to calculate the net stroke
+function netStrokeListener() {
+  const arrayId = ['inputGrossStrokeIn', 'inputGrossStrokeMM', 'inputStopTubeIn', 'inputStopTubeMM'];
+  for (i = 0; i < arrayId.length; i++) {
+    document.getElementById(arrayId[i]).addEventListener('change', () => {
+      netStrokeCalc();
+    })
+    document.getElementById(arrayId[i]).addEventListener('keyup', () => {
+      netStrokeCalc();
+    })
+  }
 }
 
 //Checking the theoretical forces against the required forces and alerting the user if theoretical is smaller than required
