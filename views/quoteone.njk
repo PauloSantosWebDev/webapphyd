@@ -188,11 +188,11 @@
         </div>
         <div class="col-md-3">
           <label for="inputNetStrokeIn" class="form-label">Net stroke - inches</label>
-          <input type="number" min="0.00" class="form-control js-in-to-mm" id="inputNetStrokeIn" name="inputNetStrokeIn">
+          <input type="number" min="0.00" class="form-control js-in-to-mm input-off" id="inputNetStrokeIn" name="inputNetStrokeIn" tabindex='-1'>
         </div>
         <div class="col-md-3">
           <label for="inputNetStrokeMM" class="form-label">Net stroke - millimiters</label>
-          <input type="number" min="0.00" class="form-control js-mm-to-in" id="inputNetStrokeMM" name="inputNetStrokeMM">
+          <input type="number" min="0.00" class="form-control js-mm-to-in input-off" id="inputNetStrokeMM" name="inputNetStrokeMM" tabindex='-1'>
         </div>
         <div class="col-md-3">
           <label for="inputClosedCentersIn" class="form-label">Closed centers - inches</label>
@@ -236,13 +236,14 @@
             <option value="pinRear">Rear</option>
           </select>
         </div>
-
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">Register</button>
-        </div>
       </form>
     </div>
   </div>
+  
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 1.5em;">
+    <button class="btn btn-secondary js-btn-first-next" type="button">Next</button>
+  </div>
+  
        
 <script src="/javascripts/quotes.js"></script>
 {% endblock %}}

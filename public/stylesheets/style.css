@@ -26,3 +26,9 @@ display: block;
   margin-top: 2em;
   margin-bottom: 0.5em;
 }
+
+.input-off {
+  /* background-color: lightgrey; */
+  /* border: none; */
+  pointer-events: none;
+}

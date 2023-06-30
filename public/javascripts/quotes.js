@@ -66,6 +66,31 @@ function emptyFields (first, second) {
   fieldsToEmpty.forEach((field) => field.value = '');
 }
 
+function newCylStd () {
+  const arrayPsi = [];
+  const arrayMpa = [];
+  const arrayBar = [];
+  const arrayLbf = [];
+  const arrayNew = [];
+  const arrayTon = [];
+  const arrayIn = [];
+  const arrayMM = [];
+
+  const inputId = ['.js-psi', '.js-mpa', '.js-bar', '.js-lbf', '.js-newton', '.js-ton', '.js-in-to-mm', '.js-mm-to-in'];
+  const arrayArrays = [arrayPsi, arrayMpa, arrayBar, arrayLbf, arrayNew, arrayTon, arrayIn, arrayMM];
+  for (i = 0; i < inputId.length; i++) {
+    document.querySelectorAll(inputId[i]).forEach((e) => {
+      // arrayPsi.push(e.value);
+      arrayArrays[i].push(e.value);
+    })
+  }
+  
+  for (i = 0; i < inputId.length; i++) {
+    console.log(arrayArrays[i]);  
+  }
+
+}
+
 //General functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -91,9 +116,6 @@ function emptyFields (first, second) {
 // }
 
 async function getHtmlContent (path) {
-  // const options = {
-  //   method: 'get'
-  // }
   const response = await fetch(path);
   const data = await response.text();
   const parser = new DOMParser();
@@ -286,6 +308,32 @@ function conversionListener() {
     });
   });
 }
+
+//Checking the theoretical forces against the required forces and alerting the user if theoretical is smaller than required
+//Creating session variables for the information
+document.querySelector('.js-btn-first-next').addEventListener('click', () => {
+  const checker = document.querySelectorAll('.js-radio-quote-for');
+  const checkerInner = document.getElementById('inputInnerType');
+  if (checker[0].checked) {
+    if (checkerInner.value === 'standard') {
+      console.log('New cylinder -> standard');
+      newCylStd();
+    }
+
+
+
+  }
+  // const checker = document.querySelectorAll('.js-radio-quote-for').forEach((e, i) => {
+  //   if (e.value === 'option1') {
+  //     console.log('Inside if for option1 seleced');
+  //   }
+  //   else {
+  //     console.log('Outside if for option1 seleced');
+  //   }
+  //   console.log(e);
+    
+  // });
+})
 
 
 //Event listeners setction - End
