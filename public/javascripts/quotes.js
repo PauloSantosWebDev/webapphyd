@@ -142,6 +142,7 @@ document.body.addEventListener('click', (event) => {
           const content = await getHtmlContent('../pages/doubleended.html');
           controllerHTML.innerHTML = content;
           conversionListener();
+          mountingsList();
         }
         else if (innerType.value === 'telescopic') {
           const content = await getHtmlContent('../pages/telescopic.html');
@@ -163,9 +164,13 @@ document.body.addEventListener('click', (event) => {
           const content = await getHtmlContent('../pages/standard.html');
           controllerHTML.innerHTML = content;
           conversionListener();
+          mountingsList();
         }
       })
     }
+  }
+  else if (event.target.id == 'inputBodyType') {
+    mountingsList();
   }
 })
 
@@ -314,9 +319,7 @@ function mountingsList() {
   let hhmiMountings = ['None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //Same mountings for hsmi
 
   const controller = document.getElementById('inputCylMounting');
-  console.log('Controller is: ' + controller);
   const checker = document.getElementById('inputBodyType');
-  console.log('Checker is: ' + checker.value);
   let accumulator = '';
   if (checker.value === 'HSH') {
     hshMountings.forEach((e, i) => {
@@ -326,6 +329,12 @@ function mountingsList() {
   }
   else if (checker.value === 'HB') {
     hbMountings.forEach((e, i) => {
+      accumulator += `<option value='${i}'>${e}</option>`;
+    })
+    controller.innerHTML = accumulator;
+  }
+  else {
+    hhmiMountings.forEach((e, i) => {
       accumulator += `<option value='${i}'>${e}</option>`;
     })
     controller.innerHTML = accumulator;
