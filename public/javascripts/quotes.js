@@ -85,13 +85,40 @@ function newCylStd () {
     })
   }
 
-  const theoreticalPush = Number(arrayMpa[1] * (Math.PI/4) * Math.pow(arrayMM[0], 2));
-  console.log(theoreticalPush);
+  const theoreticalPush = Number(arrayMpa[1] * (Math.PI/4) * Math.pow(arrayMM[0], 2)).toFixed(2);
   
-  const theoreticalPull = Number(arrayMpa[0] * (Math.PI/4) * (Math.pow(arrayMM[0], 2) - Math.pow(arrayMM[1], 2)));
-  console.log(theoreticalPull);
+  const theoreticalPull = Number(arrayMpa[0] * (Math.PI/4) * (Math.pow(arrayMM[0], 2) - Math.pow(arrayMM[1], 2))).toFixed(2);
 
-  //NEXT STEP: CHECK THEORETICAL AGAINST REQUIRED
+  //Checking if input values make sense
+  //Checking bore and rod, and gross stroke and stop tube.
+  if (Number(arrayMM[0]) <= Number(arrayMM[1])) {
+    alert(`Bore cannot be smaller or equal to rod diameter.`);
+    return;
+  } else if (Number(arrayMM[2]) <= Number(arrayMM[3])) {
+    alert(`Gross stroke cannot be smaller or equal to stop tube length.`);
+    return;
+  }
+
+  //Checking theoretical against required forces
+  if (theoreticalPush < arrayNew[1]) {
+    const isTrue = confirm(`Do you want to continue? Theoretical push (${theoreticalPush} Newtons) is smaller then required push (${arrayNew[1]} Newtons).`);
+    if (!isTrue) {
+      return;
+    }
+  } 
+  else if (theoreticalPull < arrayNew[0]) {
+    const isTrue = confirm(`Do you want to continue? Theoretical pull (${theoreticalPull} Newtons) is smaller then required pull (${arrayNew[0]} Newtons).`);
+    if (!isTrue) {
+      return;
+      // location.replace('http://localhost:3000/');
+    }
+  }
+
+  console.log("did it continue?");
+  sessionStorage.setItem('millimeters', arrayMM);
+  const working = sessionStorage.getItem('millimeters');
+  console.log(working);
+  location.assign('http://localhost:3000/');
 
   // for (i = 0; i < inputId.length; i++) {
   //   console.log(arrayArrays[i]);  

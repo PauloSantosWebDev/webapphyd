@@ -42,7 +42,7 @@ db.run(`CREATE TABLE IF NOT EXISTS resources (resources_id INTEGER PRIMARY KEY A
 //Main table that will link to costs table
 db.run(`CREATE TABLE IF NOT EXISTS ext_services (service_id INTEGER PRIMARY KEY AUTOINCREMENT, service_code TEXT NOT NULL, service TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, details TEXT, UNIQUE(service_code))`);
 
-//Material costs table
+//External services costs table
 db.run(`CREATE TABLE IF NOT EXISTS ext_services_costs (cost_id INTEGER PRIMARY KEY AUTOINCREMENT, service_code TEXT, date TEXT NOT NULL, supplier_id INTEGER, cost REAL NOT NULL, unit TEXT NOT NULL, 
 FOREIGN KEY (service_code) REFERENCES ext_services(service_code), FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id))`);
 
