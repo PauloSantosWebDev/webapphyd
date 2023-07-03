@@ -50,6 +50,12 @@ app.get('/quoteone', (req, res) =>{
   res.render('quoteone.njk');
 })
 
+//Quote barrel assembly page
+app.get('/quotebrlassy', (req, res) => {
+  // const formLines = 20;
+  res.render('quotebrlassy.njk', {title: 'Barrel assembly quote'});
+})
+
 //Customer registration form
 app.get('/regcustomer', (req, res) =>{
   res.render('regcustomer.njk', {title: 'Customers Registration Form'});

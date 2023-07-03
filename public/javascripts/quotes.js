@@ -116,9 +116,7 @@ function newCylStd () {
 
   console.log("did it continue?");
   sessionStorage.setItem('millimeters', arrayMM);
-  const working = sessionStorage.getItem('millimeters');
-  console.log(working);
-  location.assign('http://localhost:3000/');
+  location.assign('http://localhost:3000/quotebrlassy');
 
   // for (i = 0; i < inputId.length; i++) {
   //   console.log(arrayArrays[i]);  
