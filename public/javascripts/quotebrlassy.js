@@ -5,6 +5,15 @@ let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
 
+let isPrevious = false;
+
+
+//General functions - End
+
+
+//--------------------------------------------------------------------------------------------------------------------------
+//Event listeners setction - Start
+
 //Add new lines to the material session of the barrel assembly page
 document.getElementById('js-new-line-brl-matl').addEventListener('click', () => {
   document.forms[0].innerHTML += `<div class="col-md-2">
@@ -94,12 +103,10 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', () => 
   brlAssyServLine++;
 })
 
-
-//General functions - End
-
-
-//--------------------------------------------------------------------------------------------------------------------------
-//Event listeners setction - Start
+document.body.addEventListener('click', () => {
+  isPrevious = true;
+  sessionStorage.setItem('firstPrevious', true);
+})
 
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------

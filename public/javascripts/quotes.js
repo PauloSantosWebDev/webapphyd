@@ -115,6 +115,7 @@ function newCylStd () {
   }
 
   console.log("did it continue?");
+  sessionStorage.setItem('inches', arrayIn);
   sessionStorage.setItem('millimeters', arrayMM);
   location.assign('http://localhost:3000/quotebrlassy');
 
@@ -148,24 +149,6 @@ function netStrokeCalc () {
 
 //--------------------------------------------------------------------------------------------------------------------------
 //Fetch and async functions - start
-// async function updatePageRadio (selection) {
-//   const options = {
-//     method: 'post',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({selection})
-//   }
-
-//   const response = await fetch('/quoteone', options);
-
-//   const data = await response.json();
-//   console.log(data);
-//   console.log(data.status);
-//   console.log(data.body);
-
-//   return data.body;
-// }
 
 async function getHtmlContent (path) {
   const response = await fetch(path);
@@ -254,7 +237,35 @@ window.addEventListener('load', () => {
   conversionListener();
   mountingsList();
   netStrokeListener ();
+  
+  //If statetement used to populate back information when previous button is used
+  if (sessionStorage.getItem('firstPrevious') === 'true') {
+    console.log('isPrevious is working');
+    let arrayGeneric = sessionStorage.getItem('millimeters');
+    arrayGeneric = arrayGeneric.split(',');
+    arrayGeneric.forEach((e, i) => {
+      console.log('e element is:' + e);
+      console.log(document.querySelectorAll('.js-mm-to-in')[i]);
+      document.querySelectorAll('.js-mm-to-in')[i].value = e;
+    })
+    arrayGeneric = sessionStorage.getItem('inches');
+    arrayGeneric = arrayGeneric.split(',');
+    arrayGeneric.forEach((e, i) => {
+      console.log('e element is:' + e);
+      console.log(document.querySelectorAll('.js-in-to-mm')[i]);
+      document.querySelectorAll('.js-in-to-mm')[i].value = e;
+    })
+    sessionStorage.setItem('firstPrevious', false);
+  }
 });
+
+// window.addEventListener('beforeunload', () => {
+//   const clearFields = confirm("Are you sure you want to refresh? Data inserted will be lost.")
+//   console.log(clearFields);
+//   if (!clearFields) {
+//     return;
+//   }
+// })
 
 function conversionListener() {
   //General - It changes values from psi to mpa and bar
