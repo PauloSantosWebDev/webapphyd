@@ -10,14 +10,30 @@ let isPrevious = false;
 
 //General functions - End
 
+//Giving input fiels some default values
+document.getElementById('inputPart0').value = 'Barrel';
+document.getElementById('inputPart1').value = 'End cap';
+
+//Add listeners to barrel assembly material part lines
+function listenBrlMatlChange() {
+  document.querySelectorAll('.js-part').forEach((e, i) => {
+    e.addEventListener('keyup', () => {
+      document.querySelectorAll('.js-lab-part')[i].value = e.value;
+    })
+    e.addEventListener('change', () => {
+      document.querySelectorAll('.js-lab-part')[i].value = e.value;
+    })
+  })
+}
+listenBrlMatlChange();
 
 //--------------------------------------------------------------------------------------------------------------------------
 //Event listeners setction - Start
 
 //Add new lines to the material session of the barrel assembly page
 document.getElementById('js-new-line-brl-matl').addEventListener('click', () => {
-  document.forms[0].innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
+  document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
+  <input type="text" class="form-control js-part" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
     <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select">
@@ -42,12 +58,13 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', () => 
     <input type="number" min="0.00" class="form-control" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
   </div>`;
   brlAssyMatlLine++;
+  listenBrlMatlChange();
 })
 
 //Add new lines to the labour session of the barrel assembly page.
 document.getElementById('js-new-line-brl-labour').addEventListener('click', () => {
-  document.forms[1].innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
+  document.getElementById('js-second-form-add-lines').innerHTML += `<div class="col-md-2">
+  <input type="text" class="form-control js-lab-part" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
   <input type="number" min="0.00" class="form-control" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
@@ -71,12 +88,13 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
   <input type="hidden">
   </div>`;
   brlAssyLabourLine++;
+  listenBrlMatlChange();
 })
 
 //Add new lines to the service session of the barrel assembly page.
 document.getElementById('js-new-line-brl-serv').addEventListener('click', () => {
-  document.forms[2].innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
+  document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
+  <input type="text" class="form-control js-serv-part" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
   </div>
   <div class="col-md-2">
     <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select">
