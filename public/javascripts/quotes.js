@@ -1,5 +1,10 @@
 //General functions - Start
 
+//Global variables
+let isNext = false;
+console.log('isNext: ' + isNext);
+console.log(typeof(isNext));
+
 //Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
 function elementsConversion (elementYouAre, otherElement, selector) { 
   if (elementYouAre.value < 0 || elementYouAre.value === '') {
@@ -234,6 +239,8 @@ document.body.addEventListener('click', (event) => {
 })
 
 window.addEventListener('load', () => {
+  isNext = false;
+  console.log('window loading: ' + isNext);
   conversionListener();
   mountingsList();
   netStrokeListener ();
@@ -259,13 +266,14 @@ window.addEventListener('load', () => {
   }
 });
 
-// window.addEventListener('beforeunload', () => {
-//   const clearFields = confirm("Are you sure you want to refresh? Data inserted will be lost.")
-//   console.log(clearFields);
-//   if (!clearFields) {
-//     return;
-//   }
-// })
+
+//Code to check if user really want to leave or reload the page
+window.onbeforeunload = () => {
+  if (!isNext) {
+    return "Are you sure you want to reload or leave the page? Data could be lost.";
+  }  
+}
+
 
 function conversionListener() {
   //General - It changes values from psi to mpa and bar
@@ -397,6 +405,7 @@ document.querySelector('.js-btn-first-next').addEventListener('click', () => {
   if (checker[0].checked) {
     if (checkerInner.value === 'standard') {
       console.log('New cylinder -> standard');
+      isNext = true;
       newCylStd();
     }
 

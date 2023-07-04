@@ -52,7 +52,6 @@ app.get('/quoteone', (req, res) =>{
 
 //Quote barrel assembly page
 app.get('/quotebrlassy', (req, res) => {
-  // const formLines = 20;
   res.render('quotebrlassy.njk', {title: 'Barrel assembly quote'});
 })
 
