@@ -98,6 +98,34 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', () => 
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
+  console.log('array length: ' + arrayMatlInfo.length);
+  // console.log('array part: ' + arrayMatlInfo[0].part);
+  for (i = 0; i < arrayMatlInfo.length; i++) {
+    for (j = 0; j <= 6; j++) {
+      if (j === 0) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].part;
+      }
+      else if (j === 1) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].hydroilId;
+      }
+      else if (j === 2) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].item;
+      }
+      else if (j === 3) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].supplier;
+      }
+      else if (j === 4) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].cost;
+      }
+      else if (j === 5) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].usage;
+      }
+      else if (j === 6) {
+        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].subtotal;
+      }
+    }
+    // document.querySelector('.js-save').value = arrayMatlInfo[i].part;
+  }
 })
 
 //Add new lines to the labour session of the barrel assembly page.
