@@ -32,30 +32,69 @@ listenBrlMatlChange();
 
 //Add new lines to the material session of the barrel assembly page
 document.getElementById('js-new-line-brl-matl').addEventListener('click', () => {
+  
+  const matlInfo = {
+    part: '',
+    hydroilId: '',
+    item: '',
+    supplier: '',
+    cost: '',
+    usage: '',
+    subtotal: ''
+  }
+  let arrayMatlInfo = [];
+  
+  for(i = 0; i <= (brlAssyMatlLine - 6); i++) {
+    for(j = 0; j <= 6; j++) {
+      if (j === 0) {
+        matlInfo.part = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+      else if (j === 1) {
+        matlInfo.hydroilId = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+      else if (j === 2) {
+        matlInfo.item = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+      else if (j === 3) {
+        matlInfo.supplier = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+      else if (j === 4) {
+        matlInfo.cost = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+      else if (j === 5) {
+        matlInfo.usage = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+      else if (j === 6) {
+        matlInfo.subtotal = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      }
+    }
+    arrayMatlInfo[i] = Object.assign({}, matlInfo);
+  }
+
   document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-part" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
+  <input type="text" class="form-control js-part js-save" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select">
+    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save">
       <option>...</option>
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select">
+    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save">
       <option>...</option>
     </select>
   </div>
   <div class="col-md-1"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
+    <input type="number" min="0.00" class="form-control js-save" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
   </div>
   <div class="col-md-2"> 
-    <input type="number" min="0.00" class="form-control" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
+    <input type="number" min="0.00" class="form-control js-save" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
