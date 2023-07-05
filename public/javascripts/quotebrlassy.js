@@ -4,7 +4,6 @@
 let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
-let isPrevious = false;
 
 //Global arrays definition
 
@@ -34,21 +33,31 @@ const keepDataNewLine = {
 }
 
 //Giving input fiels some default values
-document.getElementById('inputPart0').value = 'Barrel';
-document.getElementById('inputPart1').value = 'End cap';
+document.getElementById('inputServicePart0').value = document.getElementById('inputLabourPart0').value = document.getElementById('inputPart0').value = 'Barrel';
+document.getElementById('inputServicePart1').value = document.getElementById('inputLabourPart1').value = document.getElementById('inputPart1').value = 'End cap';
 
 //Add listeners to barrel assembly material part lines
 function listenBrlMatlChange() {
-  document.querySelectorAll('.js-part').forEach((e, i) => {
-    e.addEventListener('keyup', () => {
-      document.querySelectorAll('.js-lab-part')[i].value = e.value;
-      document.querySelectorAll('.js-serv-part')[i].value = e.value;
+  if (brlAssyLabourLine >= brlAssyMatlLine) {
+    document.querySelectorAll('.js-part').forEach((e, i) => {
+      e.addEventListener('keyup', () => {
+        document.querySelectorAll('.js-lab-part')[i].value = e.value;
+      })
+      e.addEventListener('change', () => {
+        document.querySelectorAll('.js-lab-part')[i].value = e.value;
+      })
     })
-    e.addEventListener('change', () => {
-      document.querySelectorAll('.js-lab-part')[i].value = e.value;
-      document.querySelectorAll('.js-serv-part')[i].value = e.value;
+  }
+  if (brlAssyServLine >= brlAssyMatlLine) {
+    document.querySelectorAll('.js-part').forEach((e, i) => {
+      e.addEventListener('keyup', () => {
+        document.querySelectorAll('.js-serv-part')[i].value = e.value;
+      })
+      e.addEventListener('change', () => {
+        document.querySelectorAll('.js-serv-part')[i].value = e.value;
+      })
     })
-  })
+  }
 }
 
 //General functions - End
@@ -223,8 +232,8 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', () => 
   listenBrlMatlChange();
 })
 
-document.body.addEventListener('click', () => {
-  isPrevious = true;
+//Necessary to re-populate data in the quoteone page.
+document.getElementById('js-first-previous').addEventListener('click', () => {
   sessionStorage.setItem('firstPrevious', true);
 })
 

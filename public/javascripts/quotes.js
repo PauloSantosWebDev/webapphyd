@@ -2,8 +2,6 @@
 
 //Global variables
 let isNext = false;
-console.log('isNext: ' + isNext);
-console.log(typeof(isNext));
 
 //Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
 function elementsConversion (elementYouAre, otherElement, selector) { 
@@ -240,26 +238,20 @@ document.body.addEventListener('click', (event) => {
 
 window.addEventListener('load', () => {
   isNext = false;
-  console.log('window loading: ' + isNext);
   conversionListener();
   mountingsList();
   netStrokeListener ();
   
   //If statetement used to populate back information when previous button is used
   if (sessionStorage.getItem('firstPrevious') === 'true') {
-    console.log('isPrevious is working');
     let arrayGeneric = sessionStorage.getItem('millimeters');
     arrayGeneric = arrayGeneric.split(',');
     arrayGeneric.forEach((e, i) => {
-      console.log('e element is:' + e);
-      console.log(document.querySelectorAll('.js-mm-to-in')[i]);
       document.querySelectorAll('.js-mm-to-in')[i].value = e;
     })
     arrayGeneric = sessionStorage.getItem('inches');
     arrayGeneric = arrayGeneric.split(',');
     arrayGeneric.forEach((e, i) => {
-      console.log('e element is:' + e);
-      console.log(document.querySelectorAll('.js-in-to-mm')[i]);
       document.querySelectorAll('.js-in-to-mm')[i].value = e;
     })
     sessionStorage.setItem('firstPrevious', false);
