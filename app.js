@@ -52,12 +52,20 @@ app.get('/quoteone', (req, res) =>{
 
 //Quote barrel assembly page
 app.get('/quotebrlassy', (req, res) => {
-  db.all('SELECT hydroil_id FROM materials', (err, rows) => {
+  db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
     if (err) {
       throw err;
     }
     const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
-    res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId});
+    db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      
+      res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode});
+    })
+    // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId});
   })
 })
 
@@ -530,6 +538,18 @@ app.post('/quotebrlassy', (req, res) => {
       res.json({
         status: 'success',
         body: serverHydroilId
+      });
+    })
+  }
+  else if (checker === 'serviceCode') {
+    db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      res.json({
+        status: 'success',
+        body: serverServiceCode
       });
     })
   }

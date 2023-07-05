@@ -4,12 +4,16 @@
 let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
+let htmlAccumulator = '';
+let htmlAccumulatorServ = '';
 
 //Global arrays definition
 
 //Used to create new lines keeping the data
 let arrayColumns = [];
 let arrayRows = [];
+let serverHydroilId = [];
+let serverServiceCode = [];
 
 //Object with 2 functions to keep data when lines are added to forms
 const keepDataNewLine = {
@@ -65,6 +69,7 @@ function listenBrlMatlChange() {
 //--------------------------------------------------------------------------------------------------------------------------
 //Asynchronous functions setction - Start
 
+//Used to fetch data to feed dropdown fields
 async function addHydroilId (target) {
   const options = {
     method: 'POST',
@@ -105,6 +110,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   }
   let arrayMatlInfo = [];
   
+  //for used to get all the data already inserted into the fields
   for(i = 0; i <= (brlAssyMatlLine - 6); i++) {
     for(j = 0; j <= 6; j++) {
       if (j === 0) {
@@ -132,12 +138,20 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     arrayMatlInfo[i] = Object.assign({}, matlInfo);
   }
 
-  const serverHydroilId = await addHydroilId('hydId');
-  let htmlAccumulator = '';
+  //Used as a guard to avoid fetching all the time the add new line button is clicked
+  if (htmlAccumulator === '') {
+    console.log("First click only");
+    serverHydroilId = await addHydroilId('hydId');
+    serverHydroilId.forEach(e => {
+      htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
+    })    
+  }
+  // const serverHydroilId = await addHydroilId('hydId');
+  // // let htmlAccumulator = '';
 
-  serverHydroilId.forEach(e => {
-    htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
-  })
+  // serverHydroilId.forEach(e => {
+  //   htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
+  // })
   document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
   <input type="text" class="form-control js-part js-save" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
@@ -166,6 +180,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
+  //Used to insert the data back after another line is added
   for (i = 0; i < arrayMatlInfo.length; i++) {
     for (j = 0; j <= 6; j++) {
       if (j === 0) {
@@ -229,14 +244,23 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
 })
 
 //Add new lines to the service session of the barrel assembly page.
-document.getElementById('js-new-line-brl-serv').addEventListener('click', () => {
+document.getElementById('js-new-line-brl-serv').addEventListener('click', async () => {
   keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
+  
+  //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
+  if (htmlAccumulatorServ === '') {
+    serverServiceCode = await addHydroilId('serviceCode');
+    serverServiceCode.forEach(e => {
+      htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
+    })
+  }
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
   <input type="text" class="form-control js-serv-part js-save-serv" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
   </div>
   <div class="col-md-2">
     <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv">
-      <option>...</option>
+      <option></option>
+      ${htmlAccumulatorServ}
     </select>
   </div>
   <div class="col-md-2">

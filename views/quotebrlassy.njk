@@ -163,7 +163,10 @@
       </div>
       <div class="col-md-2">
         <select id="inputServiceCode{{l}}" name="inputServiceCode{{l}}" class="form-select">
-          <option>...</option>
+          <option></option>
+          {% for i in serverServiceCode %}
+            <option value="{{i.id}}">{{i.id}}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="col-md-2">
