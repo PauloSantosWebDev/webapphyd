@@ -4,11 +4,34 @@
 let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
-
 let isPrevious = false;
 
+//Global arrays definition
 
-//General functions - End
+//Used to create new lines keeping the data
+let arrayColumns = [];
+let arrayRows = [];
+
+//Object with 2 functions to keep data when lines are added to forms
+const keepDataNewLine = {
+  saveData(rows, columns, classId) {
+    arrayColumns = [];
+    for (i = 0; i < rows; i++) {
+      arrayRows = [];
+      for (j = 0; j < columns; j++) {
+        arrayRows[j] = document.querySelectorAll('.' + classId)[(i*columns)+j].value;
+      }
+      arrayColumns.push(arrayRows);
+    }
+  },
+  populateData(rows, columns, classId) {
+    for (i = 0; i < rows; i++) {
+      for (j = 0; j < columns; j++) {
+        document.querySelectorAll('.' + classId)[(i*columns)+j].value = arrayColumns[i][j];
+      }
+    }
+  }
+}
 
 //Giving input fiels some default values
 document.getElementById('inputPart0').value = 'Barrel';
@@ -19,16 +42,23 @@ function listenBrlMatlChange() {
   document.querySelectorAll('.js-part').forEach((e, i) => {
     e.addEventListener('keyup', () => {
       document.querySelectorAll('.js-lab-part')[i].value = e.value;
+      document.querySelectorAll('.js-serv-part')[i].value = e.value;
     })
     e.addEventListener('change', () => {
       document.querySelectorAll('.js-lab-part')[i].value = e.value;
+      document.querySelectorAll('.js-serv-part')[i].value = e.value;
     })
   })
 }
-listenBrlMatlChange();
+
+//General functions - End
 
 //--------------------------------------------------------------------------------------------------------------------------
 //Event listeners setction - Start
+
+window.addEventListener('load', () => {
+  listenBrlMatlChange();
+})
 
 //Add new lines to the material session of the barrel assembly page
 document.getElementById('js-new-line-brl-matl').addEventListener('click', () => {
@@ -98,8 +128,6 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', () => 
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
-  console.log('array length: ' + arrayMatlInfo.length);
-  // console.log('array part: ' + arrayMatlInfo[0].part);
   for (i = 0; i < arrayMatlInfo.length; i++) {
     for (j = 0; j <= 6; j++) {
       if (j === 0) {
@@ -124,68 +152,75 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', () => 
         document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].subtotal;
       }
     }
-    // document.querySelector('.js-save').value = arrayMatlInfo[i].part;
   }
 })
 
 //Add new lines to the labour session of the barrel assembly page.
 document.getElementById('js-new-line-brl-labour').addEventListener('click', () => {
+
+  keepDataNewLine.saveData((brlAssyLabourLine-5), 7, 'js-save-lab');
+  // const arrayToParse = keepDataNewLine.saveData((brlAssyLabourLine-5), 7, 'js-save-lab');
+
   document.getElementById('js-second-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-lab-part" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
+  <input type="text" class="form-control js-lab-part js-save-lab" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
   </div>
   <div class="col-md-2"> 
-  <input type="number" min="0.00" class="form-control" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}">
   </div>
   <div class="col-md-2"> 
   <input type="hidden">
   </div>`;
+  keepDataNewLine.populateData((brlAssyLabourLine-5), 7, 'js-save-lab');
   brlAssyLabourLine++;
   listenBrlMatlChange();
 })
 
 //Add new lines to the service session of the barrel assembly page.
 document.getElementById('js-new-line-brl-serv').addEventListener('click', () => {
+  keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-serv-part" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
+  <input type="text" class="form-control js-serv-part js-save-serv" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select">
+    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv">
       <option>...</option>
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
+    <input type="text" class="form-control js-save-serv" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select">
+    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv">
       <option>...</option>
     </select>
   </div>
   <div class="col-md-1"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
+    <input type="text" class="form-control js-save-serv" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
+    <input type="number" min="0.00" class="form-control js-save-serv" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
   </div>
   <div class="col-md-2"> 
-    <input type="number" min="0.00" class="form-control" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}">
+    <input type="number" min="0.00" class="form-control js-save-serv" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}">
   </div>`;
+  keepDataNewLine.populateData((brlAssyServLine-5), 7, 'js-save-serv');
   brlAssyServLine++;
+  listenBrlMatlChange();
 })
 
 document.body.addEventListener('click', () => {
