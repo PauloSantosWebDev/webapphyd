@@ -36,7 +36,10 @@
       </div>
       <div class="col-md-2">
         <select id="inputHydroilId{{l}}" name="inputHydroilId{{l}}" class="form-select">
-          <option>...</option>
+          <option></option>
+          {% for i in serverHydroilId %}
+            <option value="{{i.id}}">{{i.id}}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="col-md-2">

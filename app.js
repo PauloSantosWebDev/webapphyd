@@ -52,7 +52,13 @@ app.get('/quoteone', (req, res) =>{
 
 //Quote barrel assembly page
 app.get('/quotebrlassy', (req, res) => {
-  res.render('quotebrlassy.njk', {title: 'Barrel assembly quote'});
+  db.all('SELECT hydroil_id FROM materials', (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
+    res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId});
+  })
 })
 
 //Customer registration form
@@ -510,6 +516,23 @@ app.post('/quoteone', (req, res) => {
   //   status: 'success',
   //   body: data.selection
   // })
+})
+
+//Used to load the Hydroil ID field when lines are added
+app.post('/quotebrlassy', (req, res) => {
+  const checker = req.body.target;
+  if (checker === "hydId") {
+    db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
+      res.json({
+        status: 'success',
+        body: serverHydroilId
+      });
+    })
+  }
 })
 
 //-----------------------------------------------------------------------

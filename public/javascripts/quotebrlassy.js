@@ -63,6 +63,28 @@ function listenBrlMatlChange() {
 //General functions - End
 
 //--------------------------------------------------------------------------------------------------------------------------
+//Asynchronous functions setction - Start
+
+async function addHydroilId (target) {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({target})
+  };
+  try {
+    const response = await fetch("/quotebrlassy", options);
+    const result = await response.json();
+    return result.body;
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+
+//Asynchronous functions - End
+
+//--------------------------------------------------------------------------------------------------------------------------
 //Event listeners setction - Start
 
 window.addEventListener('load', () => {
@@ -70,7 +92,7 @@ window.addEventListener('load', () => {
 })
 
 //Add new lines to the material session of the barrel assembly page
-document.getElementById('js-new-line-brl-matl').addEventListener('click', () => {
+document.getElementById('js-new-line-brl-matl').addEventListener('click', async () => {
   
   const matlInfo = {
     part: '',
@@ -110,12 +132,19 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', () => 
     arrayMatlInfo[i] = Object.assign({}, matlInfo);
   }
 
+  const serverHydroilId = await addHydroilId('hydId');
+  let htmlAccumulator = '';
+
+  serverHydroilId.forEach(e => {
+    htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
+  })
   document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
   <input type="text" class="form-control js-part js-save" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
     <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save">
-      <option>...</option>
+      <option></option>
+      ${htmlAccumulator}
     </select>
   </div>
   <div class="col-md-2">

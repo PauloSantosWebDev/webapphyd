@@ -153,6 +153,7 @@ function netStrokeCalc () {
 //--------------------------------------------------------------------------------------------------------------------------
 //Fetch and async functions - start
 
+//Used to fetch .html files to autogenerate part of the page.
 async function getHtmlContent (path) {
   const response = await fetch(path);
   const data = await response.text();
