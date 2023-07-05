@@ -140,7 +140,6 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
   if (htmlAccumulator === '') {
-    console.log("First click only");
     serverHydroilId = await addHydroilId('hydId');
     serverHydroilId.forEach(e => {
       htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
