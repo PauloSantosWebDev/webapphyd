@@ -204,10 +204,10 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     <input type="text" class="form-control js-save js-cost" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
+    <input type="number" min="0.00" class="form-control js-save js-usage" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
+    <input type="number" min="0.00" class="form-control js-save js-subtotal" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
@@ -361,17 +361,18 @@ function dependenceFieldsUpdate() {
       }
     })
   })
+  
+  //Used to calculate subtotal for materials
+  document.querySelectorAll('.js-usage').forEach((e, i) => {
+    e.addEventListener('change', () => {
+      document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
+    })
+    e.addEventListener('keyup', () => {
+      document.querySelectorAll('.js-subtotal')[i].value = Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0]);
+    })
+  })
 }
 
-//Used to calculate subtotal for materials
-document.querySelectorAll('.js-usage').forEach((e, i) => {
-  e.addEventListener('change', () => {
-    document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
-  })
-  e.addEventListener('keyup', () => {
-    document.querySelectorAll('.js-subtotal')[i].value = Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0]);
-  })
-})
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 
