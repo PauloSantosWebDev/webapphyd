@@ -598,6 +598,18 @@ app.post('/quotebrlassy', (req, res) => {
       })
     })
   }
+  else if (checker === 'matlCost') {
+    db.all('SELECT cost FROM material_costs WHERE hydroil_id = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const data = rows.map(row => ({cost: row.cost}));
+      res.json({
+        status: 'success',
+        body: data
+      })
+    })
+  }
 })
 
 //-----------------------------------------------------------------------

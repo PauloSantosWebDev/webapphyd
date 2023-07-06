@@ -187,7 +187,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control js-save" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save js-item" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
     <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier">
@@ -195,7 +195,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     </select>
   </div>
   <div class="col-md-1"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save js-cost" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
     <input type="number" min="0.00" class="form-control js-save" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
@@ -330,6 +330,8 @@ function dependenceFieldsUpdate() {
         accumHTML += `<option>${elem.name}</option>`
       })
       document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
+      const cost = await getSupplier('matlCost', e.value);
+      document.querySelectorAll('.js-cost')[i].value = cost[0].cost;
     })
   })
 }
