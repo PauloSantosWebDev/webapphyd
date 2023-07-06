@@ -70,13 +70,30 @@ function listenBrlMatlChange() {
 //Asynchronous functions setction - Start
 
 //Used to fetch data to feed dropdown fields
-async function addHydroilId (target) {
+async function addIdCode (target) {
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({target})
+  };
+  try {
+    const response = await fetch("/quotebrlassy", options);
+    const result = await response.json();
+    return result.body;
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+
+async function getSupplier(target, value) {
+  const options = {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({target, value})
   };
   try {
     const response = await fetch("/quotebrlassy", options);
@@ -140,17 +157,12 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
   if (htmlAccumulator === '') {
-    serverHydroilId = await addHydroilId('hydId');
+    serverHydroilId = await addIdCode('hydId');
     serverHydroilId.forEach(e => {
       htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
     })    
   }
-  // const serverHydroilId = await addHydroilId('hydId');
-  // // let htmlAccumulator = '';
-
-  // serverHydroilId.forEach(e => {
-  //   htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
-  // })
+  
   document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
   <input type="text" class="form-control js-part js-save" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
@@ -248,7 +260,7 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
   
   //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
   if (htmlAccumulatorServ === '') {
-    serverServiceCode = await addHydroilId('serviceCode');
+    serverServiceCode = await addIdCode('serviceCode');
     serverServiceCode.forEach(e => {
       htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
     })
@@ -287,6 +299,18 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
 //Necessary to re-populate data in the quoteone page.
 document.getElementById('js-first-previous').addEventListener('click', () => {
   sessionStorage.setItem('firstPrevious', true);
+})
+
+//Updates the supplier when the Hydroil ID is chosen
+document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
+  e.addEventListener('change', async () => {
+    const arraySuppliers  = await getSupplier('matlSupplier', e.value);
+    let accumHTML = '';
+    arraySuppliers.forEach(elem => {
+      accumHTML += `<option>${elem.name}</option>`
+    })
+    document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
+  })
 })
 
 //Event listeners setction - End

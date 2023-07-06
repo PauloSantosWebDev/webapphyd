@@ -529,7 +529,8 @@ app.post('/quoteone', (req, res) => {
 //Used to load the Hydroil ID field when lines are added
 app.post('/quotebrlassy', (req, res) => {
   const checker = req.body.target;
-  if (checker === "hydId") {
+  const parsedValue = req.body.value;
+  if (checker === 'hydId') {
     db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
       if (err) {
         throw err;
@@ -551,6 +552,38 @@ app.post('/quotebrlassy', (req, res) => {
         status: 'success',
         body: serverServiceCode
       });
+    })
+  }
+  else if (checker === 'matlSupplier') {
+    db.all('SELECT supplier_id FROM material_costs WHERE hydroil_id = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const supplierIds = rows.map(row => ({id: row.supplier_id}));
+      let promises = supplierIds.map((e, i) => {
+        return new Promise((resolve, reject) => {
+          db.all('SELECT name FROM suppliers WHERE supplier_id = ?', [e.id], (err, rows) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(rows.map(row => ({name: row.name})));
+          })
+        })
+      })
+      Promise.all(promises)
+        .then(results => {
+          let accumulator = [];
+          results.forEach(result => {
+            accumulator = accumulator.concat(result);
+          })
+          res.json({
+            status: 'success',
+            body: accumulator
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
     })
   }
 })
