@@ -105,17 +105,23 @@ async function getSupplier(target, value) {
   }
 }
 
-// //Used to fetch items for materials
-// async function getItem(target, value) {
-//   const options = {
-//     method: 'post',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({target, value})
-//   };
-//   try {
-// }
+//Used to fetch cost for materials depending on the supplier chosen
+async function getCost(target, value, name) {
+  const options = {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({target, value, name})
+  };
+  try {
+    const response = await fetch("/quotebrlassy", options);
+    const result = await response.json();
+    return result.body;
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
 
 //Asynchronous functions - End
 
@@ -194,13 +200,13 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
       <option>...</option>
     </select>
   </div>
-  <div class="col-md-1"> <!--Here the cost per unit should be specified-->
+  <div class="col-md-2"> <!--Here the cost per unit should be specified-->
     <input type="text" class="form-control js-save js-cost" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
     <input type="number" min="0.00" class="form-control js-save" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
   </div>
-  <div class="col-md-2"> 
+  <div class="col-md-1"> 
     <input type="number" min="0.00" class="form-control js-save" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
   </div>`;
   brlAssyMatlLine++;
@@ -319,7 +325,7 @@ document.getElementById('js-first-previous').addEventListener('click', () => {
 //Used to add listener and update other fields accordingly
 //Is triggered when page is loaded and also when a new line is added
 function dependenceFieldsUpdate() {
-  //Updates the supplier when the Hydroil ID is chosen
+  //Updates the supplier and cost when the Hydroil ID is chosen
   document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
     e.addEventListener('change', async () => {
       const item = await getSupplier('matlItem', e.value);
@@ -330,11 +336,42 @@ function dependenceFieldsUpdate() {
         accumHTML += `<option>${elem.name}</option>`
       })
       document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
-      const cost = await getSupplier('matlCost', e.value);
-      document.querySelectorAll('.js-cost')[i].value = cost[0].cost;
+      document.querySelectorAll('.js-usage')[i].value = '';
+      document.querySelectorAll('.js-subtotal')[i].value = '';
+    })
+  })
+
+  //Updates the cost depending on the supplier and hydroil id
+  document.querySelectorAll('.js-supplier').forEach(async (e, i) => {
+    e.addEventListener('change', async() => {
+      const hydroiIdSelected = document.querySelectorAll('.js-hyd-id')[i].value;
+      const cost = await getCost('matlCost', hydroiIdSelected, e.value);
+      document.querySelectorAll('.js-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
+      document.querySelectorAll('.js-usage')[i].value = '';
+      document.querySelectorAll('.js-subtotal')[i].value = '';
+    })
+    e.addEventListener('click', async() => {
+      if (e.value == '') {
+        return;
+      }
+      else {
+        const hydroiIdSelected = document.querySelectorAll('.js-hyd-id')[i].value;
+        const cost = await getCost('matlCost', hydroiIdSelected, e.value);
+        document.querySelectorAll('.js-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
+      }
     })
   })
 }
+
+//Used to calculate subtotal for materials
+document.querySelectorAll('.js-usage').forEach((e, i) => {
+  e.addEventListener('change', () => {
+    document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
+  })
+  e.addEventListener('keyup', () => {
+    document.querySelectorAll('.js-subtotal')[i].value = Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0]);
+  })
+})
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 

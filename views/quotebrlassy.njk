@@ -19,13 +19,13 @@
     <div class="col-md-2">
       <label for="inputSupplier" class="form-label">Supplier</label>
     </div>
-    <div class="col-md-1"> <!--Here the cost per unit should be specified-->
-      <label for="inputCost" class="form-label">Cost</label>
+    <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+      <label for="inputCost" class="form-label">Cost (A$)</label>
     </div>
     <div class="col-md-1"> 
       <label for="inputUsage" class="form-label">Usage</label>
     </div>
-    <div class="col-md-2"> 
+    <div class="col-md-1"> 
       <label for="inputSubTotal" class="form-label">Subtotal</label>
     </div>
     
@@ -47,17 +47,17 @@
       </div>
       <div class="col-md-2">
         <select id="inputSupplier{{l}}" name="inputSupplier{{l}}" class="form-select js-supplier">
-          <option>...</option>
+          <option></option>
         </select>
       </div>
-      <div class="col-md-1"> <!--Here the cost per unit should be specified-->
+      <div class="col-md-2"> <!--Here the cost per unit should be specified-->
         <input type="text" class="form-control js-cost" id="inputCost{{l}}" name="inputCost{{l}}">
       </div>
       <div class="col-md-1"> 
-        <input type="number" min="0.00" class="form-control" id="inputUsage{{l}}" name="inputUsage{{l}}">
+        <input type="number" min="0.00" class="form-control js-usage" id="inputUsage{{l}}" name="inputUsage{{l}}">
       </div>
-      <div class="col-md-2"> 
-        <input type="number" min="0.00" class="form-control" id="inputSubTotal{{l}}" name="inputSubTotal{{l}}">
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-subtotal" id="inputSubTotal{{l}}" name="inputSubTotal{{l}}">
       </div>
     {% endfor %}
   </form>

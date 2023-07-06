@@ -530,6 +530,7 @@ app.post('/quoteone', (req, res) => {
 app.post('/quotebrlassy', (req, res) => {
   const checker = req.body.target;
   const parsedValue = req.body.value;
+  const supplierName = req.body.name;
   if (checker === 'hydId') {
     db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
       if (err) {
@@ -599,16 +600,27 @@ app.post('/quotebrlassy', (req, res) => {
     })
   }
   else if (checker === 'matlCost') {
-    db.all('SELECT cost FROM material_costs WHERE hydroil_id = ?', [parsedValue], (err, rows) => {
-      if (err) {
-        throw err;
-      }
-      const data = rows.map(row => ({cost: row.cost}));
-      res.json({
-        status: 'success',
-        body: data
+    if(!supplierName) {
+      res.end();
+    }
+    else {
+      db.all('SELECT supplier_id FROM suppliers WHERE name = ?', [supplierName], (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const supId = rows.map(row => ({supId: row.supplier_id}));
+        db.all('SELECT cost, unit FROM material_costs WHERE hydroil_id = ? AND supplier_id = ?', [parsedValue, supId[0].supId], (err, rows) => {
+          if (err) {
+            throw err;
+          }
+          const data = rows.map(row => ({cost: row.cost, unit: row.unit}));
+          res.json({
+            status: 'success',
+            body: data
+          })
+        })
       })
-    })
+    }
   }
 })
 
