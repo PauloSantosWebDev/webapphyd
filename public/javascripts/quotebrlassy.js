@@ -87,6 +87,7 @@ async function addIdCode (target) {
   }
 }
 
+//Used to fetch suppliers, items and cost for materials
 async function getSupplier(target, value) {
   const options = {
     method: 'post',
@@ -104,6 +105,18 @@ async function getSupplier(target, value) {
   }
 }
 
+// //Used to fetch items for materials
+// async function getItem(target, value) {
+//   const options = {
+//     method: 'post',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({target, value})
+//   };
+//   try {
+// }
+
 //Asynchronous functions - End
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -111,6 +124,7 @@ async function getSupplier(target, value) {
 
 window.addEventListener('load', () => {
   listenBrlMatlChange();
+  dependenceFieldsUpdate();
 })
 
 //Add new lines to the material session of the barrel assembly page
@@ -167,7 +181,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   <input type="text" class="form-control js-part js-save" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save">
+    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save js-hyd-id">
       <option></option>
       ${htmlAccumulator}
     </select>
@@ -176,7 +190,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     <input type="text" class="form-control js-save" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save">
+    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier">
       <option>...</option>
     </select>
   </div>
@@ -191,6 +205,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
+  dependenceFieldsUpdate();
   //Used to insert the data back after another line is added
   for (i = 0; i < arrayMatlInfo.length; i++) {
     for (j = 0; j <= 6; j++) {
@@ -301,18 +316,23 @@ document.getElementById('js-first-previous').addEventListener('click', () => {
   sessionStorage.setItem('firstPrevious', true);
 })
 
-//Updates the supplier when the Hydroil ID is chosen
-document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
-  e.addEventListener('change', async () => {
-    const arraySuppliers  = await getSupplier('matlSupplier', e.value);
-    let accumHTML = '';
-    arraySuppliers.forEach(elem => {
-      accumHTML += `<option>${elem.name}</option>`
+//Used to add listener and update other fields accordingly
+//Is triggered when page is loaded and also when a new line is added
+function dependenceFieldsUpdate() {
+  //Updates the supplier when the Hydroil ID is chosen
+  document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
+    e.addEventListener('change', async () => {
+      const item = await getSupplier('matlItem', e.value);
+      document.querySelectorAll('.js-item')[i].value = item[0].item;
+      const arraySuppliers = await getSupplier('matlSupplier', e.value);
+      let accumHTML = '';
+      arraySuppliers.forEach(elem => {
+        accumHTML += `<option>${elem.name}</option>`
+      })
+      document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
     })
-    document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
   })
-})
-
+}
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 

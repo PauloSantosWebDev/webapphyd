@@ -586,6 +586,18 @@ app.post('/quotebrlassy', (req, res) => {
         })
     })
   }
+  else if (checker === 'matlItem') {
+    db.all('SELECT item FROM materials WHERE hydroil_id = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const data = rows.map(row => ({item: row.item}));
+      res.json({
+        status: 'success',
+        body: data
+      })
+    })
+  }
 })
 
 //-----------------------------------------------------------------------
