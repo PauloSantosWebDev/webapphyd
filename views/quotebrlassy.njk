@@ -146,13 +146,13 @@
     <div class="col-md-2">
       <label for="inputSupplier" class="form-label">Supplier</label>
     </div>
-    <div class="col-md-1"> <!--Here the cost per unit should be specified-->
+    <div class="col-md-2"> <!--Here the cost per unit should be specified-->
       <label for="inputCost" class="form-label">Cost</label>
     </div>
     <div class="col-md-1"> 
       <label for="inputUsage" class="form-label">Usage</label>
     </div>
-    <div class="col-md-2"> 
+    <div class="col-md-1"> 
       <label for="inputSubTotal" class="form-label">Subtotal</label>
     </div>
     
@@ -162,7 +162,7 @@
         <input type="text" class="form-control js-serv-part" id="inputServicePart{{l}}" name="inputServicePart{{l}}">
       </div>
       <div class="col-md-2">
-        <select id="inputServiceCode{{l}}" name="inputServiceCode{{l}}" class="form-select">
+        <select id="inputServiceCode{{l}}" name="inputServiceCode{{l}}" class="form-select js-serv-code">
           <option></option>
           {% for i in serverServiceCode %}
             <option value="{{i.id}}">{{i.id}}</option>
@@ -170,21 +170,21 @@
         </select>
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control" id="inputService{{l}}" name="inputService{{l}}">
+        <input type="text" class="form-control js-service" id="inputService{{l}}" name="inputService{{l}}">
       </div>
       <div class="col-md-2">
-        <select id="inputServiceSupplier{{l}}" name="inputServiceSupplier{{l}}" class="form-select">
-          <option>...</option>
+        <select id="inputServiceSupplier{{l}}" name="inputServiceSupplier{{l}}" class="form-select js-serv-supplier">
+          <option></option>
         </select>
       </div>
-      <div class="col-md-1"> <!--Here the cost per unit should be specified-->
-        <input type="text" class="form-control" id="inputServiceCost{{l}}" name="inputServiceCost{{l}}">
+      <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+        <input type="text" class="form-control js-serv-cost" id="inputServiceCost{{l}}" name="inputServiceCost{{l}}">
       </div>
       <div class="col-md-1"> 
-        <input type="number" min="0.00" class="form-control" id="inputServiceUsage{{l}}" name="inputServiceUsage{{l}}">
+        <input type="number" min="0.00" class="form-control js-serv-usage" id="inputServiceUsage{{l}}" name="inputServiceUsage{{l}}">
       </div>
-      <div class="col-md-2"> 
-        <input type="number" min="0.00" class="form-control" id="inputServiceSubTotal{{l}}" name="inputServiceSubTotal{{l}}">
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-serv-subtotal" id="inputServiceSubTotal{{l}}" name="inputServiceSubTotal{{l}}">
       </div>
     {% endfor %}
   </form>

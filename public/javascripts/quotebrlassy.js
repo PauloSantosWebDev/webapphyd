@@ -88,7 +88,7 @@ async function addIdCode (target) {
 }
 
 //Used to fetch suppliers, items and cost for materials
-async function getSupplier(target, value) {
+async function getInfo(target, value) {
   const options = {
     method: 'post',
     headers: {
@@ -197,7 +197,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   </div>
   <div class="col-md-2">
     <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier">
-      <option>...</option>
+      <option></option>
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
@@ -290,31 +290,32 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
   <input type="text" class="form-control js-serv-part js-save-serv" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv">
+    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv js-serv-code">
       <option></option>
       ${htmlAccumulatorServ}
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control js-save-serv" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
+    <input type="text" class="form-control js-save-serv js-service" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv">
-      <option>...</option>
+    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier">
+      <option></option>
     </select>
   </div>
-  <div class="col-md-1"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save-serv" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
+  <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+    <input type="text" class="form-control js-save-serv js-serv-cost" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save-serv" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
+    <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
   </div>
-  <div class="col-md-2"> 
-    <input type="number" min="0.00" class="form-control js-save-serv" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}">
+  <div class="col-md-1"> 
+    <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}">
   </div>`;
   keepDataNewLine.populateData((brlAssyServLine-5), 7, 'js-save-serv');
   brlAssyServLine++;
   listenBrlMatlChange();
+  dependenceFieldsUpdate();
 })
 
 //Necessary to re-populate data in the quoteone page.
@@ -328,9 +329,9 @@ function dependenceFieldsUpdate() {
   //Updates the supplier and cost when the Hydroil ID is chosen
   document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
     e.addEventListener('change', async () => {
-      const item = await getSupplier('matlItem', e.value);
+      const item = await getInfo('matlItem', e.value);
       document.querySelectorAll('.js-item')[i].value = item[0].item;
-      const arraySuppliers = await getSupplier('matlSupplier', e.value);
+      const arraySuppliers = await getInfo('matlSupplier', e.value);
       let accumHTML = '';
       arraySuppliers.forEach(elem => {
         accumHTML += `<option>${elem.name}</option>`
@@ -368,9 +369,57 @@ function dependenceFieldsUpdate() {
       document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
     })
     e.addEventListener('keyup', () => {
-      document.querySelectorAll('.js-subtotal')[i].value = Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0]);
+      document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
     })
   })
+
+  //Update service and supplier based on service code chosen
+  document.querySelectorAll('.js-serv-code').forEach((e, i) => {
+    e.addEventListener('change', async () => {
+      const service = await getInfo('servService', e.value);
+      document.querySelectorAll('.js-service')[i].value = service[0].service;
+      const arraySuppliers = await getInfo('servSupplier', e.value);
+      let accumHTML = '';
+      arraySuppliers.forEach(elem => {
+        accumHTML += `<option>${elem.name}</option>`
+      })
+      document.querySelectorAll('.js-serv-supplier')[i].innerHTML = accumHTML;
+      document.querySelectorAll('.js-serv-usage')[i].value = '';
+      document.querySelectorAll('.js-serv-subtotal')[i].value = '';
+    })
+  })
+
+  //Updates the cost depending on the service code and supplier
+  document.querySelectorAll('.js-serv-supplier').forEach((e, i) => {
+    e.addEventListener('change', async() => {
+      const serviceCodeSelected = document.querySelectorAll('.js-serv-code')[i].value;
+      const cost = await getCost('servCost', serviceCodeSelected, e.value);
+      document.querySelectorAll('.js-serv-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
+      document.querySelectorAll('.js-serv-usage')[i].value = '';
+      document.querySelectorAll('.js-serv-subtotal')[i].value = '';
+    })
+    e.addEventListener('click', async() => {
+      if (e.value == '') {
+        return;
+      }
+      else {
+        const serviceCodeSelected = document.querySelectorAll('.js-serv-code')[i].value;
+        const cost = await getCost('servCost', serviceCodeSelected, e.value);
+        document.querySelectorAll('.js-serv-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
+      }
+    })
+  })
+
+  //Used to calculate subtotal for services
+  document.querySelectorAll('.js-serv-usage').forEach((e, i) => {
+    e.addEventListener('change', () => {
+      document.querySelectorAll('.js-serv-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-serv-cost')[i].value.split('/')[0])).toFixed(2);
+    })
+    e.addEventListener('keyup', () => {
+      document.querySelectorAll('.js-serv-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-serv-cost')[i].value.split('/')[0])).toFixed(2);
+    })
+  })
+
 }
 
 //Event listeners setction - End

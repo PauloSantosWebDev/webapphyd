@@ -622,6 +622,73 @@ app.post('/quotebrlassy', (req, res) => {
       })
     }
   }
+  else if (checker === 'servService') {
+    db.all('SELECT service FROM ext_services WHERE service_code = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const data = rows.map(row => ({service: row.service}));
+      res.json({
+        status: 'success',
+        body: data
+      })
+    })
+  }
+  else if (checker === 'servSupplier') {
+    db.all('SELECT supplier_id FROM ext_services_costs WHERE service_code = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const supplierIds = rows.map(row => ({id: row.supplier_id}));
+      let promises = supplierIds.map((e, i) => {
+        return new Promise((resolve, reject) => {
+          db.all('SELECT name FROM suppliers WHERE supplier_id = ?', [e.id], (err, rows) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(rows.map(row => ({name: row.name})));
+          })
+        })
+      })
+      Promise.all(promises)
+        .then(results => {
+          let accumulator = [];
+          results.forEach(result => {
+            accumulator = accumulator.concat(result);
+          })
+          res.json({
+            status: 'success',
+            body: accumulator
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+    })
+  }
+  else if (checker === 'servCost') {
+    if(!supplierName) {
+      res.end();
+    }
+    else {
+      db.all('SELECT supplier_id FROM suppliers WHERE name = ?', [supplierName], (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const supId = rows.map(row => ({supId: row.supplier_id}));
+        db.all('SELECT cost, unit FROM ext_services_costs WHERE service_code = ? AND supplier_id = ?', [parsedValue, supId[0].supId], (err, rows) => {
+          if (err) {
+            throw err;
+          }
+          const data = rows.map(row => ({cost: row.cost, unit: row.unit}));
+          res.json({
+            status: 'success',
+            body: data
+          })
+        })
+      })
+    }
+  }
 })
 
 //-----------------------------------------------------------------------
