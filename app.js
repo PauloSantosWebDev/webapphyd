@@ -28,7 +28,7 @@ app.use(express.json());
 
 //Clearing database commands
 // db.run('DROP TABLE material_costs');
-// db.all('SELECT * FROM ext_services', (err, rows) =>{
+// db.all('SELECT * FROM labour ORDER BY date DESC', (err, rows) =>{
 //   if (err) {
 //     throw err;
 //   }
@@ -63,7 +63,16 @@ app.get('/quotebrlassy', (req, res) => {
       }
       const serverServiceCode = rows.map(row => ({id: row.service_code}));
       
-      res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode});
+      db.all('SELECT mc, ncctr, welding, honing, assembling FROM labour ORDER BY date DESC LIMIT 1', (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const labourPrice = rows.map(row => ({mc: row.mc, ncctr: row.ncctr, welding: row.welding, honing: row.honing, assembling: row.assembling}));
+        
+        res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode, labourPrice});  
+      })
+
+      // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode});
     })
     // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId});
   })
@@ -688,6 +697,20 @@ app.post('/quotebrlassy', (req, res) => {
         })
       })
     }
+  }
+  else if (checker === 'labourCost') {  
+    db.all('SELECT mc, ncctr, welding, honing, assembling FROM labour ORDER BY date DESC LIMIT 1', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const labourPrice = rows.map(row => ({mc: row.mc, ncctr: row.ncctr, welding: row.welding, honing: row.honing, assembling: row.assembling}));
+      
+      res.json({
+        status: 'success',
+        body: labourPrice
+      })
+      // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode, labourPrice});  
+    })
   }
 })
 

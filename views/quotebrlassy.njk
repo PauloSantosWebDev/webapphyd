@@ -57,7 +57,7 @@
         <input type="number" min="0.00" class="form-control js-usage" id="inputUsage{{l}}" name="inputUsage{{l}}">
       </div>
       <div class="col-md-1"> 
-        <input type="number" min="0.00" class="form-control js-subtotal" id="inputSubTotal{{l}}" name="inputSubTotal{{l}}">
+        <input type="number" min="0.00" class="form-control js-subtotal input-off" id="inputSubTotal{{l}}" name="inputSubTotal{{l}}" tabindex=-1>
       </div>
     {% endfor %}
   </form>
@@ -75,19 +75,19 @@
       <label for="inputPart" class="form-label">Part</label>
     </div>
     <div class="col-md-1">
-      <label for="inputMC" class="form-label">Machining</label>
+      <label for="inputMC" class="form-label">Machining <br> A$ {{labourPrice[0].mc}}</label>
     </div>
     <div class="col-md-1">
-      <label for="inputNC" class="form-label">NC/CTR</label>
+      <label for="inputNC" class="form-label">NC/CTR <br> A$ {{labourPrice[0].ncctr}}</label>
     </div>
     <div class="col-md-1">
-      <label for="inputWelding" class="form-label">Welding</label>
+      <label for="inputWelding" class="form-label">Welding <br> A$ {{labourPrice[0].welding}}</label>
     </div>
     <div class="col-md-1">
-      <label for="inputHonning" class="form-label">Honning</label>
+      <label for="inputHoning" class="form-label">Honing <br> A$ {{labourPrice[0].honing}}</label>
     </div>
     <div class="col-md-1"> 
-      <label for="inputAssy" class="form-label">Assembling</label>
+      <label for="inputAssy" class="form-label">Assembling <br> A$ {{labourPrice[0].assembling}}</label>
     </div>
     <div class="col-md-2"> 
       <label for="inputSubTotal" class="form-label">Subtotal</label>
@@ -102,22 +102,22 @@
         <input type="text" class="form-control js-lab-part" id="inputLabourPart{{l}}" name="inputLabourPart{{l}}">
       </div>
       <div class="col-md-1">
-        <input type="number" min="0.00" class="form-control" id="inputMC{{l}}" name="inputMC{{l}}">
+        <input type="number" min="0.00" class="form-control js-labour-usage" id="inputMC{{l}}" name="inputMC{{l}}">
       </div>
       <div class="col-md-1">
-        <input type="number" min="0.00" class="form-control" id="inputNC{{l}}" name="inputNC{{l}}">
+        <input type="number" min="0.00" class="form-control js-labour-usage" id="inputNC{{l}}" name="inputNC{{l}}">
       </div>
       <div class="col-md-1">
-        <input type="number" min="0.00" class="form-control" id="inputWelding{{l}}" name="inputWelding{{l}}">
+        <input type="number" min="0.00" class="form-control js-labour-usage" id="inputWelding{{l}}" name="inputWelding{{l}}">
       </div>
       <div class="col-md-1">
-        <input type="number" min="0.00" class="form-control" id="inputHonning{{l}}" name="inputHonning{{l}}">
+        <input type="number" min="0.00" class="form-control js-labour-usage" id="inputHonning{{l}}" name="inputHonning{{l}}">
       </div>
       <div class="col-md-1">
-        <input type="number" min="0.00" class="form-control" id="inputAssy{{l}}" name="inputAssy{{l}}">
+        <input type="number" min="0.00" class="form-control js-labour-usage" id="inputAssy{{l}}" name="inputAssy{{l}}">
       </div>
       <div class="col-md-2"> 
-        <input type="number" min="0.00" class="form-control" id="inputLabourSubTotal{{l}}" name="inputLabourSubTotal{{l}}">
+        <input type="number" min="0.00" class="form-control js-labour-subtotal input-off" id="inputLabourSubTotal{{l}}" name="inputLabourSubTotal{{l}}" tabindex=-1>
       </div>
       <div class="col-md-2"> 
         <input type="hidden">
@@ -184,7 +184,7 @@
         <input type="number" min="0.00" class="form-control js-serv-usage" id="inputServiceUsage{{l}}" name="inputServiceUsage{{l}}">
       </div>
       <div class="col-md-1"> 
-        <input type="number" min="0.00" class="form-control js-serv-subtotal" id="inputServiceSubTotal{{l}}" name="inputServiceSubTotal{{l}}">
+        <input type="number" min="0.00" class="form-control js-serv-subtotal input-off" id="inputServiceSubTotal{{l}}" name="inputServiceSubTotal{{l}}" tabindex=-1>
       </div>
     {% endfor %}
   </form>

@@ -6,6 +6,7 @@ let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
 let htmlAccumulator = '';
 let htmlAccumulatorServ = '';
+let labourCostFetchController = true;
 
 //Global arrays definition
 
@@ -14,6 +15,7 @@ let arrayColumns = [];
 let arrayRows = [];
 let serverHydroilId = [];
 let serverServiceCode = [];
+let labourPrice = [];
 
 //Object with 2 functions to keep data when lines are added to forms
 const keepDataNewLine = {
@@ -70,6 +72,7 @@ function listenBrlMatlChange() {
 //Asynchronous functions setction - Start
 
 //Used to fetch data to feed dropdown fields
+//Used to get labour costs for the labour session
 async function addIdCode (target) {
   const options = {
     method: 'POST',
@@ -128,6 +131,7 @@ async function getCost(target, value, name) {
 //--------------------------------------------------------------------------------------------------------------------------
 //Event listeners setction - Start
 
+//Loads page with functionalities it needs when page is loaded
 window.addEventListener('load', () => {
   listenBrlMatlChange();
   dependenceFieldsUpdate();
@@ -207,7 +211,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     <input type="number" min="0.00" class="form-control js-save js-usage" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save js-subtotal" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}">
+    <input type="number" min="0.00" class="form-control js-save js-subtotal input-off" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}" tabindex=-1>
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
@@ -250,22 +254,22 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
   <input type="text" class="form-control js-lab-part js-save-lab" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
   </div>
   <div class="col-md-2"> 
-  <input type="number" min="0.00" class="form-control js-save-lab" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-subtotal input-off" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}" tabindex=-1>
   </div>
   <div class="col-md-2"> 
   <input type="hidden">
@@ -273,6 +277,7 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
   keepDataNewLine.populateData((brlAssyLabourLine-5), 7, 'js-save-lab');
   brlAssyLabourLine++;
   listenBrlMatlChange();
+  dependenceFieldsUpdate();
 })
 
 //Add new lines to the service session of the barrel assembly page.
@@ -310,7 +315,7 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
     <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}">
+    <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal input-off" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}" tabindex=-1>
   </div>`;
   keepDataNewLine.populateData((brlAssyServLine-5), 7, 'js-save-serv');
   brlAssyServLine++;
@@ -420,6 +425,95 @@ function dependenceFieldsUpdate() {
     })
   })
 
+  //Used to get the labour price and calculate labour subtotal
+  document.querySelectorAll('.js-labour-usage').forEach((e, i) => {
+    e.addEventListener('keyup', async() => {
+      if (labourCostFetchController) {
+        labourPrice = await getInfo('labourCost');
+        labourCostFetchController = false;
+      }
+      if (i % 5 == 0) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * e.value + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i + 1].value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 2].value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 3].value 
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 4].value).toFixed(2);
+      }
+      else if (i % 5 == 1) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].ncctr * e.value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 1].value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 2].value 
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 3].value).toFixed(2);
+      }
+      else if (i % 5 == 2) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 2].value 
+          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].welding * e.value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 1].value 
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 2].value).toFixed(2);
+      }
+      else if (i % 5 == 3) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 3].value 
+          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 2].value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 1].value 
+          + labourPrice[0].honing * e.value
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 1].value).toFixed(2);
+      }
+      else if (i % 5 == 4) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 4].value 
+          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 3].value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 2].value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i - 1].value
+          + labourPrice[0].assembling * e.value).toFixed(2);
+      }
+    })
+    e.addEventListener('change', async() => {
+      if (labourCostFetchController) {
+        labourPrice = await getInfo('labourCost');
+        labourCostFetchController = false;
+      }
+      if (i % 5 == 0) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * e.value + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i + 1].value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 2].value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 3].value 
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 4].value).toFixed(2);
+      }
+      else if (i % 5 == 1) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].ncctr * e.value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 1].value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 2].value 
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 3].value).toFixed(2);
+      }
+      else if (i % 5 == 2) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 2].value 
+          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].welding * e.value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 1].value 
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 2].value).toFixed(2);
+      }
+      else if (i % 5 == 3) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 3].value 
+          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 2].value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 1].value 
+          + labourPrice[0].honing * e.value
+          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 1].value).toFixed(2);
+      }
+      else if (i % 5 == 4) {
+        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
+          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 4].value 
+          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 3].value 
+          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 2].value 
+          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i - 1].value
+          + labourPrice[0].assembling * e.value).toFixed(2);
+      }
+    })
+  })
 }
 
 //Event listeners setction - End
