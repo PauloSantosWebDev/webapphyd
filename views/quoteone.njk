@@ -8,29 +8,29 @@
   <form class="row g-3">
     <div class="col-md-6">
       <label for="inputCustomer" class="form-label">Customer</label>
-      <select id="inputCustomer" name="inputCustomer" class="form-select">
+      <select id="inputCustomer" name="inputCustomer" class="form-select js-customer-info">
         <option selected>Choose...</option>
         <option>...</option>
       </select>
     </div>
     <div class="col-md-6">
       <label for="inputContact" class="form-label">Contact</label>
-      <select id="inputContact" name="inputContact" class="form-select">
+      <select id="inputContact" name="inputContact" class="form-select js-customer-info">
         <option selected>Choose...</option>
         <option>...</option>
       </select>
     </div>
     <div class="col-md-4">
       <label for="inputEmail" class="form-label">Email</label>
-      <input type="email" class="form-control" id="inputEmail" name="inputEmail">
+      <input type="email" class="form-control js-customer-info" id="inputEmail" name="inputEmail">
     </div>
     <div class="col-md-4">
       <label for="inputPhone" class="form-label">Phone</label>
-      <input type="tel" class="form-control" id="inputPhone" name="inputPhone">
+      <input type="tel" class="form-control js-customer-info" id="inputPhone" name="inputPhone">
     </div>
     <div class="col-md-4">
       <label for="inputMobile" class="form-label">Mobile</label>
-      <input type="tel" class="form-control" id="inputMobile" name="inputMobile">
+      <input type="tel" class="form-control js-customer-info" id="inputMobile" name="inputMobile">
     </div>
     <div class="col-12">
       <button type="button" class="btn btn-danger" id="js-btn-update-contact">Update</button>
@@ -63,7 +63,7 @@
       
       <div class="col-md-3">
         <label for="inputBodyType" class="form-label">Body type</label>
-        <select id="inputBodyType" name="inputBodyType" class="form-select">
+        <select id="inputBodyType" name="inputBodyType" class="form-select js-type">
           <option selected value="HSH">HSH</option>
           <option value="HB">HB</option>
           <option value="HHMI">HHMI</option>
@@ -72,7 +72,7 @@
       </div>
       <div class="col-md-3">
         <label for="inputInnerType" class="form-label">Inner type</label>
-        <select id="inputInnerType" name="inputInnerType" class="form-select">
+        <select id="inputInnerType" name="inputInnerType" class="form-select js-type">
           <option selected value="standard">Standard</option>
           <option value="doubleEnded">Double-ended</option>
           <option value="telescopic">Telescopic</option>
@@ -82,14 +82,14 @@
       </div>
       <div class="col-md-3">
         <label for="inputForceGenerator" class="form-label">Force generator</label>
-        <select id="inputForceGenerator" name="inputForceGenerator" class="form-select">
+        <select id="inputForceGenerator" name="inputForceGenerator" class="form-select js-type">
           <option selected value="hydraulic">Hydraulic</option>
           <option value="pneumatic">Pneumatic</option>
         </select>
       </div>
       <div class="col-md-3">
         <label for="inputActingType" class="form-label">Acting type</label>
-        <select id="inputActingType" name="inputActingType" class="form-select">
+        <select id="inputActingType" name="inputActingType" class="form-select js-type">
           <option selected value="doubleActing">Double acting</option>
           <option value="singleActing">Single acting</option>
         </select>
@@ -204,14 +204,14 @@
         </div>
         <div class="col-md-3">
           <label for="inputCylMounting" class="form-label">Cylinder mounting</label>
-          <select id="inputCylMounting" name="inputCylMounting" class="form-select">
+          <select id="inputCylMounting" name="inputCylMounting" class="form-select js-extra">
             <option selected>Choose...</option>
             <option>...</option>
           </select>
         </div>
         <div class="col-md-3">
           <label for="inputRodMounting" class="form-label">Rod end mounting</label>
-          <select id="inputRodMounting" name="inputRodMounting" class="form-select">
+          <select id="inputRodMounting" name="inputRodMounting" class="form-select js-extra">
             <option selected value="rodEndNone">None</option>
             <option value="rodClevis">Rod Clevis</option>
             <option value="rodKnuckle">Rod Knuckle</option>
@@ -220,7 +220,7 @@
         </div>
         <div class="col-md-3">
           <label for="inputCushion" class="form-label">Cushions</label>
-          <select id="inputCushion" name="inputCushion" class="form-select">
+          <select id="inputCushion" name="inputCushion" class="form-select js-extra">
             <option selected value="cushionNone">None</option>
             <option value="cushionBoth">Both</option>
             <option value="cushionFront">Front</option>
@@ -229,7 +229,7 @@
         </div>
         <div class="col-md-3">
           <label for="inputPin" class="form-label">Pins</label>
-          <select id="inputPin" name="inputPin" class="form-select">
+          <select id="inputPin" name="inputPin" class="form-select js-extra">
             <option selected value="pinNone">None</option>
             <option value="pinBoth">Both</option>
             <option value="pinFront">Front</option>

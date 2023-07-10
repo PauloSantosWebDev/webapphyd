@@ -69,6 +69,8 @@ function emptyFields (first, second) {
   fieldsToEmpty.forEach((field) => field.value = '');
 }
 
+//IMPORTANT!!! Note that this function is for standard new cylinders only
+//For any other situation, other functions are in use (or have to be created)
 function newCylStd () {
   const arrayPsi = [];
   const arrayMpa = [];
@@ -78,20 +80,19 @@ function newCylStd () {
   const arrayTon = [];
   const arrayIn = [];
   const arrayMM = [];
-
-  const inputId = ['.js-psi', '.js-mpa', '.js-bar', '.js-lbf', '.js-newton', '.js-ton', '.js-in-to-mm', '.js-mm-to-in'];
-  const arrayArrays = [arrayPsi, arrayMpa, arrayBar, arrayLbf, arrayNew, arrayTon, arrayIn, arrayMM];
+  const arrayCustInfo = [];
+  const arrayType = [];
+  const arrayExtra = [];
+  const inputId = ['.js-psi', '.js-mpa', '.js-bar', '.js-lbf', '.js-newton', '.js-ton', '.js-in-to-mm', '.js-mm-to-in', '.js-customer-info', '.js-type', '.js-extra'];
+  const arrayArrays = [arrayPsi, arrayMpa, arrayBar, arrayLbf, arrayNew, arrayTon, arrayIn, arrayMM, arrayCustInfo, arrayType, arrayExtra];
   for (i = 0; i < inputId.length; i++) {
     document.querySelectorAll(inputId[i]).forEach((e) => {
       // arrayPsi.push(e.value);
       arrayArrays[i].push(e.value);
     })
   }
-
   const theoreticalPush = Number(arrayMpa[1] * (Math.PI/4) * Math.pow(arrayMM[0], 2)).toFixed(2);
-  
   const theoreticalPull = Number(arrayMpa[0] * (Math.PI/4) * (Math.pow(arrayMM[0], 2) - Math.pow(arrayMM[1], 2))).toFixed(2);
-
   //Checking if input values make sense
   //Checking bore and rod, and gross stroke and stop tube.
   if (Number(arrayMM[0]) <= Number(arrayMM[1])) {
@@ -101,7 +102,6 @@ function newCylStd () {
     alert(`Gross stroke cannot be smaller or equal to stop tube length.`);
     return;
   }
-
   //Checking theoretical against required forces
   if (theoreticalPush < arrayNew[1]) {
     const isTrue = confirm(`Do you want to continue? Theoretical push (${theoreticalPush} Newtons) is smaller then required push (${arrayNew[1]} Newtons).`);
@@ -116,10 +116,17 @@ function newCylStd () {
       // location.replace('http://localhost:3000/');
     }
   }
-
-  console.log("did it continue?");
+  sessionStorage.setItem('psi', arrayPsi);
+  sessionStorage.setItem('mpa', arrayMpa);
+  sessionStorage.setItem('bar', arrayBar);
+  sessionStorage.setItem('lbf', arrayLbf);
+  sessionStorage.setItem('new', arrayNew);
+  sessionStorage.setItem('ton', arrayTon);
   sessionStorage.setItem('inches', arrayIn);
   sessionStorage.setItem('millimeters', arrayMM);
+  sessionStorage.setItem('customerInfo', arrayCustInfo);
+  sessionStorage.setItem('type', arrayType);
+  sessionStorage.setItem('extra', arrayExtra);
   location.assign('http://localhost:3000/quotebrlassy');
 
   // for (i = 0; i < inputId.length; i++) {
@@ -146,6 +153,14 @@ function netStrokeCalc () {
   }
 }
 
+//Function used to populate back information when previous button is used
+function populateBack (nameStorage, nameClass) {
+  let arrayGeneric = sessionStorage.getItem(nameStorage);
+  arrayGeneric = arrayGeneric.split(',');
+  arrayGeneric.forEach((e, i) => {
+    document.querySelectorAll('.' + nameClass)[i].value = e;
+  })
+}
 
 //General functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -245,20 +260,24 @@ window.addEventListener('load', () => {
   
   //If statetement used to populate back information when previous button is used
   if (sessionStorage.getItem('firstPrevious') === 'true') {
-    let arrayGeneric = sessionStorage.getItem('millimeters');
-    arrayGeneric = arrayGeneric.split(',');
-    arrayGeneric.forEach((e, i) => {
-      document.querySelectorAll('.js-mm-to-in')[i].value = e;
-    })
-    arrayGeneric = sessionStorage.getItem('inches');
-    arrayGeneric = arrayGeneric.split(',');
-    arrayGeneric.forEach((e, i) => {
-      document.querySelectorAll('.js-in-to-mm')[i].value = e;
-    })
+    const radioSelected = sessionStorage.getItem('radio-btn-quote-for');
+    if (radioSelected === 'option1') {
+      populateBack('millimeters', 'js-mm-to-in');
+      populateBack('inches', 'js-in-to-mm');
+      populateBack('psi', 'js-psi');
+      populateBack('mpa', 'js-mpa');
+      populateBack('bar', 'js-bar');
+      populateBack('lbf', 'js-lbf');
+      populateBack('new', 'js-newton');
+      populateBack('ton', 'js-ton');
+      populateBack('customerInfo', 'js-customer-info');
+      populateBack('type', 'js-type');
+      populateBack('extra', 'js-extra');
+    }
+
     sessionStorage.setItem('firstPrevious', false);
   }
 });
-
 
 //Code to check if user really want to leave or reload the page
 window.onbeforeunload = () => {
@@ -397,8 +416,8 @@ document.querySelector('.js-btn-first-next').addEventListener('click', () => {
   const checkerInner = document.getElementById('inputInnerType');
   if (checker[0].checked) {
     if (checkerInner.value === 'standard') {
-      console.log('New cylinder -> standard');
       isNext = true;
+      sessionStorage.setItem('radio-btn-quote-for', checker[0].value);
       newCylStd();
     }
 
