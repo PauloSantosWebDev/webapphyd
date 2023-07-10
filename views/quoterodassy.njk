@@ -1,0 +1,220 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+<h2 class="registration-forms-title">NEW QUOTE FORM</h2>
+  <hr>
+  <h4 class="registration-forms-title">BARREL ASSEMBLY</h4>
+  <h5>MATERIAL</h5>
+
+  <form class="row g-3">
+    <div class="col-md-2">
+      <label for="inputPart" class="form-label">Part</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputHydroilId" class="form-label">Hydroil ID</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputItem" class="form-label">Item</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputSupplier" class="form-label">Supplier</label>
+    </div>
+    <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+      <label for="inputCost" class="form-label">Cost (A$)</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputUsage" class="form-label">Usage</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputSubTotal" class="form-label">Subtotal</label>
+    </div>
+    
+    {#------------------------------------#}
+    {% for l in range(5) %}
+      <div class="col-md-2">
+        <input type="text" class="form-control js-part js-store-data" id="inputPart{{l}}" name="inputPart{{l}}">
+      </div>
+      <div class="col-md-2">
+        <select id="inputHydroilId{{l}}" name="inputHydroilId{{l}}" class="form-select js-hyd-id js-store-data">
+          <option></option>
+          {% for i in serverHydroilId %}
+            <option value="{{i.id}}">{{i.id}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control js-item js-store-data" id="inputItem{{l}}" name="inputItem{{l}}">
+      </div>
+      <div class="col-md-2">
+        <select id="inputSupplier{{l}}" name="inputSupplier{{l}}" class="form-select js-supplier js-store-data">
+          <option></option>
+        </select>
+      </div>
+      <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+        <input type="text" class="form-control js-cost js-store-data input-off" id="inputCost{{l}}" name="inputCost{{l}}" tabindex="-1">
+      </div>
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-usage js-store-data" id="inputUsage{{l}}" name="inputUsage{{l}}">
+      </div>
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-subtotal input-off js-store-data" id="inputSubTotal{{l}}" name="inputSubTotal{{l}}" tabindex=-1>
+      </div>
+    {% endfor %}
+  </form>
+  <form class="row g-3" id="js-first-form-add-lines" style="margin-top: 0.5em;">
+  </form>
+
+  <div class="col-md-12" style="margin-top: 1em;">
+    <button type="button" class="btn btn-primary" id="js-new-line-brl-matl">Add new line</button>
+  </div>
+
+  <h5 class="registration-forms-subtitle">LABOUR</h5>
+
+  <form class="row g-3">
+    <div class="col-md-2">
+      <label for="inputPart" class="form-label">Part</label>
+    </div>
+    <div class="col-md-1">
+      <label for="inputMC" class="form-label">Machining <br> A$ {{labourPrice[0].mc}}</label>
+    </div>
+    <div class="col-md-1">
+      <label for="inputNC" class="form-label">NC/CTR <br> A$ {{labourPrice[0].ncctr}}</label>
+    </div>
+    <div class="col-md-1">
+      <label for="inputWelding" class="form-label">Welding <br> A$ {{labourPrice[0].welding}}</label>
+    </div>
+    <div class="col-md-1">
+      <label for="inputHoning" class="form-label">Honing <br> A$ {{labourPrice[0].honing}}</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputAssy" class="form-label">Assembling <br> A$ {{labourPrice[0].assembling}}</label>
+    </div>
+    <div class="col-md-2"> 
+      <label for="inputSubTotal" class="form-label">Subtotal</label>
+    </div>
+    <div class="col-md-2"> 
+      <input type="hidden">
+    </div>
+    
+    {#------------------------------------#}
+    {% for l in range(5) %}
+      <div class="col-md-2">
+        <input type="text" class="form-control js-lab-part js-store-data" id="inputLabourPart{{l}}" name="inputLabourPart{{l}}">
+      </div>
+      <div class="col-md-1">
+        <input type="number" min="0.00" class="form-control js-labour-usage js-store-data" id="inputMC{{l}}" name="inputMC{{l}}">
+      </div>
+      <div class="col-md-1">
+        <input type="number" min="0.00" class="form-control js-labour-usage js-store-data" id="inputNC{{l}}" name="inputNC{{l}}">
+      </div>
+      <div class="col-md-1">
+        <input type="number" min="0.00" class="form-control js-labour-usage js-store-data" id="inputWelding{{l}}" name="inputWelding{{l}}">
+      </div>
+      <div class="col-md-1">
+        <input type="number" min="0.00" class="form-control js-labour-usage js-store-data" id="inputHonning{{l}}" name="inputHonning{{l}}">
+      </div>
+      <div class="col-md-1">
+        <input type="number" min="0.00" class="form-control js-labour-usage js-store-data" id="inputAssy{{l}}" name="inputAssy{{l}}">
+      </div>
+      <div class="col-md-2"> 
+        <input type="number" min="0.00" class="form-control js-labour-subtotal input-off js-store-data" id="inputLabourSubTotal{{l}}" name="inputLabourSubTotal{{l}}" tabindex=-1>
+      </div>
+      <div class="col-md-2"> 
+        <input type="hidden">
+      </div>
+    {% endfor %}
+  </form>
+  <form class="row g-3" id="js-second-form-add-lines" style="margin-top: 0.5em;">
+  </form>
+
+  <div class="col-md-12" style="margin-top: 1em;">
+    <button type="button" class="btn btn-primary" id="js-new-line-brl-labour">Add new line</button>
+  </div>
+
+  <h5 class="registration-forms-subtitle">SERVICES</h5>
+
+  <form class="row g-3">
+    <div class="col-md-2">
+      <label for="inputPart" class="form-label">Part</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputServiceCode" class="form-label">Service Code</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputService" class="form-label">Service</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputSupplier" class="form-label">Supplier</label>
+    </div>
+    <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+      <label for="inputCost" class="form-label">Cost</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputUsage" class="form-label">Usage</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputSubTotal" class="form-label">Subtotal</label>
+    </div>
+    
+    {#------------------------------------#}
+    {% for l in range(5) %}
+      <div class="col-md-2">
+        <input type="text" class="form-control js-serv-part js-store-data" id="inputServicePart{{l}}" name="inputServicePart{{l}}">
+      </div>
+      <div class="col-md-2">
+        <select id="inputServiceCode{{l}}" name="inputServiceCode{{l}}" class="form-select js-serv-code js-store-data">
+          <option></option>
+          {% for i in serverServiceCode %}
+            <option value="{{i.id}}">{{i.id}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control js-service js-store-data" id="inputService{{l}}" name="inputService{{l}}">
+      </div>
+      <div class="col-md-2">
+        <select id="inputServiceSupplier{{l}}" name="inputServiceSupplier{{l}}" class="form-select js-serv-supplier js-store-data">
+          <option></option>
+        </select>
+      </div>
+      <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+        <input type="text" class="form-control js-serv-cost js-store-data input-off" id="inputServiceCost{{l}}" name="inputServiceCost{{l}}" tabindex="-1">
+      </div>
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-serv-usage js-store-data" id="inputServiceUsage{{l}}" name="inputServiceUsage{{l}}">
+      </div>
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-serv-subtotal input-off js-store-data" id="inputServiceSubTotal{{l}}" name="inputServiceSubTotal{{l}}" tabindex=-1>
+      </div>
+    {% endfor %}
+  </form>
+  <form class="row g-3" id="js-third-form-add-lines" style="margin-top: 0.5em;">
+  </form>
+
+  <div class="col-md-12" style="margin-top: 1em;">
+    <button type="button" class="btn btn-primary" id="js-new-line-brl-serv">Add new line</button>
+  </div>
+
+  <div class="container">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        {# <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li> #}
+        <li class="page-item">
+          <a class="page-link" href="/quoteone" tabindex="-1" id="js-first-previous">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" id="js-btn-second-next">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+<script src="/javascripts/quotebrlassy.js"></script>
+{% endblock %}}
+
+

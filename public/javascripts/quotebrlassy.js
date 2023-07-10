@@ -7,6 +7,7 @@ let brlAssyServLine = 5;
 let htmlAccumulator = '';
 let htmlAccumulatorServ = '';
 let labourCostFetchController = true;
+let isNext = false;
 
 //Global arrays definition
 
@@ -180,7 +181,15 @@ window.addEventListener('load', () => {
   if (sessionStorage.getItem('secondPrevious') === 'true') {
     populateBack();
   }
+  isNext = false;
 })
+
+//Code to check if user really want to leave or reload the page
+window.onbeforeunload = () => {
+  if (!isNext) {
+    return "Are you sure you want to reload or leave the page? Data could be lost.";
+  }  
+}
 
 //Add new lines to the material session of the barrel assembly page
 document.getElementById('js-new-line-brl-matl').addEventListener('click', async () => {
@@ -562,6 +571,7 @@ function dependenceFieldsUpdate() {
 
 //When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-second-next').addEventListener('click', () => {
+  isNext = true;
   saveDataForReload();
 })
 
