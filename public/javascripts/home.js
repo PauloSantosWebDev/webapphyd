@@ -2,8 +2,13 @@
 
 window.addEventListener('load', () => {
     console.log("The loading method is working.");
-    const working = sessionStorage.getItem('millimeters');
+    const working = sessionStorage.getItem('storeDataBrlAssy');
     console.log(working);
+})
+
+document.getElementById('js-previous-test').addEventListener('click', () => {
+    sessionStorage.setItem('secondPrevious', true);
+    location.assign('http://localhost:3000/quotebrlassy');
 })
 
 //General functions - End

@@ -21,17 +21,20 @@ let labourPrice = [];
 const keepDataNewLine = {
   saveData(rows, columns, classId) {
     arrayColumns = [];
-    for (i = 0; i < rows; i++) {
+    for (let i = 0; i < rows; i++) {
       arrayRows = [];
-      for (j = 0; j < columns; j++) {
+      for (let j = 0; j < columns; j++) {
         arrayRows[j] = document.querySelectorAll('.' + classId)[(i*columns)+j].value;
       }
       arrayColumns.push(arrayRows);
     }
   },
   populateData(rows, columns, classId) {
-    for (i = 0; i < rows; i++) {
-      for (j = 0; j < columns; j++) {
+    for (let i = 0; i < rows; i++) {
+      // console.log('i ' + i);
+      for (let j = 0; j < columns; j++) {
+        // console.log('j ' + j);
+        // console.log(arrayColumns);
         document.querySelectorAll('.' + classId)[(i*columns)+j].value = arrayColumns[i][j];
       }
     }
@@ -64,6 +67,45 @@ function listenBrlMatlChange() {
       })
     })
   }
+}
+
+//Used to save the data in the sessionStorage
+//Data will be used to populate sql database and in case the page is reloaded
+function saveDataForReload() {
+  sessionStorage.setItem('brlAssyMatlLines', brlAssyMatlLine);
+  sessionStorage.setItem('brlAssyLabourLines', brlAssyLabourLine);
+  sessionStorage.setItem('brlAssyServLines', brlAssyServLine);
+  const arrayStoreData = [];
+  document.querySelectorAll('.js-store-data').forEach((e, i) => {
+    arrayStoreData.push(e.value);
+  });
+  sessionStorage.setItem('storeDataBrlAssy', arrayStoreData);
+  location.assign('http://localhost:3000/');
+}
+
+//Used to populate back when previous is clicked in the next page
+function populateBack () {
+  let iteration = Number(sessionStorage.getItem('brlAssyMatlLines'));
+  for (let i = 0; i < (iteration - 5); i++) {
+    document.getElementById('js-new-line-brl-matl').click();
+  }
+  iteration = Number(sessionStorage.getItem('brlAssyLabourLines'));
+  for (let i = 0; i < (iteration - 5); i++) {
+    document.getElementById('js-new-line-brl-labour').click();
+  }
+  iteration = Number(sessionStorage.getItem('brlAssyServLines'));
+  for (let i = 0; i < (iteration - 5); i++) {
+    document.getElementById('js-new-line-brl-serv').click();
+  }
+  let arrayStoreData = sessionStorage.getItem('storeDataBrlAssy');
+  arrayStoreData = arrayStoreData.split(',');
+  setTimeout(() => {
+    document.querySelectorAll('.js-store-data').forEach((e, i) => {
+      e.value = arrayStoreData[i];
+    })
+  }, 1000);
+
+  sessionStorage.setItem('secondPrevious', false);
 }
 
 //General functions - End
@@ -135,6 +177,9 @@ async function getCost(target, value, name) {
 window.addEventListener('load', () => {
   listenBrlMatlChange();
   dependenceFieldsUpdate();
+  if (sessionStorage.getItem('secondPrevious') === 'true') {
+    populateBack();
+  }
 })
 
 //Add new lines to the material session of the barrel assembly page
@@ -188,37 +233,37 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   }
   
   document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-part js-save" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
+  <input type="text" class="form-control js-part js-save js-store-data" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save js-hyd-id">
+    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save js-hyd-id js-store-data">
       <option></option>
       ${htmlAccumulator}
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control js-save js-item" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save js-item js-store-data" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier">
+    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data">
       <option></option>
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save js-cost" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save js-cost js-store-data" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save js-usage" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
+    <input type="number" min="0.00" class="form-control js-save js-usage js-store-data" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save js-subtotal input-off" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}" tabindex=-1>
+    <input type="number" min="0.00" class="form-control js-save js-subtotal input-off js-store-data" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}" tabindex=-1>
   </div>`;
   brlAssyMatlLine++;
   listenBrlMatlChange();
   dependenceFieldsUpdate();
   //Used to insert the data back after another line is added
-  for (i = 0; i < arrayMatlInfo.length; i++) {
-    for (j = 0; j <= 6; j++) {
+  for (let i = 0; i < arrayMatlInfo.length; i++) {
+    for (let j = 0; j <= 6; j++) {
       if (j === 0) {
         document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].part;
       }
@@ -251,25 +296,25 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
   // const arrayToParse = keepDataNewLine.saveData((brlAssyLabourLine-5), 7, 'js-save-lab');
 
   document.getElementById('js-second-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-lab-part js-save-lab" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
+  <input type="text" class="form-control js-lab-part js-save-lab js-store-data" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
   </div>
   <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
   </div>
   <div class="col-md-2"> 
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-subtotal input-off" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}" tabindex=-1>
+  <input type="number" min="0.00" class="form-control js-save-lab js-labour-subtotal input-off js-store-data" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}" tabindex=-1>
   </div>
   <div class="col-md-2"> 
   <input type="hidden">
@@ -282,8 +327,6 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
 
 //Add new lines to the service session of the barrel assembly page.
 document.getElementById('js-new-line-brl-serv').addEventListener('click', async () => {
-  keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
-  
   //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
   if (htmlAccumulatorServ === '') {
     serverServiceCode = await addIdCode('serviceCode');
@@ -291,31 +334,32 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
       htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
     })
   }
+  keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-serv-part js-save-serv" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
+  <input type="text" class="form-control js-serv-part js-save-serv js-store-data" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv js-serv-code">
+    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv js-serv-code js-store-data">
       <option></option>
       ${htmlAccumulatorServ}
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control js-save-serv js-service" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
+    <input type="text" class="form-control js-save-serv js-service js-store-data" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier">
+    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data">
       <option></option>
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save-serv js-serv-cost" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
+    <input type="text" class="form-control js-save-serv js-serv-cost js-store-data" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
+    <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage js-store-data" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
   </div>
   <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal input-off" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}" tabindex=-1>
+    <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal input-off js-store-data" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}" tabindex=-1>
   </div>`;
   keepDataNewLine.populateData((brlAssyServLine-5), 7, 'js-save-serv');
   brlAssyServLine++;
@@ -515,6 +559,11 @@ function dependenceFieldsUpdate() {
     })
   })
 }
+
+//When next is clicked, all the date need to be saved and next page loaded
+document.getElementById('js-btn-second-next').addEventListener('click', () => {
+  saveDataForReload();
+})
 
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
