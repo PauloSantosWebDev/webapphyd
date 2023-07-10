@@ -250,7 +250,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save js-cost js-store-data" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}">
+    <input type="text" class="form-control js-save js-cost js-store-data input-off" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}" tabindex="-1">
   </div>
   <div class="col-md-1"> 
     <input type="number" min="0.00" class="form-control js-save js-usage js-store-data" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
@@ -353,7 +353,7 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save-serv js-serv-cost js-store-data" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}">
+    <input type="text" class="form-control js-save-serv js-serv-cost js-store-data input-off" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}" tabindex="-1">
   </div>
   <div class="col-md-1"> 
     <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage js-store-data" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
