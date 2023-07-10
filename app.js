@@ -78,6 +78,34 @@ app.get('/quotebrlassy', (req, res) => {
   })
 })
 
+//Quote rod assembly page
+app.get('/quoterodassy', (req, res) => {
+  db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
+    db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      
+      db.all('SELECT mc, ncctr, welding, honing, assembling FROM labour ORDER BY date DESC LIMIT 1', (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const labourPrice = rows.map(row => ({mc: row.mc, ncctr: row.ncctr, welding: row.welding, honing: row.honing, assembling: row.assembling}));
+        
+        res.render('quoterodassy.njk', {title: 'Rod assembly quote', serverHydroilId, serverServiceCode, labourPrice});  
+      })
+
+      // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode});
+    })
+    // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId});
+  })
+})
+
 //Customer registration form
 app.get('/regcustomer', (req, res) =>{
   res.render('regcustomer.njk', {title: 'Customers Registration Form'});
@@ -535,8 +563,187 @@ app.post('/quoteone', (req, res) => {
   // })
 })
 
-//Used to load the Hydroil ID field when lines are added
+//Used to load the Hydroil ID field when lines are added on brl assembly page
 app.post('/quotebrlassy', (req, res) => {
+  const checker = req.body.target;
+  const parsedValue = req.body.value;
+  const supplierName = req.body.name;
+  if (checker === 'hydId') {
+    db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
+      res.json({
+        status: 'success',
+        body: serverHydroilId
+      });
+    })
+  }
+  else if (checker === 'serviceCode') {
+    db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      res.json({
+        status: 'success',
+        body: serverServiceCode
+      });
+    })
+  }
+  else if (checker === 'matlSupplier') {
+    db.all('SELECT supplier_id FROM material_costs WHERE hydroil_id = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const supplierIds = rows.map(row => ({id: row.supplier_id}));
+      let promises = supplierIds.map((e, i) => {
+        return new Promise((resolve, reject) => {
+          db.all('SELECT name FROM suppliers WHERE supplier_id = ?', [e.id], (err, rows) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(rows.map(row => ({name: row.name})));
+          })
+        })
+      })
+      Promise.all(promises)
+        .then(results => {
+          let accumulator = [];
+          results.forEach(result => {
+            accumulator = accumulator.concat(result);
+          })
+          res.json({
+            status: 'success',
+            body: accumulator
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+    })
+  }
+  else if (checker === 'matlItem') {
+    db.all('SELECT item FROM materials WHERE hydroil_id = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const data = rows.map(row => ({item: row.item}));
+      res.json({
+        status: 'success',
+        body: data
+      })
+    })
+  }
+  else if (checker === 'matlCost') {
+    if(!supplierName) {
+      res.end();
+    }
+    else {
+      db.all('SELECT supplier_id FROM suppliers WHERE name = ?', [supplierName], (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const supId = rows.map(row => ({supId: row.supplier_id}));
+        db.all('SELECT cost, unit FROM material_costs WHERE hydroil_id = ? AND supplier_id = ?', [parsedValue, supId[0].supId], (err, rows) => {
+          if (err) {
+            throw err;
+          }
+          const data = rows.map(row => ({cost: row.cost, unit: row.unit}));
+          res.json({
+            status: 'success',
+            body: data
+          })
+        })
+      })
+    }
+  }
+  else if (checker === 'servService') {
+    db.all('SELECT service FROM ext_services WHERE service_code = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const data = rows.map(row => ({service: row.service}));
+      res.json({
+        status: 'success',
+        body: data
+      })
+    })
+  }
+  else if (checker === 'servSupplier') {
+    db.all('SELECT supplier_id FROM ext_services_costs WHERE service_code = ?', [parsedValue], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const supplierIds = rows.map(row => ({id: row.supplier_id}));
+      let promises = supplierIds.map((e, i) => {
+        return new Promise((resolve, reject) => {
+          db.all('SELECT name FROM suppliers WHERE supplier_id = ?', [e.id], (err, rows) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(rows.map(row => ({name: row.name})));
+          })
+        })
+      })
+      Promise.all(promises)
+        .then(results => {
+          let accumulator = [];
+          results.forEach(result => {
+            accumulator = accumulator.concat(result);
+          })
+          res.json({
+            status: 'success',
+            body: accumulator
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+    })
+  }
+  else if (checker === 'servCost') {
+    if(!supplierName) {
+      res.end();
+    }
+    else {
+      db.all('SELECT supplier_id FROM suppliers WHERE name = ?', [supplierName], (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const supId = rows.map(row => ({supId: row.supplier_id}));
+        db.all('SELECT cost, unit FROM ext_services_costs WHERE service_code = ? AND supplier_id = ?', [parsedValue, supId[0].supId], (err, rows) => {
+          if (err) {
+            throw err;
+          }
+          const data = rows.map(row => ({cost: row.cost, unit: row.unit}));
+          res.json({
+            status: 'success',
+            body: data
+          })
+        })
+      })
+    }
+  }
+  else if (checker === 'labourCost') {  
+    db.all('SELECT mc, ncctr, welding, honing, assembling FROM labour ORDER BY date DESC LIMIT 1', (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const labourPrice = rows.map(row => ({mc: row.mc, ncctr: row.ncctr, welding: row.welding, honing: row.honing, assembling: row.assembling}));
+      
+      res.json({
+        status: 'success',
+        body: labourPrice
+      })
+      // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode, labourPrice});  
+    })
+  }
+})
+
+//Used to load the Hydroil ID field when lines are added on rod assembly page
+app.post('/quoterodassy', (req, res) => {
   const checker = req.body.target;
   const parsedValue = req.body.value;
   const supplierName = req.body.name;

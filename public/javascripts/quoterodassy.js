@@ -43,8 +43,10 @@ const keepDataNewLine = {
 }
 
 //Giving input fiels some default values
-document.getElementById('inputServicePart0').value = document.getElementById('inputLabourPart0').value = document.getElementById('inputPart0').value = 'Barrel';
-document.getElementById('inputServicePart1').value = document.getElementById('inputLabourPart1').value = document.getElementById('inputPart1').value = 'End cap';
+document.getElementById('inputServicePart0').value = document.getElementById('inputLabourPart0').value = document.getElementById('inputPart0').value = 'Rod';
+document.getElementById('inputServicePart1').value = document.getElementById('inputLabourPart1').value = document.getElementById('inputPart1').value = 'Piston';
+document.getElementById('inputServicePart2').value = document.getElementById('inputLabourPart2').value = document.getElementById('inputPart2').value = 'Piston plate';
+document.getElementById('inputServicePart3').value = document.getElementById('inputLabourPart3').value = document.getElementById('inputPart3').value = 'Piston locking nut';
 
 //Add listeners to barrel assembly material part lines
 function listenBrlMatlChange() {
@@ -73,32 +75,32 @@ function listenBrlMatlChange() {
 //Used to save the data in the sessionStorage
 //Data will be used to populate sql database and in case the page is reloaded
 function saveDataForReload() {
-  sessionStorage.setItem('brlAssyMatlLines', brlAssyMatlLine);
-  sessionStorage.setItem('brlAssyLabourLines', brlAssyLabourLine);
-  sessionStorage.setItem('brlAssyServLines', brlAssyServLine);
+  sessionStorage.setItem('rodAssyMatlLines', brlAssyMatlLine);
+  sessionStorage.setItem('rodAssyLabourLines', brlAssyLabourLine);
+  sessionStorage.setItem('rodAssyServLines', brlAssyServLine);
   const arrayStoreData = [];
   document.querySelectorAll('.js-store-data').forEach((e, i) => {
     arrayStoreData.push(e.value);
   });
-  sessionStorage.setItem('storeDataBrlAssy', arrayStoreData);
-  location.assign('http://localhost:3000/quoterodassy');
+  sessionStorage.setItem('storeDataRodAssy', arrayStoreData);
+  location.assign('http://localhost:3000/quotegland');
 }
 
 //Used to populate back when previous is clicked in the next page
 function populateBack () {
-  let iteration = Number(sessionStorage.getItem('brlAssyMatlLines'));
+  let iteration = Number(sessionStorage.getItem('rodAssyMatlLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-matl').click();
   }
-  iteration = Number(sessionStorage.getItem('brlAssyLabourLines'));
+  iteration = Number(sessionStorage.getItem('rodAssyLabourLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-labour').click();
   }
-  iteration = Number(sessionStorage.getItem('brlAssyServLines'));
+  iteration = Number(sessionStorage.getItem('rodAssyServLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-serv').click();
   }
-  let arrayStoreData = sessionStorage.getItem('storeDataBrlAssy');
+  let arrayStoreData = sessionStorage.getItem('storeDataRodAssy');
   arrayStoreData = arrayStoreData.split(',');
   setTimeout(() => {
     document.querySelectorAll('.js-store-data').forEach((e, i) => {
@@ -377,8 +379,8 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
 })
 
 //Necessary to re-populate data in the quoteone page.
-document.getElementById('js-first-previous').addEventListener('click', () => {
-  sessionStorage.setItem('firstPrevious', true);
+document.getElementById('js-second-previous').addEventListener('click', () => {
+  sessionStorage.setItem('secondPrevious', true);
 })
 
 //Used to add listener and update other fields accordingly
