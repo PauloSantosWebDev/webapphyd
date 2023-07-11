@@ -5,6 +5,7 @@ let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
 let htmlAccumulator = '';
+let htmlAccumulatorSupplier = '';
 let htmlAccumulatorServ = '';
 let labourCostFetchController = true;
 let isNext = false;
@@ -15,6 +16,7 @@ let isNext = false;
 let arrayColumns = [];
 let arrayRows = [];
 let serverHydroilId = [];
+let serverSupplierNames = [];
 let serverServiceCode = [];
 let labourPrice = [];
 
@@ -234,10 +236,21 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   }
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
+  //Used for Hydroil ID
   if (htmlAccumulator === '') {
     serverHydroilId = await addIdCode('hydId');
     serverHydroilId.forEach(e => {
       htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
+    })    
+  }
+
+  //Used as a guard to avoid fetching all the time the add new line button is clicked
+  //Used for suppliers
+  if (htmlAccumulatorSupplier === '') {
+    serverSupplierNames = await addIdCode('supplierNames');
+    console.log(serverSupplierNames);
+    serverSupplierNames.forEach(e => {
+      htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
     })    
   }
   
@@ -254,8 +267,9 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     <input type="text" class="form-control js-save js-item js-store-data" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data">
+    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data input-off" tabindex="-1">
       <option></option>
+      ${htmlAccumulatorSupplier}
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
@@ -336,12 +350,23 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
 
 //Add new lines to the service session of the barrel assembly page.
 document.getElementById('js-new-line-brl-serv').addEventListener('click', async () => {
+  
   //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
+  //Used for service code
   if (htmlAccumulatorServ === '') {
     serverServiceCode = await addIdCode('serviceCode');
     serverServiceCode.forEach(e => {
       htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
     })
+  }
+
+  //Used as a guard to avoid fetching all the time the add new line button is clicked
+  //Used for suppliers
+  if (htmlAccumulatorSupplier === '') {
+    serverSupplierNames = await addIdCode('supplierNames');
+    serverSupplierNames.forEach(e => {
+      htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
+    })    
   }
   keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
@@ -357,8 +382,9 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
     <input type="text" class="form-control js-save-serv js-service js-store-data" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data">
+    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data input-off" tabindex="-1">
       <option></option>
+      ${htmlAccumulatorSupplier}
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
@@ -387,6 +413,8 @@ function dependenceFieldsUpdate() {
   //Updates the supplier and cost when the Hydroil ID is chosen
   document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
     e.addEventListener('change', async () => {
+      document.querySelectorAll('.js-supplier')[i].removeAttribute('tabindex');
+      document.querySelectorAll('.js-supplier')[i].classList.remove('input-off');
       const item = await getInfo('matlItem', e.value);
       document.querySelectorAll('.js-item')[i].value = item[0].item;
       const arraySuppliers = await getInfo('matlSupplier', e.value);
@@ -434,6 +462,8 @@ function dependenceFieldsUpdate() {
   //Update service and supplier based on service code chosen
   document.querySelectorAll('.js-serv-code').forEach((e, i) => {
     e.addEventListener('change', async () => {
+      document.querySelectorAll('.js-serv-supplier')[i].removeAttribute('tabindex');
+      document.querySelectorAll('.js-serv-supplier')[i].classList.remove('input-off');
       const service = await getInfo('servService', e.value);
       document.querySelectorAll('.js-service')[i].value = service[0].service;
       const arraySuppliers = await getInfo('servSupplier', e.value);

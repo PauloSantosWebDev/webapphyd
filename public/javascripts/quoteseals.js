@@ -12,6 +12,7 @@ let htmlAccumulatorServ = '';
 let labourCostFetchController = true;
 let isNext = false;
 
+
 //Global arrays definition
 
 //Used to create new lines keeping the data
@@ -46,11 +47,11 @@ const keepDataNewLine = {
 }
 
 //Giving input fiels some default values
-// document.getElementById('inputPartt0').value = 'Wiper';
-// document.getElementById('inputPartt1').value = 'Gland packing';
-// document.getElementById('inputPartt2').value = 'Gland o-ring';
-// document.getElementById('inputPartt3').value = 'Piston o-ring';
-// document.getElementById('inputPartt4').value = 'Piston packing';
+document.getElementById('inputPart0').value = 'Wiper';
+document.getElementById('inputPart1').value = 'Gland packing';
+document.getElementById('inputPart2').value = 'Gland o-ring';
+document.getElementById('inputPart3').value = 'Piston o-ring';
+document.getElementById('inputPart4').value = 'Piston packing';
 
 //Used to save the data in the sessionStorage
 //Data will be used to populate sql database and in case the page is reloaded
@@ -338,6 +339,3 @@ document.getElementById('js-btn-fifth-next').addEventListener('click', () => {
 
 //HTML Generating Functions - End
 //--------------------------------------------------------------------------------------------------------------------------
-
-
-
