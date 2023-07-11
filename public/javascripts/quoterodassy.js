@@ -111,7 +111,7 @@ function populateBack () {
     })
   }, 1000);
 
-  sessionStorage.setItem('secondPrevious', false);
+  sessionStorage.setItem('thirdPrevious', false);
 }
 
 //General functions - End
@@ -183,7 +183,7 @@ async function getCost(target, value, name) {
 window.addEventListener('load', () => {
   listenBrlMatlChange();
   dependenceFieldsUpdate();
-  if (sessionStorage.getItem('secondPrevious') === 'true') {
+  if (sessionStorage.getItem('thirdPrevious') === 'true') {
     populateBack();
   }
   isNext = false;
@@ -575,7 +575,7 @@ function dependenceFieldsUpdate() {
 }
 
 //When next is clicked, all the date need to be saved and next page loaded
-document.getElementById('js-btn-second-next').addEventListener('click', () => {
+document.getElementById('js-btn-third-next').addEventListener('click', () => {
   isNext = true;
   saveDataForReload();
 })

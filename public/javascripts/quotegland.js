@@ -83,7 +83,7 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataGlandAssy', arrayStoreData);
-  location.assign('http://localhost:3000/');
+  location.assign('http://localhost:3000/quoteseals');
 }
 
 //Used to populate back when previous is clicked in the next page
@@ -108,7 +108,7 @@ function populateBack () {
     })
   }, 1000);
 
-  sessionStorage.setItem('thirdPrevious', false);
+  sessionStorage.setItem('fourthPrevious', false);
 }
 
 //General functions - End
@@ -180,7 +180,7 @@ async function getCost(target, value, name) {
 window.addEventListener('load', () => {
   listenBrlMatlChange();
   dependenceFieldsUpdate();
-  if (sessionStorage.getItem('thirdPrevious') === 'true') {
+  if (sessionStorage.getItem('fourthPrevious') === 'true') {
     populateBack();
   }
   isNext = false;
@@ -379,8 +379,8 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
 })
 
 //Necessary to re-populate data in the quoteone page.
-document.getElementById('js-second-previous').addEventListener('click', () => {
-  sessionStorage.setItem('secondPrevious', true);
+document.getElementById('js-third-previous').addEventListener('click', () => {
+  sessionStorage.setItem('thirdPrevious', true);
 })
 
 //Used to add listener and update other fields accordingly
@@ -572,7 +572,7 @@ function dependenceFieldsUpdate() {
 }
 
 //When next is clicked, all the date need to be saved and next page loaded
-document.getElementById('js-btn-second-next').addEventListener('click', () => {
+document.getElementById('js-btn-fourth-next').addEventListener('click', () => {
   isNext = true;
   saveDataForReload();
 })

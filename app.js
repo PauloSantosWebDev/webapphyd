@@ -134,6 +134,35 @@ app.get('/quotegland', (req, res) => {
   })
 })
 
+//Quote seals page
+app.get('/quoteseals', (req, res) => {
+  db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
+    res.render('quoteseals.njk', {title: 'Seals quote', serverHydroilId});
+    // db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+    //   if (err) {
+    //     throw err;
+    //   }
+    //   const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      
+    //   db.all('SELECT mc, ncctr, welding, honing, assembling FROM labour ORDER BY date DESC LIMIT 1', (err, rows) => {
+    //     if (err) {
+    //       throw err;
+    //     }
+    //     const labourPrice = rows.map(row => ({mc: row.mc, ncctr: row.ncctr, welding: row.welding, honing: row.honing, assembling: row.assembling}));
+        
+    //     res.render('quoteseals.njk', {title: 'Seals quote', serverHydroilId, serverServiceCode, labourPrice});  
+    //   })
+
+      // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId, serverServiceCode});
+    // })
+    // res.render('quotebrlassy.njk', {title: 'Barrel assembly quote', serverHydroilId});
+  })
+})
+
 //Customer registration form
 app.get('/regcustomer', (req, res) =>{
   res.render('regcustomer.njk', {title: 'Customers Registration Form'});

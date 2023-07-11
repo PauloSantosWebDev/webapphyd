@@ -1,0 +1,93 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+<h2 class="registration-forms-title">NEW QUOTE FORM</h2>
+  <hr>
+  <h4 class="registration-forms-title">SEALS</h4>
+  <h5>MATERIAL</h5>
+
+  <form class="row g-3">
+    <div class="col-md-2">
+      <label for="inputPart" class="form-label">Part</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputHydroilId" class="form-label">Hydroil ID</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputItem" class="form-label">Item</label>
+    </div>
+    <div class="col-md-2">
+      <label for="inputSupplier" class="form-label">Supplier</label>
+    </div>
+    <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+      <label for="inputCost" class="form-label">Cost (A$)</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputUsage" class="form-label">Usage</label>
+    </div>
+    <div class="col-md-1"> 
+      <label for="inputSubTotal" class="form-label">Subtotal</label>
+    </div>
+    
+    {#------------------------------------#}
+    {% for l in range(5) %}
+      <div class="col-md-2">
+        <input type="text" class="form-control js-part js-store-data" id="inputPart{{l}}" name="inputPart{{l}}">
+      </div>
+      <div class="col-md-2">
+        <select id="inputHydroilId{{l}}" name="inputHydroilId{{l}}" class="form-select js-hyd-id js-store-data">
+          <option></option>
+          {% for i in serverHydroilId %}
+            <option value="{{i.id}}">{{i.id}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control js-item js-store-data" id="inputItem{{l}}" name="inputItem{{l}}">
+      </div>
+      <div class="col-md-2">
+        <select id="inputSupplier{{l}}" name="inputSupplier{{l}}" class="form-select js-supplier js-store-data">
+          <option></option>
+        </select>
+      </div>
+      <div class="col-md-2"> <!--Here the cost per unit should be specified-->
+        <input type="text" class="form-control js-cost js-store-data input-off" id="inputCost{{l}}" name="inputCost{{l}}" tabindex="-1">
+      </div>
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-usage js-store-data" id="inputUsage{{l}}" name="inputUsage{{l}}">
+      </div>
+      <div class="col-md-1"> 
+        <input type="number" min="0.00" class="form-control js-subtotal input-off js-store-data" id="inputSubTotal{{l}}" name="inputSubTotal{{l}}" tabindex=-1>
+      </div>
+    {% endfor %}
+  </form>
+  <form class="row g-3" id="js-first-form-add-lines" style="margin-top: 0.5em;">
+  </form>
+
+  <div class="col-md-12" style="margin-top: 1em;">
+    <button type="button" class="btn btn-primary" id="js-new-line-brl-matl">Add new line</button>
+  </div>
+
+  <div class="container">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        {# <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li> #}
+        <li class="page-item">
+          <a class="page-link" href="/quotegland" tabindex="-1" id="js-fourth-previous">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" id="js-btn-fifth-next">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+<script src="/javascripts/quoteseals.js"></script>
+{% endblock %}}
+
+
