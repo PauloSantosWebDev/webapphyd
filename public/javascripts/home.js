@@ -2,13 +2,13 @@
 
 window.addEventListener('load', () => {
     console.log("The loading method is working.");
-    const working = sessionStorage.getItem('storeDataBrlAssy');
+    const working = sessionStorage.getItem('storeDataGlandAssy');
     console.log(working);
 })
 
 document.getElementById('js-previous-test').addEventListener('click', () => {
-    sessionStorage.setItem('secondPrevious', true);
-    location.assign('http://localhost:3000/quotebrlassy');
+    sessionStorage.setItem('thirdPrevious', true);
+    location.assign('http://localhost:3000/quotegland');
 })
 
 //General functions - End

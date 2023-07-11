@@ -1,5 +1,5 @@
 //This file is a copy and past of quotebrlassy.js with the extremally necessary adjustments only.
-//This is why many bindings/variables have brl in their names. 
+//This is why many bindings/variables have brl in their names.
 
 //General functions - Start
 
@@ -46,10 +46,7 @@ const keepDataNewLine = {
 }
 
 //Giving input fiels some default values
-document.getElementById('inputServicePart0').value = document.getElementById('inputLabourPart0').value = document.getElementById('inputPart0').value = 'Rod';
-document.getElementById('inputServicePart1').value = document.getElementById('inputLabourPart1').value = document.getElementById('inputPart1').value = 'Piston';
-document.getElementById('inputServicePart2').value = document.getElementById('inputLabourPart2').value = document.getElementById('inputPart2').value = 'Piston plate';
-document.getElementById('inputServicePart3').value = document.getElementById('inputLabourPart3').value = document.getElementById('inputPart3').value = 'Piston locking nut';
+document.getElementById('inputServicePart0').value = document.getElementById('inputLabourPart0').value = document.getElementById('inputPart0').value = 'Gland';
 
 //Add listeners to barrel assembly material part lines
 function listenBrlMatlChange() {
@@ -78,32 +75,32 @@ function listenBrlMatlChange() {
 //Used to save the data in the sessionStorage
 //Data will be used to populate sql database and in case the page is reloaded
 function saveDataForReload() {
-  sessionStorage.setItem('rodAssyMatlLines', brlAssyMatlLine);
-  sessionStorage.setItem('rodAssyLabourLines', brlAssyLabourLine);
-  sessionStorage.setItem('rodAssyServLines', brlAssyServLine);
+  sessionStorage.setItem('glandAssyMatlLines', brlAssyMatlLine);
+  sessionStorage.setItem('glandAssyLabourLines', brlAssyLabourLine);
+  sessionStorage.setItem('glandAssyServLines', brlAssyServLine);
   const arrayStoreData = [];
   document.querySelectorAll('.js-store-data').forEach((e, i) => {
     arrayStoreData.push(e.value);
   });
-  sessionStorage.setItem('storeDataRodAssy', arrayStoreData);
-  location.assign('http://localhost:3000/quotegland');
+  sessionStorage.setItem('storeDataGlandAssy', arrayStoreData);
+  location.assign('http://localhost:3000/');
 }
 
 //Used to populate back when previous is clicked in the next page
 function populateBack () {
-  let iteration = Number(sessionStorage.getItem('rodAssyMatlLines'));
+  let iteration = Number(sessionStorage.getItem('glandAssyMatlLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-matl').click();
   }
-  iteration = Number(sessionStorage.getItem('rodAssyLabourLines'));
+  iteration = Number(sessionStorage.getItem('glandAssyLabourLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-labour').click();
   }
-  iteration = Number(sessionStorage.getItem('rodAssyServLines'));
+  iteration = Number(sessionStorage.getItem('glandAssyServLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-serv').click();
   }
-  let arrayStoreData = sessionStorage.getItem('storeDataRodAssy');
+  let arrayStoreData = sessionStorage.getItem('storeDataGlandAssy');
   arrayStoreData = arrayStoreData.split(',');
   setTimeout(() => {
     document.querySelectorAll('.js-store-data').forEach((e, i) => {
@@ -111,7 +108,7 @@ function populateBack () {
     })
   }, 1000);
 
-  sessionStorage.setItem('secondPrevious', false);
+  sessionStorage.setItem('thirdPrevious', false);
 }
 
 //General functions - End
@@ -130,7 +127,7 @@ async function addIdCode (target) {
     body: JSON.stringify({target})
   };
   try {
-    const response = await fetch("/quoterodassy", options);
+    const response = await fetch("/quotegland", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -148,7 +145,7 @@ async function getInfo(target, value) {
     body: JSON.stringify({target, value})
   };
   try {
-    const response = await fetch("/quoterodassy", options);
+    const response = await fetch("/quotegland", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -166,7 +163,7 @@ async function getCost(target, value, name) {
     body: JSON.stringify({target, value, name})
   };
   try {
-    const response = await fetch("/quoterodassy", options);
+    const response = await fetch("/quotegland", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -183,7 +180,7 @@ async function getCost(target, value, name) {
 window.addEventListener('load', () => {
   listenBrlMatlChange();
   dependenceFieldsUpdate();
-  if (sessionStorage.getItem('secondPrevious') === 'true') {
+  if (sessionStorage.getItem('thirdPrevious') === 'true') {
     populateBack();
   }
   isNext = false;
