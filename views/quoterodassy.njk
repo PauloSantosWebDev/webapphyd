@@ -46,8 +46,11 @@
         <input type="text" class="form-control js-item js-store-data" id="inputItem{{l}}" name="inputItem{{l}}">
       </div>
       <div class="col-md-2">
-        <select id="inputSupplier{{l}}" name="inputSupplier{{l}}" class="form-select js-supplier js-store-data">
+        <select id="inputSupplier{{l}}" name="inputSupplier{{l}}" class="form-select js-supplier js-store-data input-off" tabindex="-1">
           <option></option>
+          {% for a in allSupplierNames %}
+            <option value="{{a.name}}">{{a.name}}</option>
+          {% endfor%}}
         </select>
       </div>
       <div class="col-md-2"> <!--Here the cost per unit should be specified-->
@@ -173,8 +176,11 @@
         <input type="text" class="form-control js-service js-store-data" id="inputService{{l}}" name="inputService{{l}}">
       </div>
       <div class="col-md-2">
-        <select id="inputServiceSupplier{{l}}" name="inputServiceSupplier{{l}}" class="form-select js-serv-supplier js-store-data">
+        <select id="inputServiceSupplier{{l}}" name="inputServiceSupplier{{l}}" class="form-select js-serv-supplier js-store-data input-off" tabindex="-1">
           <option></option>
+          {% for a in allSupplierNames %}
+            <option value="{{a.name}}">{{a.name}}</option>
+          {% endfor%}}
         </select>
       </div>
       <div class="col-md-2"> <!--Here the cost per unit should be specified-->

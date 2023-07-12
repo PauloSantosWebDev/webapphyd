@@ -1,5 +1,4 @@
-//This file is a copy and past of quotebrlassy.js with the extremally necessary adjustments only.
-//This is why many bindings/variables have brl in their names.
+//File very similar to quotebrlassy.js.
 
 //General functions - Start
 
@@ -8,6 +7,7 @@ let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
 let brlAssyServLine = 5;
 let htmlAccumulator = '';
+let htmlAccumulatorSupplier = '';
 let htmlAccumulatorServ = '';
 let labourCostFetchController = true;
 let isNext = false;
@@ -18,6 +18,7 @@ let isNext = false;
 let arrayColumns = [];
 let arrayRows = [];
 let serverHydroilId = [];
+let serverSupplierNames = [];
 let serverServiceCode = [];
 let labourPrice = [];
 
@@ -75,32 +76,32 @@ function listenBrlMatlChange() {
 //Used to save the data in the sessionStorage
 //Data will be used to populate sql database and in case the page is reloaded
 function saveDataForReload() {
-  sessionStorage.setItem('glandAssyMatlLines', brlAssyMatlLine);
-  sessionStorage.setItem('glandAssyLabourLines', brlAssyLabourLine);
-  sessionStorage.setItem('glandAssyServLines', brlAssyServLine);
+  sessionStorage.setItem('gldAssyMatlLines', brlAssyMatlLine);
+  sessionStorage.setItem('gldAssyLabourLines', brlAssyLabourLine);
+  sessionStorage.setItem('gldAssyServLines', brlAssyServLine);
   const arrayStoreData = [];
   document.querySelectorAll('.js-store-data').forEach((e, i) => {
     arrayStoreData.push(e.value);
   });
-  sessionStorage.setItem('storeDataGlandAssy', arrayStoreData);
+  sessionStorage.setItem('storeDataGldAssy', arrayStoreData);
   location.assign('http://localhost:3000/quoteseals');
 }
 
 //Used to populate back when previous is clicked in the next page
 function populateBack () {
-  let iteration = Number(sessionStorage.getItem('glandAssyMatlLines'));
+  let iteration = Number(sessionStorage.getItem('gldAssyMatlLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-matl').click();
   }
-  iteration = Number(sessionStorage.getItem('glandAssyLabourLines'));
+  iteration = Number(sessionStorage.getItem('gldAssyLabourLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-labour').click();
   }
-  iteration = Number(sessionStorage.getItem('glandAssyServLines'));
+  iteration = Number(sessionStorage.getItem('gldAssyServLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-serv').click();
   }
-  let arrayStoreData = sessionStorage.getItem('storeDataGlandAssy');
+  let arrayStoreData = sessionStorage.getItem('storeDataGldAssy');
   arrayStoreData = arrayStoreData.split(',');
   setTimeout(() => {
     document.querySelectorAll('.js-store-data').forEach((e, i) => {
@@ -127,7 +128,7 @@ async function addIdCode (target) {
     body: JSON.stringify({target})
   };
   try {
-    const response = await fetch("/quotegland", options);
+    const response = await fetch("/quotegldassy", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -145,7 +146,7 @@ async function getInfo(target, value) {
     body: JSON.stringify({target, value})
   };
   try {
-    const response = await fetch("/quotegland", options);
+    const response = await fetch("/quotegldassy", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -163,7 +164,7 @@ async function getCost(target, value, name) {
     body: JSON.stringify({target, value, name})
   };
   try {
-    const response = await fetch("/quotegland", options);
+    const response = await fetch("/quotegldassy", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -236,10 +237,21 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   }
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
+  //Used for Hydroil ID
   if (htmlAccumulator === '') {
     serverHydroilId = await addIdCode('hydId');
     serverHydroilId.forEach(e => {
       htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
+    })    
+  }
+
+  //Used as a guard to avoid fetching all the time the add new line button is clicked
+  //Used for suppliers
+  if (htmlAccumulatorSupplier === '') {
+    serverSupplierNames = await addIdCode('supplierNames');
+    console.log(serverSupplierNames);
+    serverSupplierNames.forEach(e => {
+      htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
     })    
   }
   
@@ -256,8 +268,9 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     <input type="text" class="form-control js-save js-item js-store-data" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data">
+    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data input-off" tabindex="-1">
       <option></option>
+      ${htmlAccumulatorSupplier}
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
@@ -338,12 +351,23 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
 
 //Add new lines to the service session of the barrel assembly page.
 document.getElementById('js-new-line-brl-serv').addEventListener('click', async () => {
+  
   //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
+  //Used for service code
   if (htmlAccumulatorServ === '') {
     serverServiceCode = await addIdCode('serviceCode');
     serverServiceCode.forEach(e => {
       htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
     })
+  }
+
+  //Used as a guard to avoid fetching all the time the add new line button is clicked
+  //Used for suppliers
+  if (htmlAccumulatorSupplier === '') {
+    serverSupplierNames = await addIdCode('supplierNames');
+    serverSupplierNames.forEach(e => {
+      htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
+    })    
   }
   keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
@@ -359,8 +383,9 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
     <input type="text" class="form-control js-save-serv js-service js-store-data" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
   </div>
   <div class="col-md-2">
-    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data">
+    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data input-off" tabindex="-1">
       <option></option>
+      ${htmlAccumulatorSupplier}
     </select>
   </div>
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
@@ -389,6 +414,8 @@ function dependenceFieldsUpdate() {
   //Updates the supplier and cost when the Hydroil ID is chosen
   document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
     e.addEventListener('change', async () => {
+      document.querySelectorAll('.js-supplier')[i].removeAttribute('tabindex');
+      document.querySelectorAll('.js-supplier')[i].classList.remove('input-off');
       const item = await getInfo('matlItem', e.value);
       document.querySelectorAll('.js-item')[i].value = item[0].item;
       const arraySuppliers = await getInfo('matlSupplier', e.value);
@@ -436,6 +463,8 @@ function dependenceFieldsUpdate() {
   //Update service and supplier based on service code chosen
   document.querySelectorAll('.js-serv-code').forEach((e, i) => {
     e.addEventListener('change', async () => {
+      document.querySelectorAll('.js-serv-supplier')[i].removeAttribute('tabindex');
+      document.querySelectorAll('.js-serv-supplier')[i].classList.remove('input-off');
       const service = await getInfo('servService', e.value);
       document.querySelectorAll('.js-service')[i].value = service[0].service;
       const arraySuppliers = await getInfo('servSupplier', e.value);

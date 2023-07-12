@@ -14,32 +14,25 @@ let arrayRows = [];
 let serverHydroilId = [];
 let serverSupplierNames = [];
 
-//Giving input fiels some default values
-document.getElementById('inputPart0').value = 'Wiper';
-document.getElementById('inputPart1').value = 'Gland packing';
-document.getElementById('inputPart2').value = 'Gland o-ring';
-document.getElementById('inputPart3').value = 'Piston o-ring';
-document.getElementById('inputPart4').value = 'Piston packing';
-
 //Used to save the data in the sessionStorage
 //Data will be used to populate sql database and in case the page is reloaded
 function saveDataForReload() {
-  sessionStorage.setItem('sealsMatlLines', brlAssyMatlLine);
+  sessionStorage.setItem('fastenersMatlLines', brlAssyMatlLine);
   const arrayStoreData = [];
   document.querySelectorAll('.js-store-data').forEach((e, i) => {
     arrayStoreData.push(e.value);
   });
-  sessionStorage.setItem('storeDataSeals', arrayStoreData);
-  location.assign('http://localhost:3000/quotefasteners');
+  sessionStorage.setItem('storeDataFasteners', arrayStoreData);
+  location.assign('http://localhost:3000/quoteperipherals');
 }
 
 //Used to populate back when previous is clicked in the next page
 function populateBack () {
-  let iteration = Number(sessionStorage.getItem('sealsMatlLines'));
+  let iteration = Number(sessionStorage.getItem('fastenersMatlLines'));
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-matl').click();
   }
-  let arrayStoreData = sessionStorage.getItem('storeDataSeals');
+  let arrayStoreData = sessionStorage.getItem('storeDataFasteners');
   arrayStoreData = arrayStoreData.split(',');
   setTimeout(() => {
     document.querySelectorAll('.js-store-data').forEach((e, i) => {
@@ -47,7 +40,7 @@ function populateBack () {
     })
   }, 1000);
 
-  sessionStorage.setItem('fifthPrevious', false);
+  sessionStorage.setItem('sixthPrevious', false);
 }
 
 //General functions - End
@@ -66,7 +59,7 @@ async function addIdCode (target) {
     body: JSON.stringify({target})
   };
   try {
-    const response = await fetch("/quoteseals", options);
+    const response = await fetch("/quotefasteners", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -84,7 +77,7 @@ async function getInfo(target, value) {
     body: JSON.stringify({target, value})
   };
   try {
-    const response = await fetch("/quoteseals", options);
+    const response = await fetch("/quotefasteners", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -102,7 +95,7 @@ async function getCost(target, value, name) {
     body: JSON.stringify({target, value, name})
   };
   try {
-    const response = await fetch("/quoteseals", options);
+    const response = await fetch("/quotefasteners", options);
     const result = await response.json();
     return result.body;
   } catch (error) {
@@ -118,7 +111,7 @@ async function getCost(target, value, name) {
 //Loads page with functionalities it needs when page is loaded
 window.addEventListener('load', () => {
   dependenceFieldsUpdate();
-  if (sessionStorage.getItem('fifthPrevious') === 'true') {
+  if (sessionStorage.getItem('sixthPrevious') === 'true') {
     populateBack();
   }
   isNext = false;
@@ -249,8 +242,8 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
 })
 
 //Necessary to re-populate data in the quoteone page.
-document.getElementById('js-fourth-previous').addEventListener('click', () =>{
-  sessionStorage.setItem('fourthPrevious', true);
+document.getElementById('js-fifth-previous').addEventListener('click', () => {
+  sessionStorage.setItem('fifthPrevious', true);
 })
 
 //Used to add listener and update other fields accordingly
@@ -307,7 +300,7 @@ function dependenceFieldsUpdate() {
 }
 
 //When next is clicked, all the date need to be saved and next page loaded
-document.getElementById('js-btn-fifth-next').addEventListener('click', () => {
+document.getElementById('js-btn-sixth-next').addEventListener('click', () => {
   isNext = true;
   saveDataForReload();
 })
