@@ -198,6 +198,11 @@ app.get('/quoteperipherals', (req, res) => {
   })
 })
 
+//Quote markup page
+app.get('/quotemarkup', (req, res) => {
+  res.render('quotemarkup.njk', {title: 'Quote markup page'});
+})
+
 //Customer registration form
 app.get('/regcustomer', (req, res) =>{
   res.render('regcustomer.njk', {title: 'Customers Registration Form'});

@@ -32,3 +32,18 @@ display: block;
   /* border: none; */
   pointer-events: none;
 }
+
+.css-input {
+  width: 30%;
+  margin: auto;
+  text-align: center;
+}
+
+.css-input-price {
+  width: 30%;
+  margin: auto;
+  text-align: center;
+  border: none;
+  outline: none;
+  background: none;
+}

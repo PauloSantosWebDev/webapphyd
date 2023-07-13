@@ -23,7 +23,7 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataPeripherals', arrayStoreData);
-  location.assign('http://localhost:3000/');
+  location.assign('http://localhost:3000/quotemarkup');
 }
 
 //Used to populate back when previous is clicked in the next page

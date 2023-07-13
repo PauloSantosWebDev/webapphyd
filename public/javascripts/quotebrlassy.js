@@ -76,8 +76,8 @@ function listenBrlMatlChange() {
 //Data will be used to populate sql database and in case the page is reloaded
 function saveDataForReload() {
   sessionStorage.setItem('brlAssyMatlLines', brlAssyMatlLine);
-  sessionStorage.setItem('brlAssyLabourLines', brlAssyLabourLine);
-  sessionStorage.setItem('brlAssyServLines', brlAssyServLine);
+  // sessionStorage.setItem('brlAssyLabourLines', brlAssyLabourLine);
+  // sessionStorage.setItem('brlAssyServLines', brlAssyServLine);
   const arrayStoreData = [];
   document.querySelectorAll('.js-store-data').forEach((e, i) => {
     arrayStoreData.push(e.value);
@@ -92,14 +92,14 @@ function populateBack () {
   for (let i = 0; i < (iteration - 5); i++) {
     document.getElementById('js-new-line-brl-matl').click();
   }
-  iteration = Number(sessionStorage.getItem('brlAssyLabourLines'));
-  for (let i = 0; i < (iteration - 5); i++) {
-    document.getElementById('js-new-line-brl-labour').click();
-  }
-  iteration = Number(sessionStorage.getItem('brlAssyServLines'));
-  for (let i = 0; i < (iteration - 5); i++) {
-    document.getElementById('js-new-line-brl-serv').click();
-  }
+  // iteration = Number(sessionStorage.getItem('brlAssyLabourLines'));
+  // for (let i = 0; i < (iteration - 5); i++) {
+  //   document.getElementById('js-new-line-brl-labour').click();
+  // }
+  // iteration = Number(sessionStorage.getItem('brlAssyServLines'));
+  // for (let i = 0; i < (iteration - 5); i++) {
+  //   document.getElementById('js-new-line-brl-serv').click();
+  // }
   let arrayStoreData = sessionStorage.getItem('storeDataBrlAssy');
   arrayStoreData = arrayStoreData.split(',');
   setTimeout(() => {
@@ -248,7 +248,6 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   //Used for suppliers
   if (htmlAccumulatorSupplier === '') {
     serverSupplierNames = await addIdCode('supplierNames');
-    console.log(serverSupplierNames);
     serverSupplierNames.forEach(e => {
       htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
     })    
@@ -310,6 +309,8 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
       }
     }
   }
+  document.getElementById('js-new-line-brl-labour').click();
+  document.getElementById('js-new-line-brl-serv').click();  
 })
 
 //Add new lines to the labour session of the barrel assembly page.
@@ -319,7 +320,7 @@ document.getElementById('js-new-line-brl-labour').addEventListener('click', () =
   // const arrayToParse = keepDataNewLine.saveData((brlAssyLabourLine-5), 7, 'js-save-lab');
 
   document.getElementById('js-second-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-lab-part js-save-lab js-store-data" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}">
+  <input type="text" class="form-control js-lab-part js-save-lab js-store-data input-off" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}" tabindex="-1">
   </div>
   <div class="col-md-1">
   <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
@@ -370,7 +371,7 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
   }
   keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-serv-part js-save-serv js-store-data" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}">
+  <input type="text" class="form-control js-serv-part js-save-serv js-store-data input-off" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}" tabindex="-1">
   </div>
   <div class="col-md-2">
     <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv js-serv-code js-store-data">
