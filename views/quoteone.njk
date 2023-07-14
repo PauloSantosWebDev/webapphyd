@@ -9,8 +9,10 @@
     <div class="col-md-6">
       <label for="inputCustomer" class="form-label">Customer</label>
       <select id="inputCustomer" name="inputCustomer" class="form-select js-customer-info">
-        <option selected>Choose...</option>
-        <option>...</option>
+        <option></option>
+        {% for c in customerName %}
+          <option value="{{c.name}}">{{c.name}}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="col-md-6">

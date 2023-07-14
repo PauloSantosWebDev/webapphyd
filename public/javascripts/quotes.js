@@ -272,9 +272,9 @@ window.addEventListener('load', () => {
       populateBack('ton', 'js-ton');
       populateBack('customerInfo', 'js-customer-info');
       populateBack('type', 'js-type');
+      mountingsList();
       populateBack('extra', 'js-extra');
     }
-
     sessionStorage.setItem('firstPrevious', false);
   }
 });

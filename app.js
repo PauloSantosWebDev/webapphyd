@@ -47,7 +47,13 @@ app.get('/', (req, res) =>{
 
 //Quote first page
 app.get('/quoteone', (req, res) =>{
-  res.render('quoteone.njk', {title: 'New quote page'});
+  db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
+    if (err) {
+      throw err;
+    }
+    const customerName = rows.map(row => ({name: row.name}));
+    res.render('quoteone.njk', {title: 'New quote page', customerName});
+  })
 })
 
 //Quote barrel assembly page

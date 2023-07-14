@@ -1,5 +1,7 @@
 //General functions - Start
 
+console.log(sessionStorage.getItem('extra'));
+
 //Global variables definition
 let brlAssyMatlLine = 5;
 let brlAssyLabourLine = 5;
