@@ -7,8 +7,8 @@ window.addEventListener('load', () => {
 })
 
 document.getElementById('js-previous-test').addEventListener('click', () => {
-    sessionStorage.setItem('fifthPrevious', true);
-    location.assign('http://localhost:3000/quoteseals');
+    sessionStorage.setItem('ninthPrevious', true);
+    location.assign('http://localhost:3000/quotefinal');
 })
 
 //General functions - End

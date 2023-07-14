@@ -1,0 +1,76 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+  <h2 class="registration-forms-title">NEW QUOTE FORM</h2>
+  <hr>
+  <h4 class="registration-forms-title">FINAL PRICE</h4>
+
+  {# <h5 class="registration-forms-subtitle">BARREL ASSEMBLY</h5> class="registration-forms-subtitle" #}
+
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center">Item</th>
+        <th scope="col" class="text-center">Price A$</th>
+        <th scope="col" class="text-center">Details</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      <tr>
+        <td class="text-center" valign="middle">Marked-up</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input input-off" tabindex="-1"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+      <tr>
+        <td class="text-center" valign="middle">Paint</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+      <tr>
+        <td class="text-center" valign="middle">Freight</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+      <tr>
+        <td class="text-center" valign="middle">Box</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+      <tr>
+        <td class="text-center" valign="middle">Inspection</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+      <tr>
+        <td class="text-center" valign="middle">Extra</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+      <tr>
+        <td class="text-center" valign="middle">Final Price</td>
+        <td class="text-center" valign="middle"><input type='number' min="0.00" step="0.25" class="js-input-final-price css-input input-off" tabindex="-1"></td>
+        <td class="text-center" valign="middle"><textarea class="form-control" rows="2" class="js-input-final-price-details"></textarea></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="container">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="/quotemarkup" tabindex="-1" id="js-eighth-previous">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" id="js-btn-ninth-next">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <script src="/javascripts/quotefinal.js"></script>
+{% endblock %}}
+
+

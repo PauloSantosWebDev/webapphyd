@@ -47,7 +47,7 @@ app.get('/', (req, res) =>{
 
 //Quote first page
 app.get('/quoteone', (req, res) =>{
-  res.render('quoteone.njk');
+  res.render('quoteone.njk', {title: 'New quote page'});
 })
 
 //Quote barrel assembly page
@@ -201,6 +201,11 @@ app.get('/quoteperipherals', (req, res) => {
 //Quote markup page
 app.get('/quotemarkup', (req, res) => {
   res.render('quotemarkup.njk', {title: 'Quote markup page'});
+})
+
+//Quote final price page
+app.get('/quotefinal', (req, res) => {
+  res.render('quotefinal.njk', {title: 'Final price page'});
 })
 
 //Customer registration form
