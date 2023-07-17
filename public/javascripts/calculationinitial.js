@@ -1,610 +1,277 @@
 //General functions - Start
+const cylinderMounting = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder', '__________', 'None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
+'5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
+'14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing', '__________', 'None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //HHMI and HSMI have the same mountings
 
-//Global variables definition
-let brlAssyMatlLine = 5;
-let brlAssyLabourLine = 5;
-let brlAssyServLine = 5;
-let htmlAccumulator = '';
-let htmlAccumulatorSupplier = '';
-let htmlAccumulatorServ = '';
-let labourCostFetchController = true;
-let isNext = false;
+function loadCylinderMountings () {
+  let accumHTML = '';
+  cylinderMounting.forEach((e, i) => {
+    accumHTML += `<option value='${i}'>${e}</option>`;
+  })
+  document.getElementById('inputCylMounting').innerHTML = accumHTML;
+}
+loadCylinderMountings();
 
-//Global arrays definition
+//Used to add listeners for unit conversions
+conversionListener();
 
-//Used to create new lines keeping the data
-let arrayColumns = [];
-let arrayRows = [];
-let serverHydroilId = [];
-let serverSupplierNames = [];
-let serverServiceCode = [];
-let labourPrice = [];
-
-//Object with 2 functions to keep data when lines are added to forms
-const keepDataNewLine = {
-  saveData(rows, columns, classId) {
-    arrayColumns = [];
-    for (let i = 0; i < rows; i++) {
-      arrayRows = [];
-      for (let j = 0; j < columns; j++) {
-        arrayRows[j] = document.querySelectorAll('.' + classId)[(i*columns)+j].value;
-      }
-      arrayColumns.push(arrayRows);
-    }
-  },
-  populateData(rows, columns, classId) {
-    for (let i = 0; i < rows; i++) {
-      // console.log('i ' + i);
-      for (let j = 0; j < columns; j++) {
-        // console.log('j ' + j);
-        // console.log(arrayColumns);
-        document.querySelectorAll('.' + classId)[(i*columns)+j].value = arrayColumns[i][j];
-      }
-    }
+//Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
+function elementsConversion (elementYouAre, otherElement, selector) { 
+  if (elementYouAre.value < 0 || elementYouAre.value === '') {
+      emptyFields(elementYouAre, otherElement);
+  }
+  else {
+      otherElement.value = conversion(elementYouAre.value, selector);
   }
 }
 
-//Giving input fiels some default values
-document.getElementById('inputServicePart0').value = document.getElementById('inputLabourPart0').value = document.getElementById('inputPart0').value = 'Barrel';
-document.getElementById('inputServicePart1').value = document.getElementById('inputLabourPart1').value = document.getElementById('inputPart1').value = 'End cap';
-
-//Add listeners to barrel assembly material part lines
-function listenBrlMatlChange() {
-  if (brlAssyLabourLine >= brlAssyMatlLine) {
-    document.querySelectorAll('.js-part').forEach((e, i) => {
-      e.addEventListener('keyup', () => {
-        document.querySelectorAll('.js-lab-part')[i].value = e.value;
-      })
-      e.addEventListener('change', () => {
-        document.querySelectorAll('.js-lab-part')[i].value = e.value;
-      })
-    })
+//Used to convert a variety of numbers from one measurement unit to another
+function conversion (origim, selector) {
+  let resultDestiny = 0;
+  switch (Number(selector)) {
+      case 1:
+          resultDestiny = origim * 254 / 10; //Conversion from inches to millimeters.
+          break;
+      case 2:
+          resultDestiny = origim / 254 * 10; //Conversion from millimeters to inches.
+          break;
+      case 3:
+          resultDestiny = origim / 1450377377 * 10000000; //Conversion from psi to MPa
+          break;
+      case 4:
+          resultDestiny = origim / 1450377377 * 100000000; //Conversion from psi to Bar
+          break;
+      case 5:
+          resultDestiny = origim * 1450377377 / 10000000; //Conversion from MPa to psi
+          break;
+      case 6:
+          resultDestiny = origim * 10; //Conversion from MPa to bar
+          break;
+      case 7:
+          resultDestiny = origim * 1450377377 / 100000000; //Conversion from bar to psi
+          break;
+      case 8:
+          resultDestiny = origim / 10; //Conversion from bar to MPa
+          break;
+      case 9:
+          resultDestiny = origim * 44482216153 / Math.pow(10,10); //Conversion from lbf to Newton
+          break;
+      case 10:
+          resultDestiny = origim * 4535924 / Math.pow(10,10); //Conversion from lbf to ton-force
+          break;
+      case 11:
+          resultDestiny = origim / 44482216153 * Math.pow(10,10); //Conversion from Newton to lbf
+          break;
+      case 12:
+          resultDestiny = origim * 1019716 / Math.pow(10,10); //Conversion from Newton to ton-force
+          break;
+      case 13:
+          resultDestiny = origim / 4535924 * Math.pow(10,10); //Conversion from ton-force to lbf
+          break;
+      case 14:
+          resultDestiny = origim / 1019716 * Math.pow(10,10); //Conversion from ton-force to Newton
+          break;
   }
-  if (brlAssyServLine >= brlAssyMatlLine) {
-    document.querySelectorAll('.js-part').forEach((e, i) => {
-      e.addEventListener('keyup', () => {
-        document.querySelectorAll('.js-serv-part')[i].value = e.value;
-      })
-      e.addEventListener('change', () => {
-        document.querySelectorAll('.js-serv-part')[i].value = e.value;
-      })
-    })
+  return resultDestiny.toFixed(2);
+}
+
+//Used to bring the fields back to showing placeholders' values
+function emptyFields (first, second) {
+  const fieldsToEmpty = [first, second];
+  fieldsToEmpty.forEach((field) => field.value = '');
+}
+
+
+function loadingTable () {
+  const pullPressWP = document.getElementById('inputPullPressureMpa').value;
+  const pushPressWP = document.getElementById('inputPushPressureMpa').value;
+  const testPress = document.getElementById('inputTestPressureMpa').value;
+  const boreMM = document.getElementById('inputBoreMM').value;
+  const rodMM = document.getElementById('inputRodMM').value;
+
+  let pullForceWP = Number(pullPressWP * (Math.PI/4) * (Math.pow(boreMM, 2) - Math.pow(rodMM, 2))).toFixed(2);
+  let pushForceWP = Number(pushPressWP * (Math.PI/4) * Math.pow(boreMM, 2)).toFixed(2);
+
+  let pullForceTest = Number(testPress * (Math.PI/4) * (Math.pow(boreMM, 2) - Math.pow(rodMM, 2))).toFixed(2);
+  let pushForceTest = Number(testPress * (Math.PI/4) * Math.pow(boreMM, 2)).toFixed(2);
+  
+  let openCenters = Number(document.getElementById('inputNetStrokeMM').value) + Number(document.getElementById('inputClosedCentersMM').value);
+  
+  let accumHTML =
+  `<tr>
+    <td scope="col" class="text-center" colspan="3">Working Pressure - Pull - ${document.getElementById('inputPullPressurePsi').value} psi</th>
+    <td class="text-center" id="js-wp-pull-lbf" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceWP, 11))}</td>
+    <td class="text-center" id="js-wp-pull-newton" colspan="3">${new Intl.NumberFormat().format(pullForceWP)}</td>
+    <td class="text-center" id="js-wp-pull-ton" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceWP, 12))}</td>
+  </tr>
+  <tr>
+    <td scope="col" class="text-center" colspan="3">Working Pressure - Push - ${document.getElementById('inputPushPressurePsi').value} psi</th>
+    <td class="text-center" id="js-wp-push-lbf" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceWP, 11))}</td>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pushForceWP)}</td>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceWP, 12))}</td>
+  </tr>
+  <tr>
+    <td scope="col" class="text-center" colspan="3">Test Pressure - Pull - ${document.getElementById('inputTestPressurePsi').value} psi</th>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceTest, 11))}</td>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pullForceTest)}</td>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceTest, 12))}</td>
+  </tr>
+  <tr>
+    <td scope="col" class="text-center" colspan="3">Test Pressure - Push - ${document.getElementById('inputTestPressurePsi').value} psi</th>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceTest, 11))}</td>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pushForceTest)}</td>
+    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceTest, 12))}</td>
+  </tr>
+  <tr>
+    <th scope="col" class="text-center" colspan="3" rowspan="2" valign="middle">DIMENSION</th>
+    <th scope="col" class="text-center" colspan="9">MEASUREMENT UNIT</th>
+  </tr>
+  <tr>
+    <th scope="col" class="text-center" colspan="4">Inches</th>
+    <th scope="col" class="text-center" colspan="4">Millimeters</th>
+  </tr>
+  <tr>
+    <td scope="col" class="text-center" colspan="3">Open centers/length</td>
+    <td scope="col" class="text-center" colspan="4">${new Intl.NumberFormat().format(conversion(openCenters, 2))}</th>
+    <td scope="col" class="text-center" colspan="4">${new Intl.NumberFormat().format(openCenters)}</th>
+  </tr>`
+
+  document.getElementById('js-tbl-forces').innerHTML = accumHTML;
+
+  if (Number(document.getElementById('inputPullForceNewton').value) <= pullForceWP) {
+
   }
 }
 
-//Used to save the data in the sessionStorage
-//Data will be used to populate sql database and in case the page is reloaded
-function saveDataForReload() {
-  sessionStorage.setItem('brlAssyMatlLines', brlAssyMatlLine);
-  // sessionStorage.setItem('brlAssyLabourLines', brlAssyLabourLine);
-  // sessionStorage.setItem('brlAssyServLines', brlAssyServLine);
-  const arrayStoreData = [];
-  document.querySelectorAll('.js-store-data').forEach((e, i) => {
-    arrayStoreData.push(e.value);
-  });
-  sessionStorage.setItem('storeDataBrlAssy', arrayStoreData);
-  location.assign('http://localhost:3000/quoterodassy');
-}
 
-//Used to populate back when previous is clicked in the next page
-function populateBack () {
-  let iteration = Number(sessionStorage.getItem('brlAssyMatlLines'));
-  for (let i = 0; i < (iteration - 5); i++) {
-    document.getElementById('js-new-line-brl-matl').click();
-  }
-  // iteration = Number(sessionStorage.getItem('brlAssyLabourLines'));
-  // for (let i = 0; i < (iteration - 5); i++) {
-  //   document.getElementById('js-new-line-brl-labour').click();
-  // }
-  // iteration = Number(sessionStorage.getItem('brlAssyServLines'));
-  // for (let i = 0; i < (iteration - 5); i++) {
-  //   document.getElementById('js-new-line-brl-serv').click();
-  // }
-  let arrayStoreData = sessionStorage.getItem('storeDataBrlAssy');
-  arrayStoreData = arrayStoreData.split(',');
-  setTimeout(() => {
-    document.querySelectorAll('.js-store-data').forEach((e, i) => {
-      e.value = arrayStoreData[i];
-    })
-  }, 1000);
+document.body.addEventListener('click', () => {
+  loadingTable();
+})
 
-  sessionStorage.setItem('secondPrevious', false);
-}
 
 //General functions - End
 
 //--------------------------------------------------------------------------------------------------------------------------
 //Asynchronous functions setction - Start
 
-//Used to fetch data to feed dropdown fields
-//Used to get labour costs for the labour session
-async function addIdCode (target) {
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({target})
-  };
-  try {
-    const response = await fetch("/quotebrlassy", options);
-    const result = await response.json();
-    return result.body;
-  } catch (error) {
-    console.error("Error: ", error);
-  }
-}
-
-//Used to fetch suppliers, items and cost for materials
-async function getInfo(target, value) {
-  const options = {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({target, value})
-  };
-  try {
-    const response = await fetch("/quotebrlassy", options);
-    const result = await response.json();
-    return result.body;
-  } catch (error) {
-    console.error("Error: ", error);
-  }
-}
-
-//Used to fetch cost for materials depending on the supplier chosen
-async function getCost(target, value, name) {
-  const options = {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({target, value, name})
-  };
-  try {
-    const response = await fetch("/quotebrlassy", options);
-    const result = await response.json();
-    return result.body;
-  } catch (error) {
-    console.error("Error: ", error);
-  }
-}
 
 //Asynchronous functions - End
 
 //--------------------------------------------------------------------------------------------------------------------------
 //Event listeners setction - Start
-
-//Loads page with functionalities it needs when page is loaded
 window.addEventListener('load', () => {
-  listenBrlMatlChange();
-  dependenceFieldsUpdate();
-  if (sessionStorage.getItem('secondPrevious') === 'true') {
-    populateBack();
-  }
-  isNext = false;
+  loadCylinderMountings();
+  conversionListener();
 })
 
-//Code to check if user really want to leave or reload the page
-window.onbeforeunload = () => {
-  if (!isNext) {
-    return "Are you sure you want to reload or leave the page? Data could be lost.";
-  }  
-}
-
-//Add new lines to the material session of the barrel assembly page
-document.getElementById('js-new-line-brl-matl').addEventListener('click', async () => {
-  
-  const matlInfo = {
-    part: '',
-    hydroilId: '',
-    item: '',
-    supplier: '',
-    cost: '',
-    usage: '',
-    subtotal: ''
-  }
-  let arrayMatlInfo = [];
-  
-  //for used to get all the data already inserted into the fields
-  for(i = 0; i <= (brlAssyMatlLine - 6); i++) {
-    for(j = 0; j <= 6; j++) {
-      if (j === 0) {
-        matlInfo.part = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 1) {
-        matlInfo.hydroilId = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 2) {
-        matlInfo.item = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 3) {
-        matlInfo.supplier = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 4) {
-        matlInfo.cost = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 5) {
-        matlInfo.usage = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 6) {
-        matlInfo.subtotal = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-    }
-    arrayMatlInfo[i] = Object.assign({}, matlInfo);
-  }
-
-  //Used as a guard to avoid fetching all the time the add new line button is clicked
-  //Used for Hydroil ID
-  if (htmlAccumulator === '') {
-    serverHydroilId = await addIdCode('hydId');
-    serverHydroilId.forEach(e => {
-      htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
-    })    
-  }
-
-  //Used as a guard to avoid fetching all the time the add new line button is clicked
-  //Used for suppliers
-  if (htmlAccumulatorSupplier === '') {
-    serverSupplierNames = await addIdCode('supplierNames');
-    serverSupplierNames.forEach(e => {
-      htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
-    })    
-  }
-  
-  document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-part js-save js-store-data" id="inputPart${brlAssyMatlLine}" name="inputPart${brlAssyMatlLine}">
-  </div>
-  <div class="col-md-2">
-    <select id="inputHydroilId${brlAssyMatlLine}" name="inputHydroilId${brlAssyMatlLine}" class="form-select js-save js-hyd-id js-store-data">
-      <option></option>
-      ${htmlAccumulator}
-    </select>
-  </div>
-  <div class="col-md-2">
-    <input type="text" class="form-control js-save js-item js-store-data" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
-  </div>
-  <div class="col-md-2">
-    <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data input-off" tabindex="-1">
-      <option></option>
-      ${htmlAccumulatorSupplier}
-    </select>
-  </div>
-  <div class="col-md-2"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save js-cost js-store-data input-off" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}" tabindex="-1">
-  </div>
-  <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save js-usage js-store-data" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
-  </div>
-  <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save js-subtotal input-off js-store-data" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}" tabindex=-1>
-  </div>`;
-  brlAssyMatlLine++;
-  listenBrlMatlChange();
-  dependenceFieldsUpdate();
-  //Used to insert the data back after another line is added
-  for (let i = 0; i < arrayMatlInfo.length; i++) {
-    for (let j = 0; j <= 6; j++) {
-      if (j === 0) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].part;
-      }
-      else if (j === 1) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].hydroilId;
-      }
-      else if (j === 2) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].item;
-      }
-      else if (j === 3) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].supplier;
-      }
-      else if (j === 4) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].cost;
-      }
-      else if (j === 5) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].usage;
-      }
-      else if (j === 6) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].subtotal;
-      }
-    }
-  }
-  document.getElementById('js-new-line-brl-labour').click();
-  document.getElementById('js-new-line-brl-serv').click();  
-})
-
-//Add new lines to the labour session of the barrel assembly page.
-document.getElementById('js-new-line-brl-labour').addEventListener('click', () => {
-
-  keepDataNewLine.saveData((brlAssyLabourLine-5), 7, 'js-save-lab');
-  // const arrayToParse = keepDataNewLine.saveData((brlAssyLabourLine-5), 7, 'js-save-lab');
-
-  document.getElementById('js-second-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-lab-part js-save-lab js-store-data input-off" id="inputLabourPart${brlAssyLabourLine}" name="inputLabourPart${brlAssyLabourLine}" tabindex="-1">
-  </div>
-  <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputMC${brlAssyLabourLine}" name="inputMC${brlAssyLabourLine}">
-  </div>
-  <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputNC${brlAssyLabourLine}" name="inputNC${brlAssyLabourLine}">
-  </div>
-  <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputWelding${brlAssyLabourLine}" name="inputWelding${brlAssyLabourLine}">
-  </div>
-  <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputHonning${brlAssyLabourLine}" name="inputHonning${brlAssyLabourLine}">
-  </div>
-  <div class="col-md-1">
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-usage js-store-data" id="inputAssy${brlAssyLabourLine}" name="inputAssy${brlAssyLabourLine}">
-  </div>
-  <div class="col-md-2"> 
-  <input type="number" min="0.00" class="form-control js-save-lab js-labour-subtotal input-off js-store-data" id="inputLabourSubTotal${brlAssyLabourLine}" name="inputLabourSubTotal${brlAssyLabourLine}" tabindex=-1>
-  </div>
-  <div class="col-md-2"> 
-  <input type="hidden">
-  </div>`;
-  keepDataNewLine.populateData((brlAssyLabourLine-5), 7, 'js-save-lab');
-  brlAssyLabourLine++;
-  listenBrlMatlChange();
-  dependenceFieldsUpdate();
-})
-
-//Add new lines to the service session of the barrel assembly page.
-document.getElementById('js-new-line-brl-serv').addEventListener('click', async () => {
-  
-  //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
-  //Used for service code
-  if (htmlAccumulatorServ === '') {
-    serverServiceCode = await addIdCode('serviceCode');
-    serverServiceCode.forEach(e => {
-      htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
-    })
-  }
-
-  //Used as a guard to avoid fetching all the time the add new line button is clicked
-  //Used for suppliers
-  if (htmlAccumulatorSupplier === '') {
-    serverSupplierNames = await addIdCode('supplierNames');
-    serverSupplierNames.forEach(e => {
-      htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
-    })    
-  }
-  keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
-  document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
-  <input type="text" class="form-control js-serv-part js-save-serv js-store-data input-off" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}" tabindex="-1">
-  </div>
-  <div class="col-md-2">
-    <select id="inputServiceCode${brlAssyServLine}" name="inputServiceCode${brlAssyServLine}" class="form-select js-save-serv js-serv-code js-store-data">
-      <option></option>
-      ${htmlAccumulatorServ}
-    </select>
-  </div>
-  <div class="col-md-2">
-    <input type="text" class="form-control js-save-serv js-service js-store-data" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
-  </div>
-  <div class="col-md-2">
-    <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data input-off" tabindex="-1">
-      <option></option>
-      ${htmlAccumulatorSupplier}
-    </select>
-  </div>
-  <div class="col-md-2"> <!--Here the cost per unit should be specified-->
-    <input type="text" class="form-control js-save-serv js-serv-cost js-store-data input-off" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}" tabindex="-1">
-  </div>
-  <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage js-store-data" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
-  </div>
-  <div class="col-md-1"> 
-    <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal input-off js-store-data" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}" tabindex=-1>
-  </div>`;
-  keepDataNewLine.populateData((brlAssyServLine-5), 7, 'js-save-serv');
-  brlAssyServLine++;
-  listenBrlMatlChange();
-  dependenceFieldsUpdate();
-})
-
-//Necessary to re-populate data in the quoteone page.
-document.getElementById('js-first-previous').addEventListener('click', () => {
-  sessionStorage.setItem('firstPrevious', true);
-})
-
-//Used to add listener and update other fields accordingly
-//Is triggered when page is loaded and also when a new line is added
-function dependenceFieldsUpdate() {
-  //Updates the supplier and cost when the Hydroil ID is chosen
-  document.querySelectorAll('.js-hyd-id').forEach(async (e, i) => {
-    e.addEventListener('change', async () => {
-      document.querySelectorAll('.js-supplier')[i].removeAttribute('tabindex');
-      document.querySelectorAll('.js-supplier')[i].classList.remove('input-off');
-      const item = await getInfo('matlItem', e.value);
-      document.querySelectorAll('.js-item')[i].value = item[0].item;
-      const arraySuppliers = await getInfo('matlSupplier', e.value);
-      let accumHTML = '';
-      arraySuppliers.forEach(elem => {
-        accumHTML += `<option>${elem.name}</option>`
-      })
-      document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
-      document.querySelectorAll('.js-usage')[i].value = '';
-      document.querySelectorAll('.js-subtotal')[i].value = '';
-    })
-  })
-
-  //Updates the cost depending on the supplier and hydroil id
-  document.querySelectorAll('.js-supplier').forEach(async (e, i) => {
-    e.addEventListener('change', async() => {
-      const hydroiIdSelected = document.querySelectorAll('.js-hyd-id')[i].value;
-      const cost = await getCost('matlCost', hydroiIdSelected, e.value);
-      document.querySelectorAll('.js-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
-      document.querySelectorAll('.js-usage')[i].value = '';
-      document.querySelectorAll('.js-subtotal')[i].value = '';
-    })
-    e.addEventListener('click', async() => {
-      if (e.value == '') {
-        return;
-      }
-      else {
-        const hydroiIdSelected = document.querySelectorAll('.js-hyd-id')[i].value;
-        const cost = await getCost('matlCost', hydroiIdSelected, e.value);
-        document.querySelectorAll('.js-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
-      }
-    })
-  })
-  
-  //Used to calculate subtotal for materials
-  document.querySelectorAll('.js-usage').forEach((e, i) => {
+//Add listeners for the conversions to happen
+function conversionListener() {
+  //General - It changes values from psi to mpa and bar
+  document.querySelectorAll(".js-psi").forEach((e, index) => {
+    let mpaElement = document.querySelectorAll(".js-mpa")[index];
+    let barElement = document.querySelectorAll(".js-bar")[index];
     e.addEventListener('change', () => {
-      document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
-    })
+        elementsConversion(e, mpaElement, 3);
+        elementsConversion(e, barElement, 4);
+    });
     e.addEventListener('keyup', () => {
-      document.querySelectorAll('.js-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-cost')[i].value.split('/')[0])).toFixed(2);
-    })
-  })
+        elementsConversion(e, mpaElement, 3);
+        elementsConversion(e, barElement, 4);
+    });
+  });
 
-  //Update service and supplier based on service code chosen
-  document.querySelectorAll('.js-serv-code').forEach((e, i) => {
-    e.addEventListener('change', async () => {
-      document.querySelectorAll('.js-serv-supplier')[i].removeAttribute('tabindex');
-      document.querySelectorAll('.js-serv-supplier')[i].classList.remove('input-off');
-      const service = await getInfo('servService', e.value);
-      document.querySelectorAll('.js-service')[i].value = service[0].service;
-      const arraySuppliers = await getInfo('servSupplier', e.value);
-      let accumHTML = '';
-      arraySuppliers.forEach(elem => {
-        accumHTML += `<option>${elem.name}</option>`
-      })
-      document.querySelectorAll('.js-serv-supplier')[i].innerHTML = accumHTML;
-      document.querySelectorAll('.js-serv-usage')[i].value = '';
-      document.querySelectorAll('.js-serv-subtotal')[i].value = '';
-    })
-  })
-
-  //Updates the cost depending on the service code and supplier
-  document.querySelectorAll('.js-serv-supplier').forEach((e, i) => {
-    e.addEventListener('change', async() => {
-      const serviceCodeSelected = document.querySelectorAll('.js-serv-code')[i].value;
-      const cost = await getCost('servCost', serviceCodeSelected, e.value);
-      document.querySelectorAll('.js-serv-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
-      document.querySelectorAll('.js-serv-usage')[i].value = '';
-      document.querySelectorAll('.js-serv-subtotal')[i].value = '';
-    })
-    e.addEventListener('click', async() => {
-      if (e.value == '') {
-        return;
-      }
-      else {
-        const serviceCodeSelected = document.querySelectorAll('.js-serv-code')[i].value;
-        const cost = await getCost('servCost', serviceCodeSelected, e.value);
-        document.querySelectorAll('.js-serv-cost')[i].value = `${cost[0].cost}/${cost[0].unit}`;
-      }
-    })
-  })
-
-  //Used to calculate subtotal for services
-  document.querySelectorAll('.js-serv-usage').forEach((e, i) => {
+  //General - It changes values from mpa to psi and bar
+  document.querySelectorAll(".js-mpa").forEach((e, index) => {
+    let psiElement = document.querySelectorAll(".js-psi")[index];
+    let barElement = document.querySelectorAll(".js-bar")[index];
     e.addEventListener('change', () => {
-      document.querySelectorAll('.js-serv-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-serv-cost')[i].value.split('/')[0])).toFixed(2);
-    })
+        elementsConversion(e, psiElement, 5);
+        elementsConversion(e, barElement, 6);
+    });
     e.addEventListener('keyup', () => {
-      document.querySelectorAll('.js-serv-subtotal')[i].value = (Number(e.value) * Number(document.querySelectorAll('.js-serv-cost')[i].value.split('/')[0])).toFixed(2);
-    })
-  })
+        elementsConversion(e, psiElement, 5);
+        elementsConversion(e, barElement, 6);
+    });
+  });
 
-  //Used to get the labour price and calculate labour subtotal
-  document.querySelectorAll('.js-labour-usage').forEach((e, i) => {
-    e.addEventListener('keyup', async() => {
-      if (labourCostFetchController) {
-        labourPrice = await getInfo('labourCost');
-        labourCostFetchController = false;
-      }
-      if (i % 5 == 0) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * e.value + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i + 1].value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 2].value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 3].value 
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 4].value).toFixed(2);
-      }
-      else if (i % 5 == 1) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].ncctr * e.value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 1].value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 2].value 
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 3].value).toFixed(2);
-      }
-      else if (i % 5 == 2) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 2].value 
-          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].welding * e.value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 1].value 
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 2].value).toFixed(2);
-      }
-      else if (i % 5 == 3) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 3].value 
-          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 2].value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 1].value 
-          + labourPrice[0].honing * e.value
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 1].value).toFixed(2);
-      }
-      else if (i % 5 == 4) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 4].value 
-          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 3].value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 2].value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i - 1].value
-          + labourPrice[0].assembling * e.value).toFixed(2);
-      }
-    })
-    e.addEventListener('change', async() => {
-      if (labourCostFetchController) {
-        labourPrice = await getInfo('labourCost');
-        labourCostFetchController = false;
-      }
-      if (i % 5 == 0) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * e.value + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i + 1].value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 2].value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 3].value 
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 4].value).toFixed(2);
-      }
-      else if (i % 5 == 1) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].ncctr * e.value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i + 1].value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 2].value 
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 3].value).toFixed(2);
-      }
-      else if (i % 5 == 2) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 2].value 
-          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 1].value + labourPrice[0].welding * e.value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i + 1].value 
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 2].value).toFixed(2);
-      }
-      else if (i % 5 == 3) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 3].value 
-          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 2].value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 1].value 
-          + labourPrice[0].honing * e.value
-          + labourPrice[0].assembling * document.querySelectorAll('.js-labour-usage')[i + 1].value).toFixed(2);
-      }
-      else if (i % 5 == 4) {
-        document.querySelectorAll('.js-labour-subtotal')[Math.floor(i / 5)].value =
-          Number(labourPrice[0].mc * document.querySelectorAll('.js-labour-usage')[i - 4].value 
-          + labourPrice[0].ncctr * document.querySelectorAll('.js-labour-usage')[i - 3].value 
-          + labourPrice[0].welding * document.querySelectorAll('.js-labour-usage')[i - 2].value 
-          + labourPrice[0].honing * document.querySelectorAll('.js-labour-usage')[i - 1].value
-          + labourPrice[0].assembling * e.value).toFixed(2);
-      }
-    })
-  })
+  //General - It changes values from bar to psi and mpa
+  document.querySelectorAll(".js-bar").forEach((e, index) => {
+    let psiElement = document.querySelectorAll(".js-psi")[index];
+    let mpaElement = document.querySelectorAll(".js-mpa")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, psiElement, 7);
+        elementsConversion(e, mpaElement, 8);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, psiElement, 7);
+        elementsConversion(e, mpaElement, 8);
+    });
+  });
+
+  //General - It changes values from lbf to Newtons and ton-force
+  document.querySelectorAll(".js-lbf").forEach((e, index) => {
+    let newtonElement = document.querySelectorAll(".js-newton")[index];
+    let tonElement = document.querySelectorAll(".js-ton")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, newtonElement, 9);
+        elementsConversion(e, tonElement, 10);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, newtonElement, 9);
+        elementsConversion(e, tonElement, 10);
+    });
+  });
+
+  //General - It changes values from Newtons to lbf and ton-force
+  document.querySelectorAll(".js-newton").forEach((e, index) => {
+    let lbfElement = document.querySelectorAll(".js-lbf")[index];
+    let tonElement = document.querySelectorAll(".js-ton")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, lbfElement, 11);
+        elementsConversion(e, tonElement, 12);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, lbfElement, 11);
+        elementsConversion(e, tonElement, 12);
+    });
+  });
+
+  //General - It changes values from ton-force to lbf and Newtons
+  document.querySelectorAll(".js-ton").forEach((e, index) => {
+    let lbfElement = document.querySelectorAll(".js-lbf")[index];
+    let newtonElement = document.querySelectorAll(".js-newton")[index];
+    e.addEventListener('change', () => {
+        elementsConversion(e, lbfElement, 13);
+        elementsConversion(e, newtonElement, 14);
+    });
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, lbfElement, 13);
+        elementsConversion(e, newtonElement, 14);
+    });
+  });
+
+  //General - Changing values from inches to millimeters
+  document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-mm-to-in")[index];
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, other, 1);
+    });
+    e.addEventListener('change', () => {
+        elementsConversion(e, other, 1);
+    });
+  });
+
+  //General - Changing values from millimeters to inches
+  document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-in-to-mm")[index];
+    e.addEventListener('keyup', () => {
+        elementsConversion(e, other, 2);
+    });
+    e.addEventListener('change', () => {
+        elementsConversion(e, other, 2);
+    });
+  });
 }
-
-//When next is clicked, all the date need to be saved and next page loaded
-document.getElementById('js-btn-second-next').addEventListener('click', () => {
-  isNext = true;
-  saveDataForReload();
-})
 
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------

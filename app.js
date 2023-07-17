@@ -279,6 +279,11 @@ app.get('/regservices', (req, res) => {
 
 })
 
+//Render the first page of the calcuations process
+app.get('/calculationinitial', (req, res) => {
+  res.render('calculationinitial.njk', {title: 'New Calculation - first page'});
+})
+
 //-----------------------------------------------------
 //Post methods
 
