@@ -1,4 +1,7 @@
 //General functions - Start
+
+let isNext = false;
+
 const cylinderMounting = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder', '__________', 'None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
 '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
 '14 - MP1 - Cap Fixed Eye', '14B - MU3 - Cap Spherical Bearing', '__________', 'None', 'Cap Fixed Eye', 'Cap Spherical Bearing', 'Head Circular Flange', 'Cap Circular Flange', 'Intermediate Trunnion', 'Non-standard']; //HHMI and HSMI have the same mountings
@@ -97,6 +100,10 @@ function loadingTable () {
   
   let openCenters = Number(document.getElementById('inputNetStrokeMM').value) + Number(document.getElementById('inputClosedCentersMM').value);
   
+  sessionStorage.setItem('open-centers-for-calc', openCenters);
+  sessionStorage.setItem('push-force-wp-newton-for-calc', pushForceWP);
+  sessionStorage.setItem('push-force-tp-newton-for-calc', pushForceTest);
+
   let pullHTMLBlock = ``;
   let pushHTMLBlock = ``;
 
@@ -163,15 +170,15 @@ function loadingTable () {
   document.getElementById('js-tbl-forces').innerHTML = accumHTML;
 }
 
-document.querySelectorAll('.js-load-table').forEach((e,i) => {
-  e.addEventListener('focusout', () => {
-    loadingTable();
-  })
-})
 
-// document.body.addEventListener('click', () => {
-//   loadingTable();
-// })
+
+function saveDataForReload() {
+  sessionStorage.setItem('push-press-mpa-for-calc', Number(document.getElementById('inputPullPressureMpa').value));
+  sessionStorage.setItem('bore-mm-for-calc', Number(document.getElementById('inputBoreMM').value));
+  sessionStorage.setItem('rod-mm-for-calc', Number(document.getElementById('inputRodMM').value));
+}
+
+
 
 
 //General functions - End
@@ -297,6 +304,36 @@ function conversionListener() {
     });
   });
 }
+
+//Makes sure the table is created and updated every time a change is done
+document.querySelectorAll('.js-load-table').forEach((e,i) => {
+  e.addEventListener('focusout', () => {
+    loadingTable();
+  })
+  e.addEventListener('keyup', () => {
+    loadingTable();
+  })
+  e.addEventListener('change', () => {
+    loadingTable();
+  })
+})
+
+// document.body.addEventListener('click', () => {
+//   loadingTable();
+// })
+
+window.onbeforeunload = () => {
+  if (!isNext) {
+    return "Are you sure you want to reload or leave the page? Data could be lost.";
+  }  
+}
+
+//When next is clicked, all the date need to be saved and next page loaded
+document.getElementById('js-btn-first-next').addEventListener('click', () => {
+  isNext = true;
+  saveDataForReload();
+  location.assign('http://localhost:3000/calculationbuckling');
+})
 
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------

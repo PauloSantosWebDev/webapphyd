@@ -284,6 +284,11 @@ app.get('/calculationinitial', (req, res) => {
   res.render('calculationinitial.njk', {title: 'New Calculation - first page'});
 })
 
+//Render the page to calcualte rod buckling
+app.get('/calculationbuckling', (req, res) => {
+  res.render('calculationbuckling.njk', {title: 'Calcualtions - buckling'});
+})
+
 //-----------------------------------------------------
 //Post methods
 
