@@ -97,27 +97,51 @@ function loadingTable () {
   
   let openCenters = Number(document.getElementById('inputNetStrokeMM').value) + Number(document.getElementById('inputClosedCentersMM').value);
   
+  let pullHTMLBlock = ``;
+  let pushHTMLBlock = ``;
+
+  if (Number(document.getElementById('inputPullForceNewton').value) > pullForceWP) {
+    pullHTMLBlock = 
+      `<td scope="col" class="text-center" colspan="3">Working Pressure - Pull - ${document.getElementById('inputPullPressurePsi').value} psi</td>
+      <td class="text-center" id="js-wp-pull-lbf" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(conversion(pullForceWP, 11))}</td>
+      <td class="text-center" id="js-wp-pull-newton" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(pullForceWP)}</td>
+      <td class="text-center css-red-alert" id="js-wp-pull-ton" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(conversion(pullForceWP, 12))}</td>`
+  }
+  else {
+    pullHTMLBlock = 
+      `<td scope="col" class="text-center" colspan="3">Working Pressure - Pull - ${document.getElementById('inputPullPressurePsi').value} psi</td>
+      <td class="text-center" id="js-wp-pull-lbf" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceWP, 11))}</td>
+      <td class="text-center" id="js-wp-pull-newton" colspan="3">${new Intl.NumberFormat().format(pullForceWP)}</td>
+      <td class="text-center" id="js-wp-pull-ton" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceWP, 12))}</td>`
+  }
+
+  if (Number(document.getElementById('inputPushForceNewton').value) > pushForceWP) {
+    pushHTMLBlock =
+      `<td scope="col" class="text-center" colspan="3">Working Pressure - Push - ${document.getElementById('inputPushPressurePsi').value} psi</td>
+      <td class="text-center" id="js-wp-push-lbf" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(conversion(pushForceWP, 11))}</td>
+      <td class="text-center" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(pushForceWP)}</td>
+      <td class="text-center" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(conversion(pushForceWP, 12))}</td>`
+  }
+  else {
+    pushHTMLBlock =
+      `<td scope="col" class="text-center" colspan="3">Working Pressure - Push - ${document.getElementById('inputPushPressurePsi').value} psi</td>
+      <td class="text-center" id="js-wp-push-lbf" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceWP, 11))}</td>
+      <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pushForceWP)}</td>
+      <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceWP, 12))}</td>`
+  }
+  
+
   let accumHTML =
-  `<tr>
-    <td scope="col" class="text-center" colspan="3">Working Pressure - Pull - ${document.getElementById('inputPullPressurePsi').value} psi</th>
-    <td class="text-center" id="js-wp-pull-lbf" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceWP, 11))}</td>
-    <td class="text-center" id="js-wp-pull-newton" colspan="3">${new Intl.NumberFormat().format(pullForceWP)}</td>
-    <td class="text-center" id="js-wp-pull-ton" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceWP, 12))}</td>
-  </tr>
+  `<tr>${pullHTMLBlock}</tr>
+   <tr>${pushHTMLBlock}</tr>
   <tr>
-    <td scope="col" class="text-center" colspan="3">Working Pressure - Push - ${document.getElementById('inputPushPressurePsi').value} psi</th>
-    <td class="text-center" id="js-wp-push-lbf" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceWP, 11))}</td>
-    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pushForceWP)}</td>
-    <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceWP, 12))}</td>
-  </tr>
-  <tr>
-    <td scope="col" class="text-center" colspan="3">Test Pressure - Pull - ${document.getElementById('inputTestPressurePsi').value} psi</th>
+    <td scope="col" class="text-center" colspan="3">Test Pressure - Pull - ${document.getElementById('inputTestPressurePsi').value} psi</td>
     <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceTest, 11))}</td>
     <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pullForceTest)}</td>
     <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pullForceTest, 12))}</td>
   </tr>
   <tr>
-    <td scope="col" class="text-center" colspan="3">Test Pressure - Push - ${document.getElementById('inputTestPressurePsi').value} psi</th>
+    <td scope="col" class="text-center" colspan="3">Test Pressure - Push - ${document.getElementById('inputTestPressurePsi').value} psi</td>
     <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceTest, 11))}</td>
     <td class="text-center" colspan="3">${new Intl.NumberFormat().format(pushForceTest)}</td>
     <td class="text-center" colspan="3">${new Intl.NumberFormat().format(conversion(pushForceTest, 12))}</td>
@@ -137,16 +161,17 @@ function loadingTable () {
   </tr>`
 
   document.getElementById('js-tbl-forces').innerHTML = accumHTML;
-
-  if (Number(document.getElementById('inputPullForceNewton').value) <= pullForceWP) {
-
-  }
 }
 
-
-document.body.addEventListener('click', () => {
-  loadingTable();
+document.querySelectorAll('.js-load-table').forEach((e,i) => {
+  e.addEventListener('focusout', () => {
+    loadingTable();
+  })
 })
+
+// document.body.addEventListener('click', () => {
+//   loadingTable();
+// })
 
 
 //General functions - End
