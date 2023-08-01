@@ -261,6 +261,12 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
   </table>`
 })
 
+//When next is clicked, all the date need to be saved and next page loaded
+document.getElementById('js-btn-second-next').addEventListener('click', () => {
+  isNext = true;
+  location.assign('http://localhost:3000/calculationhoop');
+})
+
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 

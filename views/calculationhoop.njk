@@ -1,0 +1,103 @@
+{% extends 'layout.njk' %}
+
+{% block content %}
+<h2 class="registration-forms-title">NEW CALCULATION - HOOP STRESS</h2>
+  <hr>
+
+  <h4 class="registration-forms-title">Barrel OD</h4>
+    <form class="row g-3">
+      <div class="col-md-2"> {#style="margin-bottom: 2em;"#}
+        <label for="inputYoungsModulus" class="form-label">Barrel OD in mm</label>
+        <input type="number" min="0.00" step="0.01" class="form-control" id="inputBarrelOutsideDiameter" name="inputBarrelOutsideDiameter">
+      </div>
+
+      {# <div class="col-12">
+        <button type="button" class="btn btn-primary" title="Used to link the calculation to a quote, drawing or job number.">Link</button>
+      </div> #}
+    </form>
+  <hr>
+
+  <h4 class="registration-forms-title">Barrel identification and mechanical properties</h4>
+    <form class="row g-3">
+      <div class="col-md-2">
+        <label for="inputHydroilId" class="form-label">Hydroil's id number</label>
+        <input type="text" class="form-control" id="inputHydroilId" name="inputHydroilId">
+      </div>
+      <div class="col-md-2">
+        <label for="inputItem" class="form-label">Item</label>
+        <input type="text" class="form-control input-off" id="inputItem" name="inputItem" tabindex="-1">
+      </div>
+      <div class="col-md-3">
+        <label for="inputDescription" class="form-label">Description</label>
+        <input type="text" class="form-control input-off" id="inputDescription" name="inputDescription" tabindex="-1">
+      </div>
+      <div class="col-md-5">
+        <label for="inputAltDescription" class="form-label">Alternative Description</label>
+        <textarea type="text" class="form-control input-off" id="inputAltDescription" name="inputAltDescription" tabindex="-1"></textarea>
+      </div>
+      <div class="row" style="margin-top: 2em;">
+        <div class="col-md-3">
+          <label for="inputMinYieldMPa" class="form-label">Minimum Yield - MPa</label>
+          <input type="number" min="0.00" step="0.01" class="form-control js-mpa" id="inputMinYieldMPa" name="inputMinYieldMPa">
+        </div>
+        <div class="col-md-3">
+          <label for="inputMinYieldPSI" class="form-label">Minimum Yield - PSI</label>
+          <input type="number" min="0.00" step="0.01" class="form-control js-psi" id="inputMinYieldPSI" name="inputMinYieldPSI">
+        </div>
+        <div class="col-md-3">
+          <label for="inputMinUtsMPa" class="form-label">Minimum UTS - MPa</label>
+          <input type="number" min="0.00" step="0.01" class="form-control js-mpa" id="inputMinUtsMPa" name="inputMinUtsMPa">
+        </div>
+        <div class="col-md-3">
+          <label for="inputMinUTSPSI" class="form-label">Minimum UTS - PSI</label>
+          <input type="number" min="0.00" step="0.01" class="form-control js-psi" id="inputMinUTSPSI" name="inputMinUTSPSI">
+        </div>
+      </div>
+      <div class="col-12">
+        <button type="button" class="btn btn-secondary" id="js-search-mech-properties">Search</button>
+      </div>
+    </form>
+  <hr>
+
+  <h4 class="registration-forms-title">Safety Factors</h4>
+    <div id="js-hoop-sf-result">
+    </div>
+    <button type="button" class="btn btn-secondary" title="Used to calculate rod buckling safety factor." id="js-calc-sf-buckling">Calculate</button>
+  <hr>
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Hoop stress safety factor formulas for thin and thick-walled barrels
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          {# <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. #}
+          <img src="/images/buckling-sfs.png" alt="Safety factor formulas for rod buckling" class="img-fluid">
+        </div>
+      </div>
+    </div>
+        
+  </div>
+
+  <div class="container" style="margin-top: 3.5%;">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="/calculationinitial" tabindex="-1" id="js-first-previous">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" id="js-btn-third-next">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+<script src="/javascripts/calculationhoop.js"></script>
+{% endblock %}}
+
+

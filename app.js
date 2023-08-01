@@ -284,9 +284,14 @@ app.get('/calculationinitial', (req, res) => {
   res.render('calculationinitial.njk', {title: 'New Calculation - first page'});
 })
 
-//Render the page to calcualte rod buckling
+//Render the page to calculate rod buckling
 app.get('/calculationbuckling', (req, res) => {
   res.render('calculationbuckling.njk', {title: 'Calcualtions - buckling'});
+})
+
+//Render the page to calculate hoop stress
+app.get('/calculationhoop', (req, res) => {
+  res.render('calculationhoop.njk', {title: 'Calcualtions - buckling'});
 })
 
 //-----------------------------------------------------
@@ -392,7 +397,6 @@ app.post('/regsupplier', (req, res) =>{
     });
   });
 });
-
 
 //Working with contacts page. 
 app.post('/regcontacts', (req, res) => {
@@ -1546,6 +1550,29 @@ app.post('/quoteperipherals', (req, res) => {
       })
     })
   }
+})
+
+//Used to search for items deppending on Hydroil's ID number
+app.post('/calculationhoop', (req, res) => {
+  const checker = req.body.target;
+  db.all('SELECT * FROM materials WHERE hydroil_id = ?', [checker], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+
+    const matl = rows.map(row => ({item: row.item, desc: row.description, altdesc: row.alt_description}))
+    db.all('SELECT * FROM mechanical_properties WHERE hydroil_id = ?', [checker], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const mech = rows.map (row => ({yieldM: row.yield_mpa, yieldP: row.yield_psi, utsM: row.uts_mpa, utsP: row.uts_psi}))
+      const resultant = matl.concat(mech);
+      res.send({
+        status: 'success',
+        body: resultant
+      })
+    })
+  })
 })
 
 //-----------------------------------------------------------------------

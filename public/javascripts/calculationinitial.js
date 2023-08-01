@@ -173,6 +173,7 @@ function loadingTable () {
 
 
 function saveDataForReload() {
+  sessionStorage.setItem('pull-press-mpa-for-calc', Number(document.getElementById('inputPullPressureMpa').value));
   sessionStorage.setItem('push-press-mpa-for-calc', Number(document.getElementById('inputPushPressureMpa').value));
   sessionStorage.setItem('test-press-mpa-for-calc', Number(document.getElementById('inputTestPressureMpa').value));
   sessionStorage.setItem('bore-mm-for-calc', Number(document.getElementById('inputBoreMM').value));
