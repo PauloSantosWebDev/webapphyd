@@ -80,8 +80,6 @@ function loadTable () {
     
     let safetyFactorWPThinUts = 0, safetyFactorWPThinYield = 0, safetyFactorWPThickUts = 0, safetyFactorWPThickYield = 0; //Used to calculate safety factor for working pressure
     let safetyFactorTPThinUts = 0, safetyFactorTPThinYield = 0, safetyFactorTPThickUts = 0, safetyFactorTPThickYield = 0; //Used to calculate safety factor for test pressure
-    
-    let maxWP = 0, minRodOD = 0, maxRodID = 0, maxColumnLength = 0, maxBarrelID = 0, minYoungsModulus = 0; //Used to indicate minimum and maximum values that guarantee sf of 3:1
 
     const barrelOD = Number(document.getElementById('inputBarrelOutsideDiameter').value);
 
@@ -104,140 +102,230 @@ function loadTable () {
     let htmlWpThinY = '', htmlWpThinU = '', htmlWpThickY = '', htmlWpThickU = '', htmlTpThinY = '', htmlTpThinU = '', htmlTpThickY = '', htmlTpThickU = ''; //Used to alert when sf is less than what it should be
 
     if (safetyFactorWPThinYield < 3) {
-      htmlWpThinY = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThinYield}</td>`
+      htmlWpThinY = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThinYield}</td>`
     } 
     else {
-      htmlWpThinY = `<td scope="col" class="text-center" colspan="2">${safetyFactorWPThinYield}</td>`
+      htmlWpThinY = `<td scope="col" class="text-center" colspan="4">${safetyFactorWPThinYield}</td>`
     }
 
     if (safetyFactorWPThinUts < 3) {
-      htmlWpThinU = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThinUts}</td>`
+      htmlWpThinU = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThinUts}</td>`
     } 
     else {
-      htmlWpThinU = `<td scope="col" class="text-center" colspan="2">${safetyFactorWPThinUts}</td>`
+      htmlWpThinU = `<td scope="col" class="text-center" colspan="4">${safetyFactorWPThinUts}</td>`
     }
 
     if (safetyFactorWPThickYield < 3) {
-      htmlWpThickY = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThickYield}</td>`;
+      htmlWpThickY = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThickYield}</td>`;
     }
     else {
-      htmlWpThickY = `<td scope="col" class="text-center" colspan="2">${safetyFactorWPThickYield}</td>`;
+      htmlWpThickY = `<td scope="col" class="text-center" colspan="4">${safetyFactorWPThickYield}</td>`;
     }
 
     if (safetyFactorWPThickUts < 3) {
-      htmlWpThickU = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThickUts}</td>`;
+      htmlWpThickU = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorWPThickUts}</td>`;
     }
     else {
-      htmlWpThickU = `<td scope="col" class="text-center" colspan="2">${safetyFactorWPThickUts}</td>`;
+      htmlWpThickU = `<td scope="col" class="text-center" colspan="4">${safetyFactorWPThickUts}</td>`;
     }
 
     if (safetyFactorTPThinYield < 2) {
-      htmlTpThinY = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThinYield}</td>`;
+      htmlTpThinY = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThinYield}</td>`;
     }
     else {
-      htmlTpThinY = `<td scope="col" class="text-center" colspan="2">${safetyFactorTPThinYield}</td>`;
+      htmlTpThinY = `<td scope="col" class="text-center" colspan="4">${safetyFactorTPThinYield}</td>`;
     }
 
     if (safetyFactorTPThinUts < 2) {
-      htmlTpThinU = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThinUts}</td>`;
+      htmlTpThinU = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThinUts}</td>`;
     }
     else {
-      htmlTpThinU = `<td scope="col" class="text-center" colspan="2">${safetyFactorTPThinUts}</td>`;
+      htmlTpThinU = `<td scope="col" class="text-center" colspan="4">${safetyFactorTPThinUts}</td>`;
     }
 
     if (safetyFactorTPThickYield < 2) {
-      htmlTpThickY = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThickYield}</td>`;
+      htmlTpThickY = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThickYield}</td>`;
     }
     else {
-      htmlTpThickY = `<td scope="col" class="text-center" colspan="2">${safetyFactorTPThickYield}</td>`;
+      htmlTpThickY = `<td scope="col" class="text-center" colspan="4">${safetyFactorTPThickYield}</td>`;
     }
 
     if (safetyFactorTPThickUts < 2) {
-      htmlTpThickU = `<td scope="col" class="text-center" colspan="2" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThickUts}</td>`;
+      htmlTpThickU = `<td scope="col" class="text-center" colspan="4" style="background-color: red; color: white; font-weight: bold;">${safetyFactorTPThickUts}</td>`;
     }
     else {
-      htmlTpThickU = `<td scope="col" class="text-center" colspan="2">${safetyFactorTPThickUts}</td>`;
+      htmlTpThickU = `<td scope="col" class="text-center" colspan="4">${safetyFactorTPThickUts}</td>`;
     }
 
-    //Calculations to show the values used to calculate the safety factors
-    let thinOrThick = '';
+    //Minimum and maximum values calculation
+    let minYUWp = 0, maxBrlIDWp = 0, minWtBWp = 0, minWp = 0; //Used to indicate minimum and maximum values that guarantee sf of 3:1 (work pressure)
+    let minYUTp = 0, maxBrlIDTp = 0, minWtBTp = 0, minTp = 0; //Used to indicate minimum and maximum values that guarantee sf of 2:1 (test pressure)
 
+    //Variables used to show and choose between thin or thick walled formulas for safety factors
+    let thinOrThick = '', bodyThinOrThick = '', OdOrWT = '', valueWT = null;
+
+    //Thin/Thick wall test and table part to include in main table
     if ((wallThickness / barrelID) < 0.07) {
       thinOrThick = 'Thin';
-    }
-    else {
-      thinOrThick = 'Thick';
-    }
-
-    //Table generation part
-    let accumHTML = 
-    `<table class="table table-sm table-bordered">
-    <thead>
-      <tr>
-        <th scope="col" class="text-center" colspan="2" rowspan="3" valign="middle"></th>
-        <th scope="col" class="text-center" colspan="10">Safety Factors</th>
-      </tr>
-      <tr>
-        <th scope="col" class="text-center" colspan="4">Thin-walled</th>
-        <th scope="col" class="text-center" colspan="4">Thick-walled</th>
-        <th scope="col" class="text-center" colspan="2" rowspan="2">Required</th>
-      </tr>
-      <tr>
-        <th scope="col" class="text-center" colspan="2">Yield</th>
-        <th scope="col" class="text-center" colspan="2">UTS</th>
-        <th scope="col" class="text-center" colspan="2">Yield</th>
-        <th scope="col" class="text-center" colspan="2">UTS</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td scope="col" class="text-center" colspan="2">Max. Working Pressure</td>
+      OdOrWT = 'Wall Thickness (mm)';
+      valueWT = Number(wallThickness).toFixed(2);
+      bodyThinOrThick = 
+      `<tr>
+      <td scope="col" class="text-center" colspan="2">Max. Working Pressure</td>
         ${htmlWpThinY}
         ${htmlWpThinU}
-        ${htmlWpThickY}
-        ${htmlWpThickU}
         <td scope="col" class="text-center" colspan="2">3.0</td>
       </tr>
       <tr>
         <td scope="col" class="text-center" colspan="2">Test Pressure</td>
         ${htmlTpThinY}
         ${htmlTpThinU}
+        <td scope="col" class="text-center" colspan="2">2.0</td>
+      </tr>`
+
+      //Calculate min. and max. for work pressure
+      minYUWp = Number((3 * maxWorkPress * barrelID) / (2 * wallThickness)).toFixed(1);
+      maxBrlIDWp = Number((2 * wallThickness * Number(document.getElementById('inputMinYieldMPa').value)) / (3 * maxWorkPress)).toFixed(1);
+      minWtBWp = Number((3 * maxWorkPress * barrelID) / (2 * Number(document.getElementById('inputMinYieldMPa').value))).toFixed(1);
+      minWp = Number((2 * wallThickness * Number(document.getElementById('inputMinYieldMPa').value)) / (3 * barrelID)).toFixed(1);
+
+      //Calculate min. and max. for test pressure
+      minYUTp = Number((testPress * barrelID) / (wallThickness)).toFixed(1);
+      maxBrlIDTp = Number((wallThickness * Number(document.getElementById('inputMinYieldMPa').value)) / (testPress)).toFixed(1);
+      minWtBTp = Number((testPress * barrelID) / (Number(document.getElementById('inputMinYieldMPa').value))).toFixed(1);
+      minTp = Number((wallThickness * Number(document.getElementById('inputMinYieldMPa').value)) / (barrelID)).toFixed(1);
+
+      //Making sure the proper value is shown to user
+      if (minYUWp < minYUTp) {
+        minYUWp = minYUTp;
+      } //Done to make sure the maximum value of the min yield is shown. It has to be the greater value between the two minimums.
+
+      if (maxBrlIDWp > maxBrlIDTp) {
+        maxBrlIDWp = maxBrlIDTp;
+      } // The opposite logic is applied here. The lower value between the two maximums should be shown.
+
+      if (minWtBWp < minWtBTp) {
+        minWtBWp = minWtBTp;
+      }
+    }
+    else {
+      thinOrThick = 'Thick';
+      OdOrWT = 'Barrel OD (mm)';
+      bodyThinOrThick = 
+      `<tr>
+      <td scope="col" class="text-center" colspan="2">Max. Working Pressure</td>
+        ${htmlWpThickY}
+        ${htmlWpThickU}
+        <td scope="col" class="text-center" colspan="2">3.0</td>
+      </tr>
+      <tr>
+        <td scope="col" class="text-center" colspan="2">Test Pressure</td>
         ${htmlTpThickY}
         ${htmlTpThickU}
         <td scope="col" class="text-center" colspan="2">2.0</td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <table class="table table-sm table-bordered">
+      </tr>`
+
+      //Calculate min. and max. for work pressure
+      minYUWp = Number((3 * maxWorkPress * (Math.pow(barrelID, 2) + Math.pow(barrelOD, 2))) / (Math.pow(barrelOD, 2) - Math.pow(barrelID, 2))).toFixed(1);
+      maxBrlIDWp = Number(barrelOD * Math.pow(((Number(document.getElementById('inputMinYieldMPa').value) - 3 * maxWorkPress) / (Number(document.getElementById('inputMinYieldMPa').value) + 3 * maxWorkPress)), 1/2)).toFixed(1);
+      minWtBWp = Number(barrelID * Math.pow(((Number(document.getElementById('inputMinYieldMPa').value) + 3 * maxWorkPress) / (Number(document.getElementById('inputMinYieldMPa').value) - 3 * maxWorkPress)), 1/2)).toFixed(1);
+      minWp = Number((Number(document.getElementById('inputMinYieldMPa').value) * (Math.pow(barrelOD, 2) - Math.pow(barrelID, 2))) / (3 * (Math.pow(barrelID, 2) + Math.pow(barrelOD, 2)))).toFixed(1);
+
+      //Calculate min. and max. for test pressure
+      minYUTp = Number((2 * testPress * (Math.pow(barrelID, 2) + Math.pow(barrelOD, 2))) / (Math.pow(barrelOD, 2) - Math.pow(barrelID, 2))).toFixed(1);
+      maxBrlIDTp = Number(barrelOD * Math.pow(((Number(document.getElementById('inputMinYieldMPa').value) - 2 * testPress) / (Number(document.getElementById('inputMinYieldMPa').value) + 2 * testPress)), 1/2)).toFixed(1);
+      minWtBTp = Number(barrelID * Math.pow(((Number(document.getElementById('inputMinYieldMPa').value) + 2 * testPress) / (Number(document.getElementById('inputMinYieldMPa').value) - 2 * testPress)), 1/2)).toFixed(1);
+      minTp = Number((Number(document.getElementById('inputMinYieldMPa').value) * (Math.pow(barrelOD, 2) - Math.pow(barrelID, 2))) / (2 * (Math.pow(barrelID, 2) + Math.pow(barrelOD, 2)))).toFixed(1);
+
+      //Making sure the proper value is shown to user
+      if (minYUWp < minYUTp) {
+        minYUWp = minYUTp;
+      } //Done to make sure the maximum value of the min yield is shown. It has to be the greater value between the two minimums.
+
+      if (maxBrlIDWp > maxBrlIDTp) {
+        maxBrlIDWp = maxBrlIDTp;
+      } // The opposite logic is applied here. The lower value between the two maximums should be shown.
+
+      if (minWtBWp < minWtBTp) {
+        minWtBWp = minWtBTp;
+      }
+    }
+
+    //Main table generation part
+    let accumHTML = 
+    `<table class="table table-sm table-bordered">
       <thead>
         <tr>
-          <th scope="col" class="text-center" colspan="12" valign="middle">Values used to calculate hoop stress safety factors</th>
+          <th scope="col" class="text-center" colspan="2" rowspan="3" valign="middle"></th>
+          <th scope="col" class="text-center" colspan="10">Safety Factors</th>
         </tr>
         <tr>
-          <th scope="col" class="text-center" colspan="2" valign="middle">Thin or thick?</th>
-          <th scope="col" class="text-center" colspan="2" valign="middle">Yield (MPa)</th>
-          <th scope="col" class="text-center" colspan="2" valign="middle">UTS (MPa)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Barrel ID (mm)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Barrel OD (mm)</th>
-          <th scope="col" class="text-center" colspan="2" valign="middle">Wall Thickness (mm)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Working Pressure (MPa)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Test Pressure (MPa)</th>
+          <th scope="col" class="text-center" colspan="8">${thinOrThick}-walled</th>
+          <th scope="col" class="text-center" colspan="2" rowspan="2" valign="middle">Required</th>
+        </tr>
+        <tr>
+          <th scope="col" class="text-center" colspan="4">Yield</th>
+          <th scope="col" class="text-center" colspan="4">UTS</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td scope="col" class="text-center" colspan="2">${thinOrThick}</td>
-          <td scope="col" class="text-center" colspan="2">${Number(document.getElementById('inputMinYieldMPa').value)}</td>
-          <td scope="col" class="text-center" colspan="2">${Number(document.getElementById('inputMinUtsMPa').value)}</td>
-          <td scope="col" class="text-center" colspan="1">${Number(barrelID).toFixed(2)}</td>
-          <td scope="col" class="text-center" colspan="1">${Number(barrelOD).toFixed(2)}</td>
-          <td scope="col" class="text-center" colspan="2">${Number(wallThickness).toFixed(2)}</td>
-          <td scope="col" class="text-center" colspan="1">${Number(maxWorkPress).toFixed(2)}</td>
-          <td scope="col" class="text-center" colspan="1">${Number(testPress).toFixed(2)}</td>
-        </tr>
+        ${bodyThinOrThick}
       </tbody>
-    </table>`
+  </table>
+  
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" colspan="12" valign="middle">Values used to calculate hoop stress safety factors</th>
+      </tr>
+      <tr>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Thin or thick?</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Yield (MPa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">UTS (MPa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Barrel ID (mm)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">${OdOrWT}</th>
+        <th scope="col" class="text-center" colspan="1" valign="middle">Working Pressure (MPa)</th>
+        <th scope="col" class="text-center" colspan="1" valign="middle">Test Pressure (MPa)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td scope="col" class="text-center" colspan="2">${thinOrThick}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(document.getElementById('inputMinYieldMPa').value)}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(document.getElementById('inputMinUtsMPa').value)}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(barrelID).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="2">${valueWT || Number(barrelOD).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${Number(maxWorkPress).toFixed(1)}</td>
+        <td scope="col" class="text-center" colspan="1">${Number(testPress).toFixed(1)}</td>
+      </tr>
+    </tbody>
+  </table>
+    
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" colspan="12" valign="middle">Required values to get the minimum safety factor of 3:1 at working pressure and 2:1 at test pressure</th>
+      </tr>
+      <tr>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Min. Yield (MPa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">MIn. UTS (MPa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. Barrel ID (mm)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Min. ${OdOrWT}</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. Work Press. (MPa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. Test Press. (MPa)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td scope="col" class="text-center" colspan="2">${minYUWp}</td>
+        <td scope="col" class="text-center" colspan="2">${minYUWp}</td>
+        <td scope="col" class="text-center" colspan="2">${maxBrlIDWp}</td>
+        <td scope="col" class="text-center" colspan="2">${minWtBWp}</td>
+        <td scope="col" class="text-center" colspan="2">${minWp}</td>
+        <td scope="col" class="text-center" colspan="2">${minTp}</td>
+      </tr>
+    </tbody>
+  </table>`
 
   document.getElementById('js-hoop-sf-result').innerHTML = accumHTML;
 
@@ -320,8 +408,33 @@ document.getElementById('js-search-mech-properties').addEventListener('click', a
 })
 
 //Trigger the table generation
-document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
+document.getElementById('js-calc-sf-hoop').addEventListener('click', () => {
+  if (document.getElementById('inputBarrelOutsideDiameter').value === '' 
+      || Number(document.getElementById('inputBarrelOutsideDiameter').value) < Number(sessionStorage.getItem('bore-mm-for-calc')) 
+      || document.getElementById('inputHydroilId').value === '') {
+    alert('Please make sure there is no empty fields and barrel OD greater than barrel ID');
+    return;
+  }
+  else {
     loadTable();
+  }
+})
+
+//Search when enter is the keyup in hydroil's id input element
+document.getElementById('inputHydroilId').addEventListener('keyup', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('js-search-mech-properties').click();
+  }
+})
+
+//Preventing default form submission when enter is pressed for the barrel id input element
+//Calculating, if possible, when enter is the keyup in barrel od input element
+document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    console.log('Is it even working?');
+    e.preventDefault();
+    document.getElementById('js-calc-sf-hoop').click();
+  }
 })
 
 //When next is clicked, all the date need to be saved and next page loaded

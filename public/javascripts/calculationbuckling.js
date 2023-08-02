@@ -237,7 +237,7 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
     <table class="table table-sm table-bordered">
     <thead>
       <tr>
-        <th scope="col" class="text-center" colspan="12" valign="middle">Required values to get minimum safety factor of 3:1 on working pressure</th>
+        <th scope="col" class="text-center" colspan="12" valign="middle">Required values to get the minimum safety factor of 3:1 at working pressure</th>
       </tr>
       <tr>
         <th scope="col" class="text-center" colspan="2" valign="middle">Max. push pressure (Pa)</th>
