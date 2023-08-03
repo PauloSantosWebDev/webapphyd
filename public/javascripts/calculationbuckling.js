@@ -2,8 +2,6 @@
 
 let isThereRodID = false;
 
-
-
 //General functions - End
 
 
@@ -267,6 +265,11 @@ document.getElementById('js-btn-second-next').addEventListener('click', () => {
   location.assign('http://localhost:3000/calculationhoop');
 })
 
+//When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
+document.getElementById('js-second-previous').addEventListener('click', () => {
+  sessionStorage.setItem('prev-buckling-initial', true);
+  location.assign('http://localhost:3000/calculationinitial');
+})
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 

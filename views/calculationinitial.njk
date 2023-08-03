@@ -9,7 +9,7 @@
   <form class="row g-3">
     <div class="col-md-4">
       <label for="inputQuoteNumber" class="form-label">Quote number</label>
-      <select id="inputQuoteNumber" name="inputQuoteNumber" class="form-select">
+      <select id="inputQuoteNumber" name="inputQuoteNumber" class="form-select js-save">
         <option></option>
         {# {% for c in customerName %}
           <option value="{{c.name}}">{{c.name}}</option>
@@ -18,11 +18,11 @@
     </div>
     <div class="col-md-4">
       <label for="inputHL" class="form-label">H/L number</label>
-      <input type="text" class="form-control" id="inputHLnumber" name="inputHLnumber">
+      <input type="text" class="form-control js-save" id="inputHLnumber" name="inputHLnumber">
     </div>
     <div class="col-md-4">
       <label for="inputJobNumber" class="form-label">Job number</label>
-      <input type="text" class="form-control" id="inputJobNumber" name="inputJobNumber">
+      <input type="text" class="form-control js-save" id="inputJobNumber" name="inputJobNumber">
     </div>
     <div class="col-12">
       <button type="button" class="btn btn-primary" title="Used to link the calculation to a quote, drawing or job number.">Link</button>
@@ -36,112 +36,113 @@
     <h5 class="registration-forms-subtitle">Pull Pressure</h5>
     <div class="col-md-4">
       <label for="inputPullPressurePsi" class="form-label">Pull pressure - psi</label>
-      <input type="number" min="0.0" class="form-control js-psi js-load-table" id="inputPullPressurePsi" name="inputPullPressurePsi">
+      <input type="number" min="0.0" class="form-control js-psi js-load-table js-save" id="inputPullPressurePsi" name="inputPullPressurePsi">
     </div>
     <div class="col-md-4">
       <label for="inputPullPressureMpa" class="form-label">Pull pressure - MPa</label>
-      <input type="number" min="0.0" class="form-control js-mpa js-load-table" id="inputPullPressureMpa" name="inputPullPressureMpa">
+      <input type="number" min="0.0" class="form-control js-mpa js-load-table js-save" id="inputPullPressureMpa" name="inputPullPressureMpa">
     </div>
     <div class="col-md-4">
       <label for="inputPullPressureBar" class="form-label">Pull pressure - bar</label>
-      <input type="number" min="0.0" class="form-control js-bar js-load-table" id="inputPullPressureBar" name="inputPullPressureBar">
+      <input type="number" min="0.0" class="form-control js-bar js-load-table js-save" id="inputPullPressureBar" name="inputPullPressureBar">
     </div>
     <h5 class="registration-forms-subtitle">Push Pressure</h5>
     <div class="col-md-4">
       <label for="inputPushPressurePsi" class="form-label">Push pressure - psi</label>
-      <input type="number" min="0.0" class="form-control js-psi js-load-table" id="inputPushPressurePsi" name="inputPushPressurePsi">
+      <input type="number" min="0.0" class="form-control js-psi js-load-table js-save" id="inputPushPressurePsi" name="inputPushPressurePsi">
     </div>
     <div class="col-md-4">
       <label for="inputPushPressureMpa" class="form-label">Push pressure - MPa</label>
-      <input type="number" min="0.0" class="form-control js-mpa js-load-table" id="inputPushPressureMpa" name="inputPushPressureMpa">
+      <input type="number" min="0.0" class="form-control js-mpa js-load-table js-save" id="inputPushPressureMpa" name="inputPushPressureMpa">
     </div>
     <div class="col-md-4">
       <label for="inputPushPressureBar" class="form-label">Push pressure - bar</label>
-      <input type="number" min="0.0" class="form-control  js-bar js-load-table" id="inputPushPressureBar" name="inputPushPressureBar">
+      <input type="number" min="0.0" class="form-control  js-bar js-load-table js-save" id="inputPushPressureBar" name="inputPushPressureBar">
     </div>
     <h5 class="registration-forms-subtitle">Test Pressure</h5>
     <div class="col-md-4">
       <label for="inputTestPressurePsi" class="form-label">Test pressure - psi</label>
-      <input type="number" min="0.0" class="form-control js-psi js-load-table" id="inputTestPressurePsi" name="inputTestPressurePsi">
+      <input type="number" min="0.0" class="form-control js-psi js-load-table js-save" id="inputTestPressurePsi" name="inputTestPressurePsi">
     </div>
     <div class="col-md-4">
       <label for="inputTestPressureMpa" class="form-label">Test pressure - MPa</label>
-      <input type="number" min="0.0" class="form-control js-mpa js-load-table" id="inputTestPressureMpa" name="inputTestPressureMpa">
+      <input type="number" min="0.0" class="form-control js-mpa js-load-table js-save" id="inputTestPressureMpa" name="inputTestPressureMpa">
     </div>
     <div class="col-md-4">
       <label for="inputTestPressureBar" class="form-label">Test pressure - bar</label>
-      <input type="number" min="0.0" class="form-control  js-bar js-load-table" id="inputTestPressureBar" name="inputTestPressureBar">
+      <input type="number" min="0.0" class="form-control  js-bar js-load-table js-save" id="inputTestPressureBar" name="inputTestPressureBar">
     </div>
     <h5 class="registration-forms-subtitle">Required Pull Force</h5>
     <div class="col-md-4">
       <label for="inputPullForceLbf" class="form-label">Pull force - lbf</label>
-      <input type="number" min="0.0" class="form-control js-lbf js-load-table" id="inputPullForceLbf" name="inputPullForceLbf">
+      <input type="number" min="0.0" class="form-control js-lbf js-load-table js-save" id="inputPullForceLbf" name="inputPullForceLbf">
     </div>
     <div class="col-md-4">
       <label for="inputPullForceNewton" class="form-label">Pull force - Newton</label>
-      <input type="number" min="0.0" class="form-control js-newton js-load-table" id="inputPullForceNewton" name="inputPullForceNewton">
+      <input type="number" min="0.0" class="form-control js-newton js-load-table js-save" id="inputPullForceNewton" name="inputPullForceNewton">
     </div>
     <div class="col-md-4">
       <label for="inputPullForceTon" class="form-label">Pull force - ton-force</label>
-      <input type="number" min="0.0" class="form-control js-ton js-load-table" id="inputPullForceTon" name="inputPullForceTon">
+      <input type="number" min="0.0" class="form-control js-ton js-load-table js-save" id="inputPullForceTon" name="inputPullForceTon">
     </div>
     <h5 class="registration-forms-subtitle">Required Push Force</h5>
     <div class="col-md-4">
       <label for="inputPushForceLbf" class="form-label">Push force - lbf</label>
-      <input type="number" min="0.0" class="form-control js-lbf js-load-table" id="inputPushForceLbf" name="inputPushForceLbf">
+      <input type="number" min="0.0" class="form-control js-lbf js-load-table js-save" id="inputPushForceLbf" name="inputPushForceLbf">
     </div>
     <div class="col-md-4">
       <label for="inputPushForceNewton" class="form-label">Push force - Newton</label>
-      <input type="number" min="0.0" class="form-control js-newton js-load-table" id="inputPushForceNewton" name="inputPushForceNewton">
+      <input type="number" min="0.0" class="form-control js-newton js-load-table js-save" id="inputPushForceNewton" name="inputPushForceNewton">
     </div>
     <div class="col-md-4">
       <label for="inputPushForceTon" class="form-label">Push force - ton-force</label>
-      <input type="number" min="0.0" class="form-control js-ton js-load-table" id="inputPushForceTon" name="inputPushForceTon">
+      <input type="number" min="0.0" class="form-control js-ton js-load-table js-save" id="inputPushForceTon" name="inputPushForceTon">
     </div>
   </form>
+
   <h5 class="registration-forms-subtitle">Dimension specs</h5>
   <form class="row g-3">
     <div class="col-md-3">
       <label for="inputBoreIn" class="form-label">Bore - inches</label>
-      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table" id="inputBoreIn" name="inputBoreIn">
+      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table js-save" id="inputBoreIn" name="inputBoreIn">
     </div>
     <div class="col-md-3">
       <label for="inputBoreMM" class="form-label">Bore - millimiters</label>
-      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table" id="inputBoreMM" name="inputBoreMM">
+      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table js-save" id="inputBoreMM" name="inputBoreMM">
     </div>
     <div class="col-md-3">
       <label for="inputRodIn" class="form-label">Rod - inches</label>
-      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table" id="inputRodIn" name="inputRodIn">
+      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table js-save" id="inputRodIn" name="inputRodIn">
     </div>
     <div class="col-md-3">
       <label for="inputRodMM" class="form-label">Rod - millimiters</label>
-      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table" id="inputRodMM" name="inputRodMM">
+      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table js-save" id="inputRodMM" name="inputRodMM">
     </div>
     <div class="col-md-3">
       <label for="inputNetStrokeIn" class="form-label">Net stroke - inches</label>
-      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table" id="inputNetStrokeIn" name="inputNetStrokeIn">
+      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table js-save" id="inputNetStrokeIn" name="inputNetStrokeIn">
     </div>
     <div class="col-md-3">
       <label for="inputNetStrokeMM" class="form-label">Net stroke - millimiters</label>
-      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table" id="inputNetStrokeMM" name="inputNetStrokeMM">
+      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table js-save" id="inputNetStrokeMM" name="inputNetStrokeMM">
     </div>
     <div class="col-md-3">
       <label for="inputClosedCentersIn" class="form-label">Closed centers - inches</label>
-      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table" id="inputClosedCentersIn" name="inputClosedCentersIn">
+      <input type="number" min="0.00" class="form-control js-in-to-mm js-load-table js-save" id="inputClosedCentersIn" name="inputClosedCentersIn">
     </div>
     <div class="col-md-3">
       <label for="inputClosedCentersMM" class="form-label">Closed centers - millimiters</label>
-      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table" id="inputClosedCentersMM" name="inputClosedCentersMM">
+      <input type="number" min="0.00" class="form-control js-mm-to-in js-load-table js-save" id="inputClosedCentersMM" name="inputClosedCentersMM">
     </div>
     <div class="col-md-3">
       <label for="inputCylMounting" class="form-label">Cylinder mounting</label>
-      <select id="inputCylMounting" name="inputCylMounting" class="form-select js-extra">
+      <select id="inputCylMounting" name="inputCylMounting" class="form-select js-extra js-save">
         <option></option>
       </select>
     </div>
     <div class="col-md-3">
       <label for="inputRodMounting" class="form-label">Rod end mounting</label>
-      <select id="inputRodMounting" name="inputRodMounting" class="form-select js-extra">
+      <select id="inputRodMounting" name="inputRodMounting" class="form-select js-extra js-save">
         <option selected value="rodEndNone">None</option>
         <option value="rodClevis">Rod Clevis</option>
         <option value="rodKnuckle">Rod Knuckle</option>
@@ -150,7 +151,7 @@
     </div>
     <div class="col-md-3">
       <label for="inputCushion" class="form-label">Cushions</label>
-      <select id="inputCushion" name="inputCushion" class="form-select js-extra">
+      <select id="inputCushion" name="inputCushion" class="form-select js-extra js-save">
         <option selected value="cushionNone">None</option>
         <option value="cushionBoth">Both</option>
         <option value="cushionFront">Front</option>
@@ -159,7 +160,7 @@
     </div>
     <div class="col-md-3">
       <label for="inputPin" class="form-label">Pins</label>
-      <select id="inputPin" name="inputPin" class="form-select js-extra">
+      <select id="inputPin" name="inputPin" class="form-select js-extra js-save">
         <option selected value="pinNone">None</option>
         <option value="pinBoth">Both</option>
         <option value="pinFront">Front</option>
@@ -167,7 +168,7 @@
       </select>
     </div>
   </form>
-  <h5 class="registration-forms-subtitle">FORCES AND OPEN CENTER/LENGTH</h5> {#class="registration-forms-subtitle"#}
+  <h5 class="registration-forms-subtitle">FORCES AND OPEN CENTERS/LENGTH</h5> {#class="registration-forms-subtitle"#}
   <table class="table table-sm table-bordered">
     <thead>
       <tr>
@@ -180,21 +181,17 @@
         <th scope="col" class="text-center" colspan="3">ton</th>
       </tr>
     </thead>
-    <tbody id="js-tbl-forces"> {# class="table-group-divider" #}
-      {# <tr>
-        <th scope="col" class="text-center" colspan="3">Working Pressure - Pull -<input></th>
-        <td class="text-center" colspan="3"></td>
-        <td class="text-center" colspan="3"></td>
-        <td class="text-center" colspan="3"></td>
-      </tr>
-      <tr>
-        <th scope="col" class="text-center" colspan="3">Working Pressure - Push -<input></th>
-        <td class="text-center" colspan="3"></td>
-        <td class="text-center" colspan="3"></td>
-        <td class="text-center" colspan="3"></td>
-      </tr> #}
+    <tbody id="js-tbl-forces">
     </tbody>
   </table>
+  
+  <hr>
+  <h4 class="registration-forms-title">Suitable Hydroil's standard cylinders to achieve the forces required</h4>
+  <div id="js-show-div">
+  </div>
+  <button type="button" class="btn btn-secondary" title="Used to generate a table with suitable cylinder specs." id="js-show-suitable-cylinders">Show</button>
+  <hr>
+
   <div class="container" style="margin-top: 3.5%;">
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
@@ -205,7 +202,7 @@
         <li class="page-item"><a class="page-link" href="#">2</a></li>
         <li class="page-item"><a class="page-link" href="#">3</a></li>
         <li class="page-item">
-          <a class="page-link" href="#" id="js-btn-first-next">Next</a>
+          <a class="page-link" href="" id="js-btn-first-next">Next</a>
         </li>
       </ul>
     </nav>

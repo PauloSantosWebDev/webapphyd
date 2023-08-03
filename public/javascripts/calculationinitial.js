@@ -1,6 +1,10 @@
 //General functions - Start
 
-let isNext = false;
+let isNext = false; //Used to allow the user to go to the next page without the prompt of the risk-of-losing-data alert
+let notEnoughForce = false; //Used to check if the forces created by the cylinder specs are enough to achieve what is required by the client
+
+//Variables used to calculate forces and open centers/length
+let pullForceWP = 0, pushForceWP = 0, pullForceTest = 0, pushForceTest = 0, openCenters = 0;
 
 const cylinderMounting = ['None', 'Female Clevis', 'Male Clevis', 'Spherical Bearing', 'Front Flange', 'Rear Flange', 'Tapped Mount', 'Lug Mount', 'Front Trunnion', 'Rear Trunnion', 'Double Ended Cylinder', '__________', 'None', '1 - MX3 - Extended Tie Rod Head End', '1A - MX2 - Extended Tie Rod Cap End', '1B - MX1 - Extended Tie Rod Both Ends', '2 - MF1 - Head Rectangular Flange', '3 - MF2 - Cap Rectangular Flange', '4 - MF5 - Head Square Flange',
 '5 - MF6 - Cap Square Flange', '6 - MS2 - Side Lugs', '7 - MS3 - Centre Line Lugs', '8 - MS4 - Side Tapped', '9 - End Angles', '10 - MS7 - End Lugs', '11 - MT1 - Head Trunnion', '12 - MT2 - Cap Trunnion', '13 - MT4 - Intermediate Trunnion',
@@ -84,30 +88,28 @@ function emptyFields (first, second) {
   fieldsToEmpty.forEach((field) => field.value = '');
 }
 
-
+//Function that generate the main table that shows forces and open centers/length
 function loadingTable () {
+  notEnoughForce = false; //This variable needs to be restarted everytime changes are made to the input values. Otherwise, the user will be locked in the page, not being able to proceed. 
   const pullPressWP = document.getElementById('inputPullPressureMpa').value;
   const pushPressWP = document.getElementById('inputPushPressureMpa').value;
   const testPress = document.getElementById('inputTestPressureMpa').value;
   const boreMM = document.getElementById('inputBoreMM').value;
   const rodMM = document.getElementById('inputRodMM').value;
 
-  let pullForceWP = Number(pullPressWP * (Math.PI/4) * (Math.pow(boreMM, 2) - Math.pow(rodMM, 2))).toFixed(2);
-  let pushForceWP = Number(pushPressWP * (Math.PI/4) * Math.pow(boreMM, 2)).toFixed(2);
+  pullForceWP = Number(pullPressWP * (Math.PI/4) * (Math.pow(boreMM, 2) - Math.pow(rodMM, 2))).toFixed(2);
+  pushForceWP = Number(pushPressWP * (Math.PI/4) * Math.pow(boreMM, 2)).toFixed(2);
 
-  let pullForceTest = Number(testPress * (Math.PI/4) * (Math.pow(boreMM, 2) - Math.pow(rodMM, 2))).toFixed(2);
-  let pushForceTest = Number(testPress * (Math.PI/4) * Math.pow(boreMM, 2)).toFixed(2);
+  pullForceTest = Number(testPress * (Math.PI/4) * (Math.pow(boreMM, 2) - Math.pow(rodMM, 2))).toFixed(2);
+  pushForceTest = Number(testPress * (Math.PI/4) * Math.pow(boreMM, 2)).toFixed(2);
   
-  let openCenters = Number(document.getElementById('inputNetStrokeMM').value) + Number(document.getElementById('inputClosedCentersMM').value);
-  
-  sessionStorage.setItem('open-centers-for-calc', openCenters);
-  sessionStorage.setItem('push-force-wp-newton-for-calc', pushForceWP);
-  sessionStorage.setItem('push-force-tp-newton-for-calc', pushForceTest);
+  openCenters = Number(document.getElementById('inputNetStrokeMM').value) + Number(document.getElementById('inputClosedCentersMM').value);
 
   let pullHTMLBlock = ``;
   let pushHTMLBlock = ``;
 
   if (Number(document.getElementById('inputPullForceNewton').value) > pullForceWP) {
+    notEnoughForce = true;
     pullHTMLBlock = 
       `<td scope="col" class="text-center" colspan="3">Working Pressure - Pull - ${document.getElementById('inputPullPressurePsi').value} psi</td>
       <td class="text-center" id="js-wp-pull-lbf" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(conversion(pullForceWP, 11))}</td>
@@ -123,6 +125,7 @@ function loadingTable () {
   }
 
   if (Number(document.getElementById('inputPushForceNewton').value) > pushForceWP) {
+    notEnoughForce = true;
     pushHTMLBlock =
       `<td scope="col" class="text-center" colspan="3">Working Pressure - Push - ${document.getElementById('inputPushPressurePsi').value} psi</td>
       <td class="text-center" id="js-wp-push-lbf" colspan="3" style="background-color: red; color: white; font-weight: bold;">${new Intl.NumberFormat().format(conversion(pushForceWP, 11))}</td>
@@ -170,18 +173,133 @@ function loadingTable () {
   document.getElementById('js-tbl-forces').innerHTML = accumHTML;
 }
 
-
-
-function saveDataForReload() {
+//Data is saved to be used in the next calculation pages and to reload if needed
+function saveData() {
+  const arrayToSaveAllData = [];
+  document.querySelectorAll('.js-save').forEach((e) => {
+    arrayToSaveAllData.push(e.value);
+  })
+  sessionStorage.setItem('calc-init-data', arrayToSaveAllData); //Used specifically to reload data when previous button on the next page is used.
   sessionStorage.setItem('pull-press-mpa-for-calc', Number(document.getElementById('inputPullPressureMpa').value));
   sessionStorage.setItem('push-press-mpa-for-calc', Number(document.getElementById('inputPushPressureMpa').value));
   sessionStorage.setItem('test-press-mpa-for-calc', Number(document.getElementById('inputTestPressureMpa').value));
   sessionStorage.setItem('bore-mm-for-calc', Number(document.getElementById('inputBoreMM').value));
   sessionStorage.setItem('rod-mm-for-calc', Number(document.getElementById('inputRodMM').value));
+  sessionStorage.setItem('open-centers-for-calc', openCenters);
+  sessionStorage.setItem('pull-force-wp-newton-for-calc', pullForceWP);
+  sessionStorage.setItem('push-force-wp-newton-for-calc', pushForceWP);
+  sessionStorage.setItem('push-force-tp-newton-for-calc', pushForceTest);
 }
 
+//Check if all the fiels have the appropriate data inside them and if the force required is achieved
+function emptyFields () {
+  let returnCheck = false;
+  let idAccumCheck = 0;
+  document.querySelectorAll('.js-save').forEach((e, i) => {
+    if (i === 0 || i === 1 || i === 2) {
+      if (e.value === '') {
+        idAccumCheck++;
+      }
+      if (idAccumCheck === 3) {
+        returnCheck = true;
+      }
+    } 
+    else {
+      if (e.value === '') {
+        returnCheck = true;
+      }
+    }
+  })
+  return returnCheck;
+}
 
+function showCylinderSuggestions () {
+  const hshCombinations = [{bore: 1.5, rod: 0.875}, {bore: 2, rod: 1}, {bore: 2.5, rod: 1.375}, {bore: 3, rod: 1.75}, {bore: 3.5, rod: 1.75}, {bore: 4, rod: 2}, {bore: 4.5, rod: 2}, {bore: 5, rod: 2.5},
+                          {bore: 5.5, rod: 2.5}, {bore: 6, rod: 3}, {bore: 6.5, rod: 3}, {bore: 7, rod: 3.5}, {bore: 7.5, rod: 3.5}, {bore: 8, rod: 4}, {bore: 9, rod: 4.5}, {bore: 10, rod: 5}];
+  
+  const hbCombinations = [{bore: 1.5, rod: 0.625}, {bore: 1.5, rod: 1}, {bore: 2, rod: 1}, {bore: 2, rod: 1.375}, {bore: 2.5, rod: 1}, {bore: 2.5, rod: 1.375}, {bore: 2.5, rod: 1.75}, 
+                          {bore: 3.25, rod: 1.375}, {bore: 3.25, rod: 1.75}, {bore: 3.25, rod: 2}, {bore: 4, rod: 1.75}, {bore: 4, rod: 2}, {bore: 4, rod: 2.5}, {bore: 5, rod: 2}, {bore: 5, rod: 2.5},
+                          {bore: 5, rod: 3}, {bore: 5, rod: 3.5}, {bore: 6, rod: 2.5}, {bore: 6, rod: 3}, {bore: 6, rod: 3.5}, {bore: 6, rod: 4}, {bore: 7, rod: 3}, {bore: 7, rod: 3.5}, {bore: 7, rod: 4},
+                          {bore: 7, rod: 5}, {bore: 8, rod: 3.5}, {bore: 8, rod: 4}, {bore: 8, rod: 5}, {bore: 8, rod: 5.5}];
 
+  const hhmiCombinations = [{bore: 50, rod: 32}, {bore: 50, rod: 36}, {bore: 63, rod: 40}, {bore: 63, rod: 45}, {bore: 80, rod: 50}, {bore: 80, rod: 56}, {bore: 100, rod: 63}, {bore: 100, rod: 70},
+                            {bore: 125, rod: 80}, {bore: 125, rod: 90}, {bore: 160, rod: 100}, {bore: 160, rod: 110}, {bore: 200, rod: 125}, {bore: 200, rod: 140}, {bore: 250, rod: 160}, 
+                            {bore: 320, rod: 200}, {bore: 320, rod: 220}, {bore: 400, rod: 250}, {bore: 400, rod: 280}, {bore: 500, rod: 320}, {bore: 500, rod: 360}];
+
+  let referenceBoreMM = Math.pow(((4 * document.getElementById('inputPushForceNewton').value)) / (Math.PI * document.getElementById('inputPushPressureMpa').value), 1/2);
+  let referenceBoreIN = referenceBoreMM / 254 * 10;
+  let tempRod = 0; //Used to temporarily hold the value of suitable rod to add to the table.
+  let constantForPull = (4 * document.getElementById('inputPullForceNewton').value) / (Math.PI * document.getElementById('inputPullPressureMpa').value);
+  
+  let hshHTMLAcc = ``, hbHTMLAcc = ``, hhmiHTMLAcc = ``; //Used to accumulate the HTML code to be added to the table.
+  
+  function checkBoreRod (arrayCombinations, reference) {
+    let htmlAcc = ``;
+    for (let i = 0; i < arrayCombinations.length; i++) {
+      if (Number(arrayCombinations[i].bore) >= Number(reference)) {
+        tempRod = Number(Math.pow((Math.pow(Number(arrayCombinations[i].bore), 2) - Number(constantForPull)), 1/2));
+        console.log(Number(arrayCombinations[i].bore));
+        console.log('Temp: ' + tempRod + ' i: ' + i);
+        if (Number(arrayCombinations[i].rod) <= tempRod) {
+          htmlAcc += `<tr><td scope="col" class="text-center" colspan="6">${arrayCombinations[i].bore}</td><td scope="col" class="text-center" colspan="6">${arrayCombinations[i].rod}</td></tr>`
+        }
+      }
+    }
+    return htmlAcc
+  }
+
+  hshHTMLAcc = checkBoreRod(hshCombinations, referenceBoreIN);
+  hbHTMLAcc = checkBoreRod(hbCombinations, referenceBoreIN);
+  hhmiHTMLAcc = checkBoreRod(hhmiCombinations, referenceBoreMM);
+
+  let accumHTML = 
+  `<table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" colspan="12" valign="middle">HSH</th>
+      </tr>
+      <tr>
+        <th scope="col" class="text-center" colspan="6" valign="middle">Bore</th>
+        <th scope="col" class="text-center" colspan="6" valign="middle">Rod</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${hshHTMLAcc}
+    </tbody>
+  </table>
+  
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" colspan="12" valign="middle">HB</th>
+      </tr>
+      <tr>
+        <th scope="col" class="text-center" colspan="6" valign="middle">Bore</th>
+        <th scope="col" class="text-center" colspan="6" valign="middle">Rod</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${hbHTMLAcc}
+    </tbody>
+  </table>
+  
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" colspan="12" valign="middle">HHMI</th>
+      </tr>
+      <tr>
+        <th scope="col" class="text-center" colspan="6" valign="middle">Bore</th>
+        <th scope="col" class="text-center" colspan="6" valign="middle">Rod</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${hhmiHTMLAcc}
+    </tbody>
+  </table>`
+
+  document.getElementById('js-show-div').innerHTML = accumHTML;
+}
 
 //General functions - End
 
@@ -196,6 +314,14 @@ function saveDataForReload() {
 window.addEventListener('load', () => {
   loadCylinderMountings();
   conversionListener();
+  if (sessionStorage.getItem('prev-buckling-initial') === 'true') {
+    const arrayToReloadData = sessionStorage.getItem('calc-init-data').split(',');
+    arrayToReloadData.forEach((e, i) => {
+      document.querySelectorAll('.js-save')[i].value = e;
+    })
+    loadingTable();
+    sessionStorage.setItem('prev-buckling-initial', false);
+  }
 })
 
 //Add listeners for the conversions to happen
@@ -308,7 +434,7 @@ function conversionListener() {
 }
 
 //Makes sure the table is created and updated every time a change is done
-document.querySelectorAll('.js-load-table').forEach((e,i) => {
+document.querySelectorAll('.js-load-table').forEach((e, i) => {
   e.addEventListener('focusout', () => {
     loadingTable();
   })
@@ -324,6 +450,11 @@ document.querySelectorAll('.js-load-table').forEach((e,i) => {
 //   loadingTable();
 // })
 
+//Used to show cylinder specs suggestions
+document.getElementById('js-show-suitable-cylinders').addEventListener('click', () => {
+  showCylinderSuggestions();
+})
+
 window.onbeforeunload = () => {
   if (!isNext) {
     return "Are you sure you want to reload or leave the page? Data could be lost.";
@@ -332,9 +463,17 @@ window.onbeforeunload = () => {
 
 //When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-first-next').addEventListener('click', () => {
-  isNext = true;
-  saveDataForReload();
-  location.assign('http://localhost:3000/calculationbuckling');
+  if (emptyFields()) {
+    alert('Please provide at least one link to number and make sure fields for cylinder initial specs are not empty!');
+  }
+  else if (notEnoughForce) {
+    alert('Design changes needed. Actual forces smaller than required!');
+  }
+  else {
+    isNext = true;
+    saveData();
+    location.assign('http://localhost:3000/calculationbuckling');
+  }  
 })
 
 //Event listeners setction - End
