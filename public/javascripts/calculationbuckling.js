@@ -2,6 +2,72 @@
 
 let isThereRodID = false;
 
+//Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
+function elementsConversion (elementYouAre, otherElement, selector) { 
+  if (elementYouAre.value < 0 || elementYouAre.value === '') {
+      emptyFields(elementYouAre, otherElement);
+  }
+  else {
+      otherElement.value = conversion(elementYouAre.value, selector);
+  }
+}
+
+//Used to convert a variety of numbers from one measurement unit to another
+function conversion (origim, selector) {
+  let resultDestiny = 0;
+  switch (Number(selector)) {
+      case 1:
+          resultDestiny = origim * 254 / 10; //Conversion from inches to millimeters.
+          break;
+      case 2:
+          resultDestiny = origim / 254 * 10; //Conversion from millimeters to inches.
+          break;
+      case 3:
+          resultDestiny = origim / 1450377377 * 10000000; //Conversion from psi to MPa
+          break;
+      case 4:
+          resultDestiny = origim / 1450377377 * 100000000; //Conversion from psi to Bar
+          break;
+      case 5:
+          resultDestiny = origim * 1450377377 / 10000000; //Conversion from MPa to psi
+          break;
+      case 6:
+          resultDestiny = origim * 10; //Conversion from MPa to bar
+          break;
+      case 7:
+          resultDestiny = origim * 1450377377 / 100000000; //Conversion from bar to psi
+          break;
+      case 8:
+          resultDestiny = origim / 10; //Conversion from bar to MPa
+          break;
+      case 9:
+          resultDestiny = origim * 44482216153 / Math.pow(10,10); //Conversion from lbf to Newton
+          break;
+      case 10:
+          resultDestiny = origim * 4535924 / Math.pow(10,10); //Conversion from lbf to ton-force
+          break;
+      case 11:
+          resultDestiny = origim / 44482216153 * Math.pow(10,10); //Conversion from Newton to lbf
+          break;
+      case 12:
+          resultDestiny = origim * 1019716 / Math.pow(10,10); //Conversion from Newton to ton-force
+          break;
+      case 13:
+          resultDestiny = origim / 4535924 * Math.pow(10,10); //Conversion from ton-force to lbf
+          break;
+      case 14:
+          resultDestiny = origim / 1019716 * Math.pow(10,10); //Conversion from ton-force to Newton
+          break;
+  }
+  return resultDestiny.toFixed(2);
+}
+
+//Used to bring the fields back to showing placeholders' values
+function emptyFields (first, second) {
+  const fieldsToEmpty = [first, second];
+  fieldsToEmpty.forEach((field) => field.value = '');
+}
+
 //General functions - End
 
 
@@ -13,9 +79,29 @@ document.querySelectorAll('.js-radio-round-hollow').forEach((e) => {
   e.addEventListener('change', () => {
     if (document.getElementById('js-round-hollow-yes').checked) {
       document.getElementById('js-buckling-rod-id').innerHTML = 
-      `<label for="inputRodID" class="form-label">Rod ID in millimeters</label>
-      <input type="number" min="0.00" step="0.01" class="form-control" id="inputRodID" name="inputRodID">`;
+      `<div class="col-md-3">
+        <label for="inputRodIDInches" class="form-label">Rod ID - inches</label>
+        <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm" id="inputRodIDInches" name="inputRodIDInches">
+      </div>
+      <div class="col-md-3" style="margin-left: 0; padding-left: 0;">
+        <label for="inputRodID" class="form-label">Rod ID - millimeters</label>
+        <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in" id="inputRodID" name="inputRodID">
+      </div>`;
       isThereRodID = true;
+      
+      //Used to block Enter key default actions
+      function blockReloadEnterKey () {
+        document.getElementById('inputRodID').addEventListener('keydown', (element) => {
+          if (element.key === 'Enter') {
+            element.preventDefault();
+            document.getElementById('js-calc-sf-buckling').click();
+          }
+        })
+      }
+      blockReloadEnterKey();
+
+      //Used to add listeners for unit conversions
+      conversionListener();
     }
     else {
       document.getElementById('js-buckling-rod-id').innerHTML = ``;
@@ -259,6 +345,14 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
   </table>`
 })
 
+//Make sure that when enter is pressed in the input tags, the page doesn't reload. Also, that it triggers calculate button.
+document.getElementById('inputYoungsModulus').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('js-calc-sf-buckling').click();
+  }
+})
+
 //When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-second-next').addEventListener('click', () => {
   isNext = true;
@@ -270,6 +364,32 @@ document.getElementById('js-second-previous').addEventListener('click', () => {
   sessionStorage.setItem('prev-buckling-initial', true);
   location.assign('http://localhost:3000/calculationinitial');
 })
+
+//Add listeners for the conversions to happen
+function conversionListener() {
+  //General - Changing values from inches to millimeters
+  document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-mm-to-in")[index];
+    e.addEventListener('keyup', () => {
+      elementsConversion(e, other, 1);
+    });
+    e.addEventListener('change', () => {
+      elementsConversion(e, other, 1);
+    });
+  });
+
+  //General - Changing values from millimeters to inches
+  document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-in-to-mm")[index];
+    e.addEventListener('keyup', () => {
+      elementsConversion(e, other, 2);
+    });
+    e.addEventListener('change', () => {
+      elementsConversion(e, other, 2);
+    });
+  });
+}
+
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 
