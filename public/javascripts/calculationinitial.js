@@ -229,17 +229,19 @@ function showCylinderSuggestions () {
   let referenceBoreMM = Math.pow(((4 * document.getElementById('inputPushForceNewton').value)) / (Math.PI * document.getElementById('inputPushPressureMpa').value), 1/2);
   let referenceBoreIN = referenceBoreMM / 254 * 10;
   let tempRod = 0; //Used to temporarily hold the value of suitable rod to add to the table.
-  let constantForPull = (4 * document.getElementById('inputPullForceNewton').value) / (Math.PI * document.getElementById('inputPullPressureMpa').value);
-  
+  let constantForPullMM = (4 * document.getElementById('inputPullForceNewton').value) / (Math.PI * document.getElementById('inputPullPressureMpa').value);
+  let constantForPullIN = constantForPullMM / ((254 * 254) / 100);
+
   let hshHTMLAcc = ``, hbHTMLAcc = ``, hhmiHTMLAcc = ``; //Used to accumulate the HTML code to be added to the table.
   
-  function checkBoreRod (arrayCombinations, reference) {
+  function checkBoreRod (arrayCombinations, reference, constant) {
     let htmlAcc = ``;
     for (let i = 0; i < arrayCombinations.length; i++) {
       if (Number(arrayCombinations[i].bore) >= Number(reference)) {
-        tempRod = Number(Math.pow((Math.pow(Number(arrayCombinations[i].bore), 2) - Number(constantForPull)), 1/2));
-        console.log(Number(arrayCombinations[i].bore));
-        console.log('Temp: ' + tempRod + ' i: ' + i);
+        if (Math.pow(Number(arrayCombinations[i].bore), 2) - Number(constant) < 0) {
+          continue
+        }
+        tempRod = Number(Math.pow((Math.pow(Number(arrayCombinations[i].bore), 2) - Number(constant)), 1/2));
         if (Number(arrayCombinations[i].rod) <= tempRod) {
           htmlAcc += `<tr><td scope="col" class="text-center" colspan="6">${arrayCombinations[i].bore}</td><td scope="col" class="text-center" colspan="6">${arrayCombinations[i].rod}</td></tr>`
         }
@@ -248,9 +250,9 @@ function showCylinderSuggestions () {
     return htmlAcc
   }
 
-  hshHTMLAcc = checkBoreRod(hshCombinations, referenceBoreIN);
-  hbHTMLAcc = checkBoreRod(hbCombinations, referenceBoreIN);
-  hhmiHTMLAcc = checkBoreRod(hhmiCombinations, referenceBoreMM);
+  hshHTMLAcc = checkBoreRod(hshCombinations, referenceBoreIN, constantForPullIN);
+  hbHTMLAcc = checkBoreRod(hbCombinations, referenceBoreIN, constantForPullIN);
+  hhmiHTMLAcc = checkBoreRod(hhmiCombinations, referenceBoreMM, constantForPullMM);
 
   let accumHTML = 
   `<table class="table table-sm table-bordered">
@@ -331,13 +333,32 @@ function conversionListener() {
     let mpaElement = document.querySelectorAll(".js-mpa")[index];
     let barElement = document.querySelectorAll(".js-bar")[index];
     e.addEventListener('change', () => {
-        elementsConversion(e, mpaElement, 3);
-        elementsConversion(e, barElement, 4);
+      elementsConversion(e, mpaElement, 3);
+      elementsConversion(e, barElement, 4);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, mpaElement, 3);
-        elementsConversion(e, barElement, 4);
+    e.addEventListener('keyup', (element) => { 
+      elementsConversion(e, mpaElement, 3);
+      elementsConversion(e, barElement, 4);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-psi').length) {
+          document.querySelectorAll(".js-psi")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-lbf")[0].focus();
+        }
+      }
     });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-psi').length) {
+          document.querySelectorAll(".js-psi")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-lbf")[0].focus();
+        }
+      }
+    })
   });
 
   //General - It changes values from mpa to psi and bar
@@ -348,10 +369,29 @@ function conversionListener() {
         elementsConversion(e, psiElement, 5);
         elementsConversion(e, barElement, 6);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, psiElement, 5);
-        elementsConversion(e, barElement, 6);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, psiElement, 5);
+      elementsConversion(e, barElement, 6);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-mpa').length) {
+          document.querySelectorAll(".js-mpa")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-newton")[0].focus();
+        }
+      }
     });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-mpa').length) {
+          document.querySelectorAll(".js-mpa")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-newton")[0].focus();
+        }
+      }
+    })
   });
 
   //General - It changes values from bar to psi and mpa
@@ -359,13 +399,32 @@ function conversionListener() {
     let psiElement = document.querySelectorAll(".js-psi")[index];
     let mpaElement = document.querySelectorAll(".js-mpa")[index];
     e.addEventListener('change', () => {
-        elementsConversion(e, psiElement, 7);
-        elementsConversion(e, mpaElement, 8);
+      elementsConversion(e, psiElement, 7);
+      elementsConversion(e, mpaElement, 8);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, psiElement, 7);
-        elementsConversion(e, mpaElement, 8);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, psiElement, 7);
+      elementsConversion(e, mpaElement, 8);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-bar').length) {
+          document.querySelectorAll(".js-bar")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-ton")[0].focus();
+        }
+      }
     });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-bar').length) {
+          document.querySelectorAll(".js-bar")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-ton")[0].focus();
+        }
+      }
+    })
   });
 
   //General - It changes values from lbf to Newtons and ton-force
@@ -376,9 +435,28 @@ function conversionListener() {
         elementsConversion(e, newtonElement, 9);
         elementsConversion(e, tonElement, 10);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, newtonElement, 9);
-        elementsConversion(e, tonElement, 10);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, newtonElement, 9);
+      elementsConversion(e, tonElement, 10);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-lbf').length) {
+          document.querySelectorAll(".js-lbf")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-in-to-mm")[0].focus();
+        }
+      }
+    });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-lbf').length) {
+          document.querySelectorAll(".js-lbf")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-in-to-mm")[0].focus();
+        }
+      }
     });
   });
 
@@ -387,12 +465,31 @@ function conversionListener() {
     let lbfElement = document.querySelectorAll(".js-lbf")[index];
     let tonElement = document.querySelectorAll(".js-ton")[index];
     e.addEventListener('change', () => {
-        elementsConversion(e, lbfElement, 11);
-        elementsConversion(e, tonElement, 12);
+      elementsConversion(e, lbfElement, 11);
+      elementsConversion(e, tonElement, 12);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, lbfElement, 11);
-        elementsConversion(e, tonElement, 12);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, lbfElement, 11);
+      elementsConversion(e, tonElement, 12);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-newton').length) {
+          document.querySelectorAll(".js-newton")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-mm-to-in")[0].focus();
+        }
+      }
+    });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-newton').length) {
+          document.querySelectorAll(".js-newton")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-mm-to-in")[0].focus();
+        }
+      }
     });
   });
 
@@ -401,34 +498,91 @@ function conversionListener() {
     let lbfElement = document.querySelectorAll(".js-lbf")[index];
     let newtonElement = document.querySelectorAll(".js-newton")[index];
     e.addEventListener('change', () => {
-        elementsConversion(e, lbfElement, 13);
-        elementsConversion(e, newtonElement, 14);
+      elementsConversion(e, lbfElement, 13);
+      elementsConversion(e, newtonElement, 14);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, lbfElement, 13);
-        elementsConversion(e, newtonElement, 14);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, lbfElement, 13);
+      elementsConversion(e, newtonElement, 14);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-ton').length) {
+          document.querySelectorAll(".js-ton")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-mm-to-in")[0].focus();
+        }
+      }
+    });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-ton').length) {
+          document.querySelectorAll(".js-ton")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-mm-to-in")[0].focus();
+        }
+      }
     });
   });
 
   //General - Changing values from inches to millimeters
   document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
     let other = document.querySelectorAll(".js-mm-to-in")[index];
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, other, 1);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, other, 1);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-in-to-mm').length) {
+          document.querySelectorAll(".js-in-to-mm")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-extra")[0].focus();
+        }
+      }
+    });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-in-to-mm').length) {
+          document.querySelectorAll(".js-in-to-mm")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-extra")[0].focus();
+        }
+      }
     });
     e.addEventListener('change', () => {
-        elementsConversion(e, other, 1);
+      elementsConversion(e, other, 1);
     });
   });
 
   //General - Changing values from millimeters to inches
   document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
     let other = document.querySelectorAll(".js-in-to-mm")[index];
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, other, 2);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, other, 2);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-mm-to-in').length) {
+          document.querySelectorAll(".js-mm-to-in")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-extra")[0].focus();
+        }
+      }
+    });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-mm-to-in').length) {
+          document.querySelectorAll(".js-mm-to-in")[index + 1].focus();
+        }
+        else {
+          document.querySelectorAll(".js-extra")[0].focus();
+        }
+      }
     });
     e.addEventListener('change', () => {
-        elementsConversion(e, other, 2);
+      elementsConversion(e, other, 2);
     });
   });
 }

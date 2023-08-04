@@ -431,7 +431,6 @@ document.getElementById('inputHydroilId').addEventListener('keyup', (e) => {
 //Calculating, if possible, when enter is the keyup in barrel od input element
 document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
-    console.log('Is it even working?');
     e.preventDefault();
     document.getElementById('js-calc-sf-hoop').click();
   }
