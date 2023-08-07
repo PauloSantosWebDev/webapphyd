@@ -286,12 +286,17 @@ app.get('/calculationinitial', (req, res) => {
 
 //Render the page to calculate rod buckling
 app.get('/calculationbuckling', (req, res) => {
-  res.render('calculationbuckling.njk', {title: 'Calcualtions - buckling'});
+  res.render('calculationbuckling.njk', {title: 'Calcualtions - Buckling'});
 })
 
 //Render the page to calculate hoop stress
 app.get('/calculationhoop', (req, res) => {
-  res.render('calculationhoop.njk', {title: 'Calcualtions - buckling'});
+  res.render('calculationhoop.njk', {title: 'Calcualtions - Hoop'});
+})
+
+//Render the page to calculate weldings
+app.get('/calculationwelding', (req, res) => {
+  res.render('calculationwelding.njk', {title: 'Calcualtions - Welding'});
 })
 
 //-----------------------------------------------------

@@ -515,7 +515,7 @@ document.getElementById('js-third-previous').addEventListener('click', () => {
 document.getElementById('js-btn-third-next').addEventListener('click', () => {
   isNext = true;
   saveData();
-  location.assign('http://localhost:3000/calculationwelding');
+  location.assign('http://localhost:3000/');
 })
 
 //Event listeners setction - End

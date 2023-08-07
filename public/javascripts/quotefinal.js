@@ -31,7 +31,7 @@ function saveDataForReload () {
   //   arrayPrice.push(e.value);
   // });
   // sessionStorage.setItem('partsPrice', arrayPrice);
-  location.assign('http://localhost:3000/');
+  location.assign('http://localhost:3000/calculationinitial');
 }
 
 function populateBack () {
