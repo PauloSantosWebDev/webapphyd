@@ -23,16 +23,15 @@
   </form>
   
   <h5 class="registration-forms-subtitle">Support images</h5>
-  <div class="accordion" id="accordionExample">
+  <div class="accordion" id="accordionBuckling">
     <div class="accordion-item">
       <h2 class="accordion-header" id="headingOne">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
           The two ends can pivot and the load is guided - &nbsp<span style="font-weight: bold;">FIRST</span>
         </button>
       </h2>
-      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionBuckling">
         <div class="accordion-body">
-          {# <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. #}
           <img src="/images/end-condition-one.png" alt="End condition one">
         </div>
       </div>
@@ -43,9 +42,8 @@
           One end is fixed, the other is free and load is not guided - &nbsp<span style="font-weight: bold;">SECOND</span>
         </button>
       </h2>
-      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionBuckling">
         <div class="accordion-body">
-          {# <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. #}
           <img src="/images/end-condition-two.png" alt="End condition two">
         </div>
       </div>
@@ -56,9 +54,8 @@
           One end can pivot, the other is fixed and load is guided - &nbsp<span style="font-weight: bold;">THIRD</span>
         </button>
       </h2>
-      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionBuckling">
         <div class="accordion-body">
-          {# <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. #}
           <img src="/images/end-condition-three.png" alt="End condition three">
         </div>
       </div>
@@ -69,9 +66,8 @@
           The two end are fixed and load is guided - &nbsp<span style="font-weight: bold;">FOURTH</span>
         </button>
       </h2>
-      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionBuckling">
         <div class="accordion-body">
-          {# <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. #}
           <img src="/images/end-condition-four.png" alt="End condition four">
         </div>
       </div>
@@ -92,7 +88,7 @@
     </form>
   <hr>
 
-  <h4 class="registration-forms-title">Round or hollow rod</h4>
+  <h4 class="registration-forms-title">Solid or hollow rod</h4>
     <form class="row g-3">
       <div>
         <label for="inputRadioButtons" class="form-label"style="margin-right: 1em;">Is the rod hollow?</label>
@@ -117,34 +113,33 @@
     </div>
     <button type="button" class="btn btn-secondary" title="Used to calculate rod buckling safety factor." id="js-calc-sf-buckling">Calculate</button>
   <hr>
-  <div class="accordion" id="accordionExample">
+  <div class="accordion" id="accordion-buckling-formula">
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+      <h2 class="accordion-header" id="headingFive">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
           Rod buckling safety factor formulas for solid and hollow bars
         </button>
       </h2>
-      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordion-buckling-formula">
         <div class="accordion-body">
           {# <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow. #}
           <img src="/images/buckling-sfs.png" alt="Safety factor formulas for rod buckling" class="img-fluid">
         </div>
       </div>
     </div>
-        
   </div>
 
   <div class="container" style="margin-top: 3.5%;">
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item">
-          <a class="page-link" href="#" tabindex="-1" id="js-second-previous">Previous</a>
+          <a class="page-link" tabindex="-1" id="js-second-previous" style="cursor: pointer;">Previous</a>
         </li>
         <li class="page-item"><a class="page-link" href="#">1</a></li>
         <li class="page-item"><a class="page-link" href="#">2</a></li>
         <li class="page-item"><a class="page-link" href="#">3</a></li>
         <li class="page-item">
-          <a class="page-link" href="#" id="js-btn-second-next">Next</a>
+          <a class="page-link" id="js-btn-second-next" style="cursor: pointer;">Next</a>
         </li>
       </ul>
     </nav>

@@ -368,21 +368,81 @@ function conversionListener() {
   document.querySelectorAll(".js-psi").forEach((e, index) => {
     let mpaElement = document.querySelectorAll(".js-mpa")[index];
     e.addEventListener('change', () => {
-        elementsConversion(e, mpaElement, 3);
+      elementsConversion(e, mpaElement, 3);
     });
-    e.addEventListener('keyup', () => {
-        elementsConversion(e, mpaElement, 3);
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, mpaElement, 3);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-psi').length) {
+          document.querySelectorAll(".js-psi")[index + 1].focus();
+        }
+        else {
+          document.getElementById('js-search-mech-properties').click();
+        }
+      }
     });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-psi').length) {
+          document.querySelectorAll(".js-psi")[index + 1].focus();
+        }
+        else {
+          document.getElementById('js-search-mech-properties').focus();
+        }
+      }
+    })
   });
 
   //General - It changes values from mpa to psi and bar
   document.querySelectorAll(".js-mpa").forEach((e, index) => {
     let psiElement = document.querySelectorAll(".js-psi")[index];
     e.addEventListener('change', () => {
-        elementsConversion(e, psiElement, 5);
+      elementsConversion(e, psiElement, 5);
     });
+    e.addEventListener('keyup', (element) => {
+      elementsConversion(e, psiElement, 5);
+      if (element.key === 'Enter') {
+        if ((index + 1) < document.querySelectorAll('.js-mpa').length) {
+          document.querySelectorAll(".js-mpa")[index + 1].focus();
+        }
+        else {
+          document.getElementById('js-search-mech-properties').click();
+        }
+      }
+    });
+    e.addEventListener('keydown', (element) => {
+      if (element.key === 'Tab') {
+        element.preventDefault();
+        if ((index + 1) < document.querySelectorAll('.js-mpa').length) {
+          document.querySelectorAll(".js-mpa")[index + 1].focus();
+        }
+        else {
+          document.getElementById('js-search-mech-properties').focus();
+        }
+      }
+    })
+  });
+  
+  //General - Changing values from inches to millimeters
+  document.querySelectorAll(".js-in-to-mm").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-mm-to-in")[index];
     e.addEventListener('keyup', () => {
-        elementsConversion(e, psiElement, 5);
+      elementsConversion(e, other, 1);
+    });
+    e.addEventListener('change', () => {
+      elementsConversion(e, other, 1);
+    });
+  });
+
+  //General - Changing values from millimeters to inches
+  document.querySelectorAll(".js-mm-to-in").forEach((e, index) => {
+    let other = document.querySelectorAll(".js-in-to-mm")[index];
+    e.addEventListener('keyup', () => {
+      elementsConversion(e, other, 2);
+    });
+    e.addEventListener('change', () => {
+      elementsConversion(e, other, 2);
     });
   });
 }
@@ -434,6 +494,12 @@ document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => 
     e.preventDefault();
     document.getElementById('js-calc-sf-hoop').click();
   }
+})
+
+//When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
+document.getElementById('js-third-previous').addEventListener('click', () => {
+  sessionStorage.setItem('prev-hoop-buckling', true);
+  location.assign('http://localhost:3000/calculationbuckling');
 })
 
 //When next is clicked, all the date need to be saved and next page loaded

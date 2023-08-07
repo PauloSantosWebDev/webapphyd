@@ -1,6 +1,10 @@
 //General functions - Start
 
+let isNext = false; //Used to allow the user to go to the next page without the prompt of the risk-of-losing-data alert
+
 let isThereRodID = false;
+
+let sfWp = 0, sfTp = 0; //Used to make sure the safety factor results can be accessed by other functions
 
 //Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
 function elementsConversion (elementYouAre, otherElement, selector) { 
@@ -66,6 +70,20 @@ function conversion (origim, selector) {
 function emptyFields (first, second) {
   const fieldsToEmpty = [first, second];
   fieldsToEmpty.forEach((field) => field.value = '');
+}
+
+//Used to save important data in session storage
+function saveData () {
+  const E = document.getElementById('inputYoungsModulus').value || 200;
+  sessionStorage.setItem('buckling-end-condition', document.getElementById('inputEndCondition').value);
+  sessionStorage.setItem('buckling-solid-hollow', document.getElementById('js-round-hollow-yes').checked);
+  if (sessionStorage.getItem('buckling-solid-hollow') === 'true') {
+   sessionStorage.setItem('buckling-rod-id-in', document.getElementById('inputRodIDInches').value);
+   sessionStorage.setItem('buckling-rod-id-mm', document.getElementById('inputRodID').value);
+  }
+  sessionStorage.setItem('buckling-youngs-modulus', E);
+  sessionStorage.setItem('buckling-safety-factor-wp', sfWp);
+  sessionStorage.setItem('buckling-safety-factor-tp', sfTp);
 }
 
 //General functions - End
@@ -166,7 +184,7 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
     }
   }
   else {
-    rodID = Number(document.getElementById('inputRodID').value).toFixed(4);
+    rodID = Number(document.getElementById('inputRodID').value).toFixed(2);
     if (document.getElementById('inputEndCondition').value === 'endCondition1') {
       safetyFactorWP = (youngsModulus * 1000 * Math.pow(Math.PI, 2) * (Math.pow(rodOD, 4) - Math.pow(rodID, 4)))/(16 * Math.pow(columnLength, 2) * pushPressWP * Math.pow(barrelID, 2)); //1000 is necessary as E should be in GPa. Also Math.PI/4 is added to work with proper values.
       safetyFactorTP = (youngsModulus * 1000 * Math.pow(Math.PI, 2) * (Math.pow(rodOD, 4) - Math.pow(rodID, 4)))/(16 * Math.pow(columnLength, 2) * pushPressTP * Math.pow(barrelID, 2));
@@ -209,8 +227,8 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
     }
   }
 
-  safetyFactorWP = safetyFactorWP.toFixed(1);
-  safetyFactorTP = safetyFactorTP.toFixed(1);
+  sfWp = safetyFactorWP = safetyFactorWP.toFixed(1);
+  sfTp = safetyFactorTP = safetyFactorTP.toFixed(1);
 
   let actualSFWP = ''; //Used for signaling if the safety factor is according to standard or not.
   let actualSFTP = ''; //Used for signaling if the safety factor is according to standard or not.
@@ -252,7 +270,7 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
     rodIDHTML = 'N/A';
   }
   else {
-    rodIDHTML = rodID/1000;
+    rodIDHTML = rodID;
   }
 
   let maxRodIDHTML = '';
@@ -261,7 +279,12 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
     maxRodIDHTML = 'N/A';
   }
   else {
-    maxRodIDHTML = maxRodID / 1000;
+    if (isNaN(maxRodID)) {
+      maxRodIDHTML = 'Cannot be hollow';
+    }
+    else {
+      maxRodIDHTML = Number(maxRodID).toFixed(2);
+    }
   }
 
   document.getElementById('js-buckling-sf-result').innerHTML =
@@ -297,23 +320,23 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
         </tr>
         <tr>
           <th scope="col" class="text-center" colspan="2" valign="middle">End-condition</th>
-          <th scope="col" class="text-center" colspan="3" valign="middle">Young's Modulus (Pa)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Rod OD (m)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Rod ID (m)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Column length (m)</th>
-          <th scope="col" class="text-center" colspan="3" valign="middle">Push pressure (Pa)</th>
-          <th scope="col" class="text-center" colspan="1" valign="middle">Barrel ID (m)</th>
+          <th scope="col" class="text-center" colspan="3" valign="middle">Young's Modulus (GPa)</th>
+          <th scope="col" class="text-center" colspan="1" valign="middle">Rod OD (mm)</th>
+          <th scope="col" class="text-center" colspan="1" valign="middle">Rod ID (mm)</th>
+          <th scope="col" class="text-center" colspan="1" valign="middle">Column length (mm)</th>
+          <th scope="col" class="text-center" colspan="3" valign="middle">Push pressure (MPa)</th>
+          <th scope="col" class="text-center" colspan="1" valign="middle">Barrel ID (mm)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td scope="col" class="text-center" colspan="2">${endCondition}</td>
-          <td scope="col" class="text-center" colspan="3">${youngsModulus.toFixed(0)} &#183 10<sup>9</sup></td>
-          <td scope="col" class="text-center" colspan="1">${(rodOD / 1000).toFixed(4)}</td>
+          <td scope="col" class="text-center" colspan="3">${youngsModulus.toFixed(0)}</td>
+          <td scope="col" class="text-center" colspan="1">${Number(rodOD).toFixed(2)}</td>
           <td scope="col" class="text-center" colspan="1">${rodIDHTML}</td>
-          <td scope="col" class="text-center" colspan="1">${(columnLength / 1000).toFixed(4)}</td>
-          <td scope="col" class="text-center" colspan="3">${Number(pushPressWP).toFixed(2)} &#183 10<sup>6</sup></td>
-          <td scope="col" class="text-center" colspan="1">${(barrelID / 1000).toFixed(4)}</td>
+          <td scope="col" class="text-center" colspan="1">${Number(columnLength).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="3">${Number(pushPressWP).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${Number(barrelID).toFixed(2)}</td>
         </tr>
       </tbody>
     </table>
@@ -324,22 +347,22 @@ document.getElementById('js-calc-sf-buckling').addEventListener('click', () => {
         <th scope="col" class="text-center" colspan="12" valign="middle">Required values to get the minimum safety factor of 3:1 at working pressure</th>
       </tr>
       <tr>
-        <th scope="col" class="text-center" colspan="2" valign="middle">Max. push pressure (Pa)</th>
-        <th scope="col" class="text-center" colspan="2" valign="middle">Min. rod OD (m)</th>
-        <th scope="col" class="text-center" colspan="2" valign="middle">Max. rod ID (m)</th>
-        <th scope="col" class="text-center" colspan="2" valign="middle">Max. column length (m)</th>
-        <th scope="col" class="text-center" colspan="2" valign="middle">Max. barrel ID (m)</th>
-        <th scope="col" class="text-center" colspan="2" valign="middle">Min. Young's Modulus (Pa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. push pressure (MPa)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Min. rod OD (mm)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. rod ID (mm)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. column length (mm)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Max. barrel ID (mm)</th>
+        <th scope="col" class="text-center" colspan="2" valign="middle">Min. Young's Modulus (GPa)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td scope="col" class="text-center" colspan="2">${Number(maxWP).toFixed(2)} &#183 10<sup>6</sup></td>
-        <td scope="col" class="text-center" colspan="2">${(minRodOD / 1000).toFixed(4)}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(maxWP).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(minRodOD).toFixed(2)}</td>
         <td scope="col" class="text-center" colspan="2">${maxRodIDHTML}</td>
-        <td scope="col" class="text-center" colspan="2">${(maxColumnLength / 1000).toFixed(4)}</td>
-        <td scope="col" class="text-center" colspan="2">${Number(maxBarrelID / 1000).toFixed(4)}</td>
-        <td scope="col" class="text-center" colspan="2">${Number(minYoungsModulus).toFixed(2)} &#183 10<sup>9</sup></td>
+        <td scope="col" class="text-center" colspan="2">${Number(maxColumnLength).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(maxBarrelID).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="2">${Number(minYoungsModulus).toFixed(2)}</td>
       </tr>
     </tbody>
   </table>`
@@ -356,7 +379,14 @@ document.getElementById('inputYoungsModulus').addEventListener('keydown', (e) =>
 //When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-second-next').addEventListener('click', () => {
   isNext = true;
-  location.assign('http://localhost:3000/calculationhoop');
+  document.getElementById('js-calc-sf-buckling').click();
+  if (sfWp < 3 || sfTp < 2) {
+    alert("Safety factors below Hydroil's standard. Please change design to achive safety factors.");
+  }
+  else {
+    saveData();
+    location.assign('http://localhost:3000/calculationhoop');
+  }
 })
 
 //When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
@@ -390,6 +420,28 @@ function conversionListener() {
   });
 }
 
+
+//Page loading behaviour
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('prev-hoop-buckling') === 'true') {
+    document.getElementById('inputEndCondition').value = sessionStorage.getItem('buckling-end-condition');
+    document.getElementById('inputYoungsModulus').value = sessionStorage.getItem('buckling-youngs-modulus');
+    if (sessionStorage.getItem('buckling-solid-hollow') === 'true') {
+      document.getElementById('js-round-hollow-yes').click();
+      document.getElementById('inputRodIDInches').value = sessionStorage.getItem('buckling-rod-id-in');
+      document.getElementById('inputRodID').value = sessionStorage.getItem('buckling-rod-id-mm');
+    }
+    document.getElementById('js-calc-sf-buckling').click();
+    sessionStorage.setItem('prev-hoop-buckling', false);
+  }
+})
+
+
+window.onbeforeunload = () => {
+  if (!isNext) {
+    return "Are you sure you want to reload or leave the page? Data could be lost.";
+  }  
+}
 //Event listeners setction - End
 //--------------------------------------------------------------------------------------------------------------------------
 
