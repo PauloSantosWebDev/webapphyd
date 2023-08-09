@@ -3,21 +3,7 @@
 {% block content %}
 <h2 class="registration-forms-title">NEW CALCULATION - WELDINGS</h2>
   <hr>
-  
-  <h4 class="registration-forms-title">Barrel OD</h4>
-    <form class="row g-3" id="js-form-barrel-od">
-      <div class="col-md-2"> {#style="margin-bottom: 2em;"#}
-        <label for="inputBarrelOutsideDiameterIn" class="form-label">Barrel OD - inches</label>
-        <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm js-save" id="inputBarrelOutsideDiameterIn" name="inputBarrelOutsideDiameterIn">
-      </div>
-      <div class="col-md-2"> {#style="margin-bottom: 2em;"#}
-        <label for="inputBarrelOutsideDiameter" class="form-label">Barrel OD - millimeters</label>
-        <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in js-save" id="inputBarrelOutsideDiameter" name="inputBarrelOutsideDiameter">
-      </div>
-    </form>
-  <hr>
-
-  <h4 class="registration-forms-title">Barrel identification and mechanical properties</h4>
+  <h4 class="registration-forms-title">Welding wire mechanical properties</h4>
     <form class="row g-3">
       <div class="col-md-2">
         <label for="inputHydroilId" class="form-label">Hydroil's id</label>
@@ -59,6 +45,134 @@
     </form>
   <hr>
 
+  <h4 class="registration-forms-title">Weldings</h4>
+    <form class="row g-3" id="js-form-weld-sf">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="inputWeldingJoint" class="form-label">Joint</label>
+          <input type="text" class="form-control js-joint js-save-welding js-save">
+        </div>
+        <div class="col-md-2">
+          <label for="inputThroatIN" class="form-label">Throat - in</label>
+          <input type="text" class="form-control js-in-to-mm js-throat-in js-save-welding js-save" tabindex="-1">
+        </div>
+        <div class="col-md-2">
+          <label for="inputThroatMM" class="form-label">Throat - mm</label>
+          <input type="text" class="form-control js-mm-to-in js-throat-mm js-save-welding js-save" tabindex="-1">
+        </div>
+        <div class="col-md-2">
+          <label for="inputLengthIN" class="form-label">Length - in</label>
+          <input type="text" class="form-control js-in-to-mm js-length-in js-save-welding js-save" tabindex="-1">
+        </div>
+        <div class="col-md-2">
+          <label for="inputLengthMM" class="form-label">Length - mm</label>
+          <input type="text" class="form-control js-mm-to-in js-length-mm js-save-welding js-save" tabindex="-1">
+        </div>
+      </div>
+      <div class="row" id="js-div-new-line">
+      </div>
+      <div class="col-12">
+        <button type="button" class="btn btn-secondary" id="js-add-new-line">Add new line</button>
+      </div>
+    </form>
+  <hr>
+
+<h4 class="registration-forms-title">How to find throat sizes</h4>
+  <div class="accordion" id="accordionBuckling">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Throat - Definition
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionBuckling">
+        <div class="accordion-body">
+          <p>The throat size is found by measuring the depth of the weld, from face to root subtracting the "reinforcements". It can also be found using trigonometrical formulas.</p>
+          {# <img src="/images/throat-types.png" alt="Throat types" class="img-fluid"> #}
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Throat - Types
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionBuckling">
+        <div class="accordion-body">
+          <img src="/images/throat-types.png" alt="Throat types" class="img-fluid">
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Throat size calculator - for 45&deg fillet weld
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionBuckling">
+        <div class="accordion-body">
+          <form class="row g-3" id="js-form-barrel-od">
+            <div class="col-md-2"> 
+              <label for="inputWeldLegIN" class="form-label">Leg size - inches</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm js-save" id="js-leg-in" style="text-align: center;">
+            </div>
+            <div class="col-md-2"> 
+              <label for="inputWeldLegMM" class="form-label">Leg size - mm</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in js-save" id="js-leg-mm" style="text-align: center;">
+            </div>
+            <div class="col-md-2"> 
+              <label for="inputWeldThroatIN" class="form-label">Throat size - inches</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm input-off js-save" id="js-throat-in-calc" tabindex="-1" style="text-align: center;">
+            </div>
+            <div class="col-md-2"> 
+              <label for="inputWeldThroatMM" class="form-label">Throat size - mm</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in input-off js-save" id="js-throat-mm-calc" tabindex="-1" style="text-align: center;">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFour">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Throat size calculator - for circular groove welds
+        </button>
+      </h2>
+      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionBuckling">
+        <div class="accordion-body">
+          <form class="row g-3" id="js-form-barrel-od">
+            <div class="col-md-2"> 
+              <label for="inputWeldIDIN" class="form-label">Weld ID - inches</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm js-save" id="js-weld-id-in" style="text-align: center;">
+            </div>
+            <div class="col-md-2"> 
+              <label for="inputWeldIDMM" class="form-label">Weld ID - mm</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in js-save" id="js-weld-id-mm" style="text-align: center;">
+            </div>
+            <div class="col-md-2"> 
+              <label for="inputWeldODIN" class="form-label">Weld OD - inches</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm js-save" id="js-weld-od-in" style="text-align: center;">
+            </div>
+            <div class="col-md-2"> 
+              <label for="inputWeldODMM" class="form-label">Weld OD - mm</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in js-save" id="js-weld-od-mm" style="text-align: center;">
+            </div>
+            <div class="col-md-2">
+              <label for="inputWeldThroatIN" class="form-label">Throat size - inches</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-in-to-mm input-off js-save" id="js-throat-in-calc-diam" tabindex="-1" style="text-align: center;">
+            </div>
+            <div class="col-md-2">
+              <label for="inputWeldThroatMM" class="form-label">Throat size - mm</label>
+              <input type="number" min="0.00" step="0.01" class="form-control js-mm-to-in input-off js-save" id="js-throat-mm-calc-diam" tabindex="-1" style="text-align: center;">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
   <h4 class="registration-forms-title">Safety Factors</h4>
     <div id="js-hoop-sf-result">
     </div>
@@ -85,13 +199,13 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item">
-          <a class="page-link" tabindex="-1" id="js-third-previous" style="cursor: pointer;">Previous</a>
+          <a class="page-link" tabindex="-1" id="js-fourth-previous" style="cursor: pointer;">Previous</a>
         </li>
         <li class="page-item"><a class="page-link" href="#">1</a></li>
         <li class="page-item"><a class="page-link" href="#">2</a></li>
         <li class="page-item"><a class="page-link" href="#">3</a></li>
         <li class="page-item">
-          <a class="page-link" id="js-btn-third-next" style="cursor: pointer;">Next</a>
+          <a class="page-link" id="js-btn-fourth-next" style="cursor: pointer;">Next</a>
         </li>
       </ul>
     </nav>

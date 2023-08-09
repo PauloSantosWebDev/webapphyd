@@ -5,13 +5,13 @@ let isNext = false;
 //Used to add listeners for unit conversions
 conversionListener();
 
-//Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
+//Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In, for example.
 function elementsConversion (elementYouAre, otherElement, selector) { 
   if (elementYouAre.value < 0 || elementYouAre.value === '') {
-      emptyFields(elementYouAre, otherElement);
+    emptyFields(elementYouAre, otherElement);
   }
   else {
-      otherElement.value = conversion(elementYouAre.value, selector);
+    otherElement.value = conversion(elementYouAre.value, selector);
   }
 }
 
@@ -476,6 +476,86 @@ document.getElementById('js-search-mech-properties').addEventListener('click', a
     document.getElementById('inputMinUTSPSI').value = result[1].utsP.toFixed(0);
 })
 
+//Global variable to accumulate welding lines
+let accumHTMLWeldingLines = '';
+
+//Used to add new lines to calculate welding safety factors
+document.getElementById('js-add-new-line').addEventListener('click', () => {
+  let keepData = [];
+  document.querySelectorAll('.js-save-welding').forEach((e) => {
+    keepData.push(e.value);
+  })
+  accumHTMLWeldingLines +=
+    `<div class="col-md-4" style="margin-top: 1em;">
+      <input type="text" class="form-control js-joint js-save-welding js-save">
+    </div>
+    <div class="col-md-2" style="margin-top: 1em;">
+      <input type="text" class="form-control js-in-to-mm js-throat-in js-save-welding js-save" tabindex="-1">
+    </div>
+    <div class="col-md-2" style="margin-top: 1em;">
+      <input type="text" class="form-control js-mm-to-in js-throat-mm js-save-welding js-save" tabindex="-1">
+    </div>
+    <div class="col-md-2" style="margin-top: 1em;">
+      <input type="text" class="form-control js-in-to-mm js-length-in js-save-welding js-save" tabindex="-1">
+    </div>
+    <div class="col-md-2" style="margin-top: 1em;">
+      <input type="text" class="form-control js-mm-to-in js-length-mm js-save-welding js-save" tabindex="-1">
+    </div>`;
+    document.getElementById('js-div-new-line').innerHTML = accumHTMLWeldingLines;
+    conversionListener();
+    for (let i = 0; i < keepData.length; i++) {
+      document.querySelectorAll('.js-save-welding')[i].value = keepData[i];
+    }
+})
+
+//Used to calculate throat size for 45-degree fillets
+document.getElementById('js-leg-in').addEventListener('keyup', () => {
+  if (document.getElementById('js-leg-in').value === '' || document.getElementById('js-leg-in').value === 0) {
+    emptyFields(document.getElementById('js-throat-in-calc'), document.getElementById('js-throat-mm-calc'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc').value = Number(Math.sin(45 * (Math.PI / 180)) * document.getElementById('js-leg-in').value).toFixed(4);
+    document.getElementById('js-throat-mm-calc').value = Number(document.getElementById('js-throat-in-calc').value * 25.4).toFixed(2);
+  }
+})
+document.getElementById('js-leg-in').addEventListener('change', () => {
+  if (document.getElementById('js-leg-in').value === '' || document.getElementById('js-leg-in').value === 0) {
+    emptyFields(document.getElementById('js-throat-in-calc'), document.getElementById('js-throat-mm-calc'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc').value = Number(Math.sin(45 * (Math.PI / 180)) * document.getElementById('js-leg-in').value).toFixed(4);
+    document.getElementById('js-throat-mm-calc').value = Number(document.getElementById('js-throat-in-calc').value * 25.4).toFixed(2);
+  }
+})
+document.getElementById('js-leg-mm').addEventListener('keyup', () => {
+  if (document.getElementById('js-leg-mm').value === '' || document.getElementById('js-leg-mm').value === 0) {
+    emptyFields(document.getElementById('js-throat-in-calc'), document.getElementById('js-throat-mm-calc'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc').value = Number(Math.sin(45 * (Math.PI / 180)) * document.getElementById('js-leg-in').value).toFixed(4);
+    document.getElementById('js-throat-mm-calc').value = Number(document.getElementById('js-throat-in-calc').value * 25.4).toFixed(2);
+  }
+})
+document.getElementById('js-leg-mm').addEventListener('change', () => {
+  if (document.getElementById('js-leg-mm').value === '' || document.getElementById('js-leg-mm').value === 0) {
+    emptyFields(document.getElementById('js-throat-in-calc'), document.getElementById('js-throat-mm-calc'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc').value = Number(Math.sin(45 * (Math.PI / 180)) * document.getElementById('js-leg-in').value).toFixed(4);
+    document.getElementById('js-throat-mm-calc').value = Number(document.getElementById('js-throat-in-calc').value * 25.4).toFixed(2);
+  }
+})
+
+//Used to calculate throat size for circular groove welds
+document.getElementById('js-weld-id-in').addEventListener('keyup', () => {
+  // if (document.getElementById('js-weld-id-mm').value === '') {
+  //   emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  // }
+  console.log("Working");
+  document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4) || 0.0;
+  document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4) || 0.0;
+})
+
 //Trigger the table generation
 document.getElementById('js-calc-sf-hoop').addEventListener('click', () => {
   if (document.getElementById('inputBarrelOutsideDiameter').value === '' 
@@ -498,21 +578,21 @@ document.getElementById('inputHydroilId').addEventListener('keyup', (e) => {
 
 //Preventing default form submission when enter is pressed for the barrel id input element
 //Calculating, if possible, when enter is the keyup in barrel od input element
-document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    document.getElementById('js-calc-sf-hoop').click();
-  }
-})
+// document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => {
+//   if (e.key === 'Enter') {
+//     e.preventDefault();
+//     document.getElementById('js-calc-sf-hoop').click();
+//   }
+// })
 
 //When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
-document.getElementById('js-third-previous').addEventListener('click', () => {
-  sessionStorage.setItem('prev-hoop-buckling', true);
-  location.assign('http://localhost:3000/calculationbuckling');
+document.getElementById('js-fourth-previous').addEventListener('click', () => {
+  sessionStorage.setItem('prev-welding-hoop', true);
+  location.assign('http://localhost:3000/calculationhoop');
 })
 
 // When next is clicked, all the date need to be saved and next page loaded
-document.getElementById('js-btn-third-next').addEventListener('click', () => {
+document.getElementById('js-btn-fourth-next').addEventListener('click', () => {
   isNext = true;
   saveData();
   location.assign('http://localhost:3000/');
