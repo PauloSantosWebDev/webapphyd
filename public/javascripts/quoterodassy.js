@@ -87,7 +87,8 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataRodAssy', arrayStoreData);
-  location.assign('http://localhost:3000/quotegldassy');
+  window.location.pathname = '/quotegldassy';
+  // location.assign('http://localhost:3000/quotegldassy');
 }
 
 //Used to populate back when previous is clicked in the next page

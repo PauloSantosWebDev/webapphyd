@@ -626,7 +626,8 @@ document.getElementById('js-btn-first-next').addEventListener('click', () => {
   else {
     isNext = true;
     saveData();
-    location.assign('http://localhost:3000/calculationbuckling');
+    window.location.pathname = '/calculationbuckling';
+    // location.assign('http://localhost:3000/calculationbuckling');
   }  
 })
 

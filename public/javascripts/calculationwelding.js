@@ -588,14 +588,16 @@ document.getElementById('inputHydroilId').addEventListener('keyup', (e) => {
 //When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
 document.getElementById('js-fourth-previous').addEventListener('click', () => {
   sessionStorage.setItem('prev-welding-hoop', true);
-  location.assign('http://localhost:3000/calculationhoop');
+  window.location.pathname = '/calculationhoop';
+  // location.assign('http://localhost:3000/calculationhoop');
 })
 
 // When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-fourth-next').addEventListener('click', () => {
   isNext = true;
   saveData();
-  location.assign('http://localhost:3000/');
+  window.location.pathname = '/';
+  // location.assign('http://localhost:3000/');
 })
 
 //Event listeners setction - End

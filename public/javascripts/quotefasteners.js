@@ -23,7 +23,8 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataFasteners', arrayStoreData);
-  location.assign('http://localhost:3000/quoteperipherals');
+  window.location.pathname = '/quoteperipherals';
+  // location.assign('http://localhost:3000/quoteperipherals');
 }
 
 //Used to populate back when previous is clicked in the next page

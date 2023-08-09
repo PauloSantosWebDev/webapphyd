@@ -30,7 +30,8 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataSeals', arrayStoreData);
-  location.assign('http://localhost:3000/quotefasteners');
+  window.location.pathname = '/quotefasteners';
+  // location.assign('http://localhost:3000/quotefasteners');
 }
 
 //Used to populate back when previous is clicked in the next page

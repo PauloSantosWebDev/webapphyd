@@ -508,14 +508,16 @@ document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => 
 //When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
 document.getElementById('js-third-previous').addEventListener('click', () => {
   sessionStorage.setItem('prev-hoop-buckling', true);
-  location.assign('http://localhost:3000/calculationbuckling');
+  window.location.pathname = '/calculationbuckling';
+  // location.assign('http://localhost:3000/calculationbuckling');
 })
 
 // When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-third-next').addEventListener('click', () => {
   isNext = true;
   saveData();
-  location.assign('http://localhost:3000/calculationwelding');
+  window.location.pathname = '/calculationwelding';
+  // location.assign('http://localhost:3000/calculationwelding');
 })
 
 //Event listeners setction - End

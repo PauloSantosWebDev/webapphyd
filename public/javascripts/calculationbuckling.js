@@ -385,14 +385,16 @@ document.getElementById('js-btn-second-next').addEventListener('click', () => {
   }
   else {
     saveData();
-    location.assign('http://localhost:3000/calculationhoop');
+    window.location.pathname = '/calculationhoop';
+    // location.assign('http://localhost:3000/calculationhoop');
   }
 })
 
 //When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
 document.getElementById('js-second-previous').addEventListener('click', () => {
   sessionStorage.setItem('prev-buckling-initial', true);
-  location.assign('http://localhost:3000/calculationinitial');
+  window.location.pathname = '/calculationinitial';
+  // location.assign('http://localhost:3000/calculationinitial');
 })
 
 //Add listeners for the conversions to happen

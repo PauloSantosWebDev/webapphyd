@@ -84,7 +84,8 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataGldAssy', arrayStoreData);
-  location.assign('http://localhost:3000/quoteseals');
+  window.location.pathname = '/quoteseals';
+  // location.assign('http://localhost:3000/quoteseals');
 }
 
 //Used to populate back when previous is clicked in the next page

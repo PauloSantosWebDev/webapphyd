@@ -83,7 +83,8 @@ function saveDataForReload() {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataBrlAssy', arrayStoreData);
-  location.assign('http://localhost:3000/quoterodassy');
+  window.location.pathname = '/quoterodassy';
+  // location.assign('http://localhost:3000/quoterodassy');
 }
 
 //Used to populate back when previous is clicked in the next page

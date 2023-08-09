@@ -100,7 +100,8 @@ function saveDataForReload () {
     arrayPrice.push(e.value);
   });
   sessionStorage.setItem('partsPrice', arrayPrice);
-  location.assign('http://localhost:3000/quotefinal');
+  window.location.pathname = '/quotefinal';
+  // location.assign('http://localhost:3000/quotefinal');
 }
 
 function populateBack () {

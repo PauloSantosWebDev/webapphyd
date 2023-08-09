@@ -1,5 +1,9 @@
 //General functions - Start
-
+// console.log(window.location.href);
+// console.log(window.location.hostname);
+// console.log(window.location.pathname);
+// window.location.pathname = '/calculationinitial';
+// console.log(location.toString());
 //Global variables
 let isNext = false;
 
@@ -127,7 +131,8 @@ function newCylStd () {
   sessionStorage.setItem('customerInfo', arrayCustInfo);
   sessionStorage.setItem('type', arrayType);
   sessionStorage.setItem('extra', arrayExtra);
-  location.assign('http://localhost:3000/quotebrlassy');
+  window.location.pathname = '/quotebrlassy';
+  // location.assign('http://localhost:3000/quotebrlassy');
 
   // for (i = 0; i < inputId.length; i++) {
   //   console.log(arrayArrays[i]);  
