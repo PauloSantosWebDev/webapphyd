@@ -2,6 +2,8 @@
 
 let isNext = false;
 
+document.getElementById('js-number-welds').value = 1; //Used to make sure the number of wels is at least 1 (just to show to user).
+
 //Used to add listeners for unit conversions
 conversionListener();
 
@@ -548,13 +550,79 @@ document.getElementById('js-leg-mm').addEventListener('change', () => {
 
 //Used to calculate throat size for circular groove welds
 document.getElementById('js-weld-id-in').addEventListener('keyup', () => {
-  // if (document.getElementById('js-weld-id-mm').value === '') {
-  //   emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
-  // }
-  console.log("Working");
-  document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4) || 0.0;
-  document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4) || 0.0;
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
 })
+document.getElementById('js-weld-id-in').addEventListener('change', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+document.getElementById('js-weld-id-mm').addEventListener('keyup', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+document.getElementById('js-weld-id-mm').addEventListener('change', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+document.getElementById('js-weld-od-in').addEventListener('keyup', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+document.getElementById('js-weld-od-in').addEventListener('change', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+document.getElementById('js-weld-od-mm').addEventListener('keyup', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+document.getElementById('js-weld-od-mm').addEventListener('change', () => {
+  if ((document.getElementById('js-weld-id-in').value === '' || document.getElementById('js-weld-id-mm').value === '') && (document.getElementById('js-weld-od-in').value === '' || document.getElementById('js-weld-od-mm').value === '')) {
+    emptyFields(document.getElementById('js-throat-in-calc-diam'), document.getElementById('js-throat-mm-calc-diam'));
+  }
+  else {
+    document.getElementById('js-throat-in-calc-diam').value = Number((document.getElementById('js-weld-od-in').value - document.getElementById('js-weld-id-in').value) / 2).toFixed(4);
+    document.getElementById('js-throat-mm-calc-diam').value = Number((document.getElementById('js-weld-od-mm').value - document.getElementById('js-weld-id-mm').value) / 2).toFixed(4);
+  }
+})
+
+
 
 //Trigger the table generation
 document.getElementById('js-calc-sf-hoop').addEventListener('click', () => {
@@ -576,14 +644,31 @@ document.getElementById('inputHydroilId').addEventListener('keyup', (e) => {
   }
 })
 
-//Preventing default form submission when enter is pressed for the barrel id input element
-//Calculating, if possible, when enter is the keyup in barrel od input element
-// document.getElementById('js-form-barrel-od').addEventListener('keydown', (e) => {
-//   if (e.key === 'Enter') {
-//     e.preventDefault();
-//     document.getElementById('js-calc-sf-hoop').click();
-//   }
-// })
+//Used to calculate weld appropriate length when in a perimeter
+document.getElementById('js-diameter-in').addEventListener('keyup', () => {
+  document.getElementById('js-length-in-calc').value = Number(document.getElementById('js-diameter-in').value * (document.getElementById('js-number-welds').value || 1) * Math.PI).toFixed(2);
+  document.getElementById('js-length-mm-calc').value = Number(document.getElementById('js-length-in-calc').value * 25.4).toFixed(2);
+})
+document.getElementById('js-diameter-in').addEventListener('change', () => {
+  document.getElementById('js-length-in-calc').value = Number(document.getElementById('js-diameter-in').value * (document.getElementById('js-number-welds').value || 1) * Math.PI).toFixed(2);
+  document.getElementById('js-length-mm-calc').value = Number(document.getElementById('js-length-in-calc').value * 25.4).toFixed(2);
+})
+document.getElementById('js-diameter-mm').addEventListener('keyup', () => {
+  document.getElementById('js-length-in-calc').value = Number(document.getElementById('js-diameter-in').value * (document.getElementById('js-number-welds').value || 1) * Math.PI).toFixed(2);
+  document.getElementById('js-length-mm-calc').value = Number(document.getElementById('js-length-in-calc').value * 25.4).toFixed(2);
+})
+document.getElementById('js-diameter-mm').addEventListener('change', () => {
+  document.getElementById('js-length-in-calc').value = Number(document.getElementById('js-diameter-in').value * (document.getElementById('js-number-welds').value || 1) * Math.PI).toFixed(2);
+  document.getElementById('js-length-mm-calc').value = Number(document.getElementById('js-length-in-calc').value * 25.4).toFixed(2);
+})
+document.getElementById('js-number-welds').addEventListener('keyup', () => {
+  document.getElementById('js-length-in-calc').value = Number(document.getElementById('js-diameter-in').value * (document.getElementById('js-number-welds').value || 1) * Math.PI).toFixed(2);
+  document.getElementById('js-length-mm-calc').value = Number(document.getElementById('js-length-in-calc').value * 25.4).toFixed(2);
+})
+document.getElementById('js-number-welds').addEventListener('change', () => {
+  document.getElementById('js-length-in-calc').value = Number(document.getElementById('js-diameter-in').value * (document.getElementById('js-number-welds').value || 1) * Math.PI).toFixed(2);
+  document.getElementById('js-length-mm-calc').value = Number(document.getElementById('js-length-in-calc').value * 25.4).toFixed(2);
+})
 
 //When previous is clicked, data has to be preparad to be reloaded in the calculationinitial page
 document.getElementById('js-fourth-previous').addEventListener('click', () => {
