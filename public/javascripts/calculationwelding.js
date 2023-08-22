@@ -76,6 +76,50 @@ function emptyFields (first, second) {
   fieldsToEmpty.forEach((field) => field.value = '');
 }
 
+//Used to calculate minimum and maximum values suggested to achieve Hydroil's requested safety factor
+function calculateMinMax (selector, bore, rodOD, pushPressure, pullPressure, testPressure, throat, length, wireYield) {
+  let result = 0;
+  switch (Number(selector)) {
+    case 1: //Case for wire yield strength suggestion
+      let yieldPush = (3 * Math.PI * Math.pow(bore, 2) * pushPressure) / (2.308 * throat * length);
+      let yieldPull = (3 * Math.PI * (Math.pow(bore, 2) - Math.pow(rodOD, 2)) * pullPressure) / (2.308 * throat * length);
+      let yieldTest = (2 * Math.PI * Math.pow(bore, 2) * testPressure) / (2.308 * throat * length);
+      result = Math.max(yieldPush, yieldPull, yieldTest);
+      break;
+    case 2: //Case for throat size suggestion
+      let throatPush = (3 * Math.PI * Math.pow(bore, 2) * pushPressure) / (2.308 * wireYield * length);
+      let throatPull = (3 * Math.PI * (Math.pow(bore, 2) - Math.pow(rodOD, 2)) * pullPressure) / (2.308 * wireYield * length);
+      let throatTest = (2 * Math.PI * Math.pow(bore, 2) * testPressure) / (2.308 * wireYield * length);
+      result = Math.max(throatPush, throatPull, throatTest);
+      break;
+    case 3: //Case for length size suggestion
+      let lengthPush = (3 * Math.PI * Math.pow(bore, 2) * pushPressure) / (2.308 * wireYield * throat);
+      let lengthPull = (3 * Math.PI * (Math.pow(bore, 2) - Math.pow(rodOD, 2)) * pullPressure) / (2.308 * wireYield * throat);
+      let lengthTest = (2 * Math.PI * Math.pow(bore, 2) * testPressure) / (2.308 * wireYield * throat);
+      result = Math.max(lengthPush, lengthPull, lengthTest);
+      break;
+    case 4: //Case for bore size suggestion
+      let borePush = Math.sqrt((2.308 * wireYield * throat * length) / (3 * Math.PI * pushPressure));
+      let borePull = Math.sqrt(((2.308 * wireYield * throat * length) / (3 * Math.PI * pushPressure)) + Math.pow(rodOD, 2));
+      let boreTest = Math.sqrt((2.308 * wireYield * throat * length) / (2 * Math.PI * testPressure));
+      result = Math.min(borePush, borePull, boreTest);
+      break;
+    case 5: //Case for rod size suggestion. Notice that rod size is important only when working at pull
+      result = Math.sqrt(Math.pow(bore, 2) - ((2.308 * wireYield * throat * length) / (3 * Math.PI * pullPressure)));
+      break;
+    case 6: //Case for pull pressure suggestion
+      result = (2.308 * wireYield * throat * length) / (3 * Math.PI * Math.pow(bore, 2));
+      break;
+    case 7: //Case for push pressure suggestion
+      result = (2.308 * wireYield * throat * length) / (3 * Math.PI * (Math.pow(bore, 2) - Math.pow(rodOD, 2)));
+      break;
+    case 8: //Case for test pressure suggestion
+      result = (2.308 * wireYield * throat * length) / (2 * Math.PI * Math.pow(bore, 2));
+      break;
+  }
+  return result
+}
+
 //Used to create the tables needed to present the information to the user
 function loadTable () {
     const pushPressWP = sessionStorage.getItem('push-press-mpa-for-calc');
@@ -87,7 +131,7 @@ function loadTable () {
     
     let jointNames= [], sfPull = [], sfPush = [], sfTest = []; //Used to hold the names and the safety factors for each welding joint row.
 
-    let tableLinesHTML = ``;
+    let tableLinesHTML = ``, suggestionLinesHTML = ''; //used to populate the table according to the joints
 
     document.querySelectorAll('.js-joint').forEach((e, i) => {
       let calcSFPush = (2.308 * wireYield * document.querySelectorAll('.js-throat-mm')[i].value * document.querySelectorAll('.js-length-mm')[i].value) / (Math.PI * Math.pow(barrelID, 2) * pushPressWP);
@@ -99,18 +143,42 @@ function loadTable () {
       sfTest.push(calcSFTest);
     })
 
-    console.log(sfPull);
-
     for (let i = 0; i < jointNames.length; i++) {
+      let cssSFPull = '', cssSFPush = '', cssSFTest = '';
+      
+      if (Number(sfPull[i]).toFixed(1) < 3) {
+        cssSFPull = `style="background-color: red; color: white; font-weight: bold;"`;
+      }
+      if (Number(sfPush[i]).toFixed(1) < 3) {
+        cssSFPush = `style="background-color: red; color: white; font-weight: bold;"`;
+      }
+      if (Number(sfTest[i]).toFixed(1) < 2) {
+        cssSFTest = `style="background-color: red; color: white; font-weight: bold;"`;
+      }
       tableLinesHTML += `
       <tr>
         <td scope="col" class="text-center" colspan="2">${jointNames[i]}</td>
-        <td scope="col" class="text-center" colspan="2">${Number(sfPull[i]).toFixed(1)}</td>
-        <td scope="col" class="text-center" colspan="2">${Number(sfPush[i]).toFixed(1)}</td>
-        <td scope="col" class="text-center" colspan="2">${Number(sfTest[i]).toFixed(1)}</td>
+        <td scope="col" class="text-center" colspan="2" ${cssSFPull}>${Number(sfPull[i]).toFixed(1)}</td>
+        <td scope="col" class="text-center" colspan="2" ${cssSFPush}>${Number(sfPush[i]).toFixed(1)}</td>
+        <td scope="col" class="text-center" colspan="2" ${cssSFTest}>${Number(sfTest[i]).toFixed(1)}</td>
         <td scope="col" class="text-center" colspan="2">${document.querySelectorAll('.js-throat-mm')[i].value}</td>
         <td scope="col" class="text-center" colspan="2">${document.querySelectorAll('.js-length-mm')[i].value}</td>
       </tr>`
+
+      let arrayToCallCalculateMinMax = [barrelID, rodOD, pushPressWP, pullPressWP, testPress, document.querySelectorAll('.js-throat-mm')[i].value, document.querySelectorAll('.js-length-mm')[i].value, wireYield];
+
+      suggestionLinesHTML += `
+      <tr>
+        <td scope="col" class="text-center" colspan="4">${jointNames[i]}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(2, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(3, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(1, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(6, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(7, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(8, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${calculateMinMax(4, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+        <td scope="col" class="text-center" colspan="1">${Number(calculateMinMax(5, ...arrayToCallCalculateMinMax) || rodOD).toFixed(2)}</td>
+    </tr>`
     }
 
     //Main table generation part
@@ -148,9 +216,35 @@ function loadTable () {
           <td scope="col" class="text-center" colspan="2">${pullPressWP}</td>
           <td scope="col" class="text-center" colspan="2">${pushPressWP}</td>
           <td scope="col" class="text-center" colspan="2">${testPress}</td>
-          <td scope="col" class="text-center" colspan="2">${barrelID}</td>
-          <td scope="col" class="text-center" colspan="2">${rodOD}</td>
+          <td scope="col" class="text-center" colspan="2">${Number(barrelID).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="2">${Number(rodOD).toFixed(2)}</td>
         </tr>
+        <tr>
+          <th scope="col" class="text-center" colspan="12">Required Safety Factors</th>
+        </tr>
+        <tr>
+          <th scope="col" class="text-center" colspan="6">Working Pressure</th>
+          <th scope="col" class="text-center" colspan="6">Test Pressure</th>
+        </tr>
+        <tr>
+          <td scope="col" class="text-center" colspan="6">3.0</td>
+          <td scope="col" class="text-center" colspan="6">2.0</td>
+        </tr>
+        <tr>
+          <th scope="col" class="text-center" colspan="12">Minimum and maximum values to achieve Hydroil's required safety factors</th>
+        </tr>
+        <tr>
+          <th scope="col" class="text-center" colspan="4" valign="middle">Joint</th>
+          <th scope="col" class="text-center" colspan="1">Min. Throat (mm)</th>
+          <th scope="col" class="text-center" colspan="1">Min. Length (mm)</th>
+          <th scope="col" class="text-center" colspan="1">Min. Wire Yield (MPa)</th>
+          <th scope="col" class="text-center" colspan="1">Max. Pull (MPa)</th>
+          <th scope="col" class="text-center" colspan="1">Max. Push (MPa)</th>
+          <th scope="col" class="text-center" colspan="1">Max. Test (MPa)</th>
+          <th scope="col" class="text-center" colspan="1">Max. Bore (mm)</th>
+          <th scope="col" class="text-center" colspan="1">Min. Rod (mm)</th>
+        </tr>
+        ${suggestionLinesHTML}
       </tbody>
   </table>`
 
