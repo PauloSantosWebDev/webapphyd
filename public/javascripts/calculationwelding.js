@@ -167,18 +167,33 @@ function loadTable () {
 
       let arrayToCallCalculateMinMax = [barrelID, rodOD, pushPressWP, pullPressWP, testPress, document.querySelectorAll('.js-throat-mm')[i].value, document.querySelectorAll('.js-length-mm')[i].value, wireYield];
 
-      suggestionLinesHTML += `
-      <tr>
-        <td scope="col" class="text-center" colspan="4">${jointNames[i]}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(2, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(3, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(1, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(6, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(7, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(8, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${calculateMinMax(4, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
-        <td scope="col" class="text-center" colspan="1">${Number(calculateMinMax(5, ...arrayToCallCalculateMinMax) || rodOD).toFixed(2)}</td>
-    </tr>`
+      if (Number(sfPull[i]).toFixed(1) < 3 || Number(sfPush[i]).toFixed(1) < 3 || Number(sfTest[i]).toFixed(1) < 2) {
+        suggestionLinesHTML += `
+        <tr>
+          <td scope="col" class="text-center" colspan="4">${jointNames[i]}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(2, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(3, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(1, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(6, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(7, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(8, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${calculateMinMax(4, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+          <td scope="col" class="text-center" colspan="1">${Number(calculateMinMax(5, ...arrayToCallCalculateMinMax) || rodOD).toFixed(2)}</td>
+        </tr>`
+      }
+
+    //   suggestionLinesHTML += `
+    //   <tr>
+    //     <td scope="col" class="text-center" colspan="4">${jointNames[i]}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(2, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(3, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(1, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(6, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(7, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(8, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${calculateMinMax(4, ...arrayToCallCalculateMinMax).toFixed(2)}</td>
+    //     <td scope="col" class="text-center" colspan="1">${Number(calculateMinMax(5, ...arrayToCallCalculateMinMax) || rodOD).toFixed(2)}</td>
+    // </tr>`
     }
 
     //Main table generation part
@@ -230,26 +245,32 @@ function loadTable () {
           <td scope="col" class="text-center" colspan="6">3.0</td>
           <td scope="col" class="text-center" colspan="6">2.0</td>
         </tr>
-        <tr>
-          <th scope="col" class="text-center" colspan="12">Minimum and maximum values to achieve Hydroil's required safety factors</th>
-        </tr>
-        <tr>
-          <th scope="col" class="text-center" colspan="4" valign="middle">Joint</th>
-          <th scope="col" class="text-center" colspan="1">Min. Throat (mm)</th>
-          <th scope="col" class="text-center" colspan="1">Min. Length (mm)</th>
-          <th scope="col" class="text-center" colspan="1">Min. Wire Yield (MPa)</th>
-          <th scope="col" class="text-center" colspan="1">Max. Pull (MPa)</th>
-          <th scope="col" class="text-center" colspan="1">Max. Push (MPa)</th>
-          <th scope="col" class="text-center" colspan="1">Max. Test (MPa)</th>
-          <th scope="col" class="text-center" colspan="1">Max. Bore (mm)</th>
-          <th scope="col" class="text-center" colspan="1">Min. Rod (mm)</th>
-        </tr>
-        ${suggestionLinesHTML}
       </tbody>
+  </table>
+  
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" colspan="12">Minimum and maximum values to achieve Hydroil's required safety factors</th>
+      </tr>
+    </theard>
+    <tbody>
+      <tr>
+        <th scope="col" class="text-center" colspan="4" valign="middle">Joint</th>
+        <th scope="col" class="text-center" colspan="1">Min. Throat (mm)</th>
+        <th scope="col" class="text-center" colspan="1">Min. Length (mm)</th>
+        <th scope="col" class="text-center" colspan="1">Min. Wire Yield (MPa)</th>
+        <th scope="col" class="text-center" colspan="1">Max. Pull (MPa)</th>
+        <th scope="col" class="text-center" colspan="1">Max. Push (MPa)</th>
+        <th scope="col" class="text-center" colspan="1">Max. Test (MPa)</th>
+        <th scope="col" class="text-center" colspan="1">Max. Bore (mm)</th>
+        <th scope="col" class="text-center" colspan="1">Min. Rod (mm)</th>
+      </tr>
+      ${suggestionLinesHTML}
+    </tbody>
   </table>`
 
   document.getElementById('js-weld-sf-result').innerHTML = accumHTML;
-
 }
 
 //Used to save the data created in the hoop stress calculation page
