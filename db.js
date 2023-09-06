@@ -48,7 +48,7 @@ FOREIGN KEY (service_code) REFERENCES ext_services(service_code), FOREIGN KEY (s
 
 //Quote-control tables
 //Main quote table (summary)
-//db.run(`CREATE TABLE IF NOT EXISTS quote (quote_id INTEGER PRIMARY KEY AUTOINCREMENT, quote_hyd_id INTEGER NOT NULL, taken TEXT, total_price INTEGER, status TEXT NOT NULL, FOREIGN KEY (contact_id) REFERENCES contacts(contact_id))`);
+db.run(`CREATE TABLE IF NOT EXISTS quote (quote_id INTEGER PRIMARY KEY AUTOINCREMENT, quote_hyd_id INTEGER NOT NULL, taken TEXT, total_price INTEGER, status TEXT NOT NULL, contact_id INTEGER, FOREIGN KEY (contact_id) REFERENCES contacts(contact_id), UNIQUE(quote_hyd_id))`);
 
 // db.run(`CREATE TABLE IF NOT EXISTS materials (material_id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, hydroil_id TEXT NOT NULL, item TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, supplier TEXT NOT NULL, supplier_id INTEGER, 
 //   cost REAL NOT NULL, unit TEXT NOT NULL, details TEXT, yield_mpa REAL, yield_psi REAL, uts_mpa REAL, uts_psi REAL, young REAL)`);
