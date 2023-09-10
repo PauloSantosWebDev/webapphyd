@@ -46,15 +46,30 @@ app.get('/', (req, res) =>{
 })
 
 //Quote first page
-app.get('/quoteone', (req, res) =>{
-  db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
-    if (err) {
-      throw err;
-    }
-    const customerName = rows.map(row => ({name: row.name}));
-    res.render('quoteone.njk', {title: 'New quote page', customerName});
-  })
+app.get('/quoteone', async (req, res) =>{
+  let query = async function () {
+    return new Promise((resolve, reject) => {
+      db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
+        if (err) {
+          reject(err);
+        }
+        const customerName = rows.map(row => ({name: row.name}));
+        resolve(customerName);
+      })
+    });
+  }
+  let customerName = await query();
+  res.render('quoteone.njk', {title: 'New quote page', customerName});
 })
+  
+  // db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
+  //   if (err) {
+  //     throw err;
+  //   }
+  //   const customerName = rows.map(row => ({name: row.name}));
+  //   res.render('quoteone.njk', {title: 'New quote page', customerName});
+  // })
+// })
 
 //Quote barrel assembly page
 app.get('/quotebrlassy', (req, res) => {
