@@ -185,13 +185,31 @@ async function getHtmlContent (path) {
 
 //Used to fetch data to feed dropdown fields
 //Used to get labour costs for the labour session
-async function showContact (target) {
+async function showContact (target, value) {
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({target})
+    body: JSON.stringify({target, value})
+  };
+  try {
+    const response = await fetch("/quoteone", options);
+    const result = await response.json();
+    return result.body;
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+
+//Used to update contact details
+async function updateDetails (target, id, email, phone, mobile) {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({target, id, email, phone, mobile})
   };
   try {
     const response = await fetch("/quoteone", options);
@@ -635,13 +653,12 @@ document.querySelector('.js-btn-first-next').addEventListener('click', () => {
 
 //Used to call the function to populate the Contact field
 document.getElementById('inputCustomer').addEventListener('change', async () => {
-  let target = document.getElementById('inputCustomer').value;
+  let value = document.getElementById('inputCustomer').value;
   let htmlAccumulator = `<option></option>`;
-  let contacts = await showContact(target);
+  let contacts = await showContact('1', value);
   contacts.forEach(e => {
     htmlAccumulator += `<option value="${e.name}">${e.name}</option>`;
   })
-  console.log(contacts);
   sessionStorage.setItem('contactDetalis', JSON.stringify(contacts));
   document.getElementById('inputContact').innerHTML = htmlAccumulator;
 })
@@ -659,6 +676,16 @@ document.getElementById('inputContact').addEventListener('change', () => {
   document.getElementById('inputEmail').value = contactDetails[target].email || "Not supplied";
   document.getElementById('inputPhone').value = contactDetails[target].phone || "Not supplied";
   document.getElementById('inputMobile').value = contactDetails[target].mobile || "Not supplied";
+  let specificContact = {id: contactDetails[target].id, email: contactDetails[target].email, phone: contactDetails[target].phone, mobile: contactDetails[target].mobile};
+  sessionStorage.setItem('specificContact', JSON.stringify(specificContact));
+})
+
+//Used to update the contact details
+//The user does note have to go to the register contact to update information
+document.getElementById('js-btn-update-contact').addEventListener('click', async () => {
+  let specificContact = JSON.parse(sessionStorage.getItem('specificContact'));
+  await updateDetails ('2', specificContact.id, specificContact.email, specificContact.phone, specificContact.mobile);
+  return;
 })
 
 //Event listeners setction - End

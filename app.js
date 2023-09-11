@@ -738,8 +738,17 @@ app.post('/regservices', (req, res) => {
 //Second goal, update the page according to the radio button checked
 app.post('/quoteone', (req, res) => {
   const checker = req.body.target;
-  if (checker) {
-    db.all('SELECT customer_id FROM customers WHERE name = ?', [checker], (err, rows) => {
+  const value = req.body.value;
+  const id = JSON.stringify(req.body.id);
+  const email = req.body.email;
+  const phone = req.body.phone;
+  const mobile = req.body.mobile;
+
+  console.log(checker);
+  console.log(typeof id);
+
+  if (checker === '1') {
+    db.all('SELECT customer_id FROM customers WHERE name = ?', [value], (err, rows) => {
       if (err) {
         throw err;
       }
@@ -748,13 +757,26 @@ app.post('/quoteone', (req, res) => {
         if (err) {
           throw err;
         }
-        const names = rows.map(row => ({name: row.name, email: row.email, phone: row.phone_number, mobile: row.mobile_number}));
+        const names = rows.map(row => ({name: row.name, email: row.email, phone: row.phone_number, mobile: row.mobile_number, id: row.contact_id}));
         res.json({
           status: 'success',
           body: names
         });
       })
     })
+  }
+  if (checker === '2') {
+    db.run ('UPDATE contacts SET email = ?, phone_number = ?, mobile_number = ? WHERE contact_id = ?', [email, phone, mobile, id], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Data successfully updated in the contacts table.');
+      }
+    });
+    res.json({
+      status: 'success'
+    });
   }
 })
 
