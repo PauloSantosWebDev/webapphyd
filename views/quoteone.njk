@@ -1,7 +1,7 @@
 {% extends 'layout.njk' %}
 
 {% block content %}
-  <h2 class="registration-forms-title">NEW QUOTE FORM</h2>
+  <h2 class="registration-forms-title">NEW QUOTE FORM - {{quote}}</h2>
   <hr>
   <h4 class="registration-forms-title">CUSTOMER INFORMATION</h4>
 
@@ -10,8 +10,10 @@
       <label for="inputCustomer" class="form-label">Customer</label>
       <select id="inputCustomer" name="inputCustomer" class="form-select js-customer-info">
         <option></option>
-        {% for c in customerName %}
-          <option value="{{c.name}}">{{c.name}}</option>
+        {% for r in result %}
+          {% if r.name %}
+            <option value="{{r.name}}">{{r.name}}</option>
+          {% endif %}
         {% endfor %}
       </select>
     </div>

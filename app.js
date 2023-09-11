@@ -3,6 +3,7 @@ const db = require('./db');
 const path = require('path');
 const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const app = express();
 const port = 3000;
 
@@ -25,6 +26,12 @@ app.use(express.static('views'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(session({
+  secret: 'hydroil-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
 
 //Clearing database commands
 // db.run('DROP TABLE material_costs');
@@ -42,34 +49,69 @@ app.use(express.json());
 //Routes
 //Get methods
 app.get('/', (req, res) =>{
-    res.render('index.njk', {title: 'Home page'});
+  res.render('index.njk', {title: 'Home page'});
 })
 
 //Quote first page
 app.get('/quoteone', async (req, res) =>{
-  let query = async function () {
-    return new Promise((resolve, reject) => {
-      db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
-        if (err) {
-          reject(err);
-        }
-        const customerName = rows.map(row => ({name: row.name}));
-        resolve(customerName);
-      })
+  if (!req.session.quoteNumAllocated) {
+    req.session.quoteNumAllocated = true;
+    let queryNames = async function () {
+      return new Promise((resolve, reject) => {
+        db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
+          if (err) {
+            reject(err);
+          }
+          const customerName = rows.map(row => ({name: row.name}));
+          resolve(customerName);
+        })
+      });
+    }
+    let customerName = await queryNames();
+
+    let queryNumbers = async function () {
+      return new Promise((resolve, reject) => {
+        db.run('INSERT INTO quote (quote_hyd_id, taken, status) VALUES (?, ?, ?)', ['0', 'P', 'I'], (err) => {
+          if (err) {
+            console.error(err.message);
+            // res.status(500).send('Error when inserting new line in quote table');
+          } 
+          else {
+            // res.status(200);
+            console.log('Data inserted successfully in quote table.');
+            // res.redirect('/regcustomer');
+          }
+        });
+        db.all('SELECT quote_id FROM quote WHERE taken = ? ORDER BY quote_id DESC LIMIT 1', ['P'], (err, rows) => {
+          if (err) {
+            reject(err);
+          }
+          const quoteNumbers = rows.map(row => ({number: row.quote_id}));
+          resolve(quoteNumbers);
+        })
+      });
+    }
+    let quoteNumber = await queryNumbers();
+
+    const hydroilQuoteNumber = quoteNumber[0].number + 100000;
+    db.run ('UPDATE quote SET quote_hyd_id = ? WHERE quote_id = ?', [hydroilQuoteNumber, quoteNumber[0].number], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Data successfully updated in the quote table.');
+      }
     });
+    let result = customerName.concat(quoteNumber);
+    req.session.quoteNumber = hydroilQuoteNumber;
+    req.session.customerNames = result;
+    res.render('quoteone.njk', {title: 'New quote page', quote: hydroilQuoteNumber, result});
   }
-  let customerName = await query();
-  res.render('quoteone.njk', {title: 'New quote page', customerName});
+  else {
+    let result = req.session.customerNames;
+    res.render('quoteone.njk', {title: 'New quote page', quote: req.session.quoteNumber, result});
+  }
 })
-  
-  // db.all('SELECT name FROM customers ORDER BY name', (err, rows) =>{
-  //   if (err) {
-  //     throw err;
-  //   }
-  //   const customerName = rows.map(row => ({name: row.name}));
-  //   res.render('quoteone.njk', {title: 'New quote page', customerName});
-  // })
-// })
 
 //Quote barrel assembly page
 app.get('/quotebrlassy', (req, res) => {
