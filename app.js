@@ -737,14 +737,25 @@ app.post('/regservices', (req, res) => {
 //Main goal, submit the data to the database
 //Second goal, update the page according to the radio button checked
 app.post('/quoteone', (req, res) => {
-  // const data = req.body;
-  // console.log(data.selection);
-  // console.log(req.body);
-
-  // res.json({
-  //   status: 'success',
-  //   body: data.selection
-  // })
+  const checker = req.body.target;
+  if (checker) {
+    db.all('SELECT customer_id FROM customers WHERE name = ?', [checker], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      const customerID = rows.map(row => ({id: row.customer_id}));
+      db.all('SELECT * FROM contacts WHERE customer_id = ? ORDER BY name', [customerID[0].id], (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        const names = rows.map(row => ({name: row.name, email: row.email, phone: row.phone_number, mobile: row.mobile_number}));
+        res.json({
+          status: 'success',
+          body: names
+        });
+      })
+    })
+  }
 })
 
 //Used to load and populate many different fields in the barrel assembly page

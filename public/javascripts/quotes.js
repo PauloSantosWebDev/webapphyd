@@ -183,6 +183,25 @@ async function getHtmlContent (path) {
   return docBody;
 }
 
+//Used to fetch data to feed dropdown fields
+//Used to get labour costs for the labour session
+async function showContact (target) {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({target})
+  };
+  try {
+    const response = await fetch("/quoteone", options);
+    const result = await response.json();
+    return result.body;
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+
 //Fetch and async functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -613,6 +632,34 @@ document.querySelector('.js-btn-first-next').addEventListener('click', () => {
   // });
 })
 
+
+//Used to call the function to populate the Contact field
+document.getElementById('inputCustomer').addEventListener('change', async () => {
+  let target = document.getElementById('inputCustomer').value;
+  let htmlAccumulator = `<option></option>`;
+  let contacts = await showContact(target);
+  contacts.forEach(e => {
+    htmlAccumulator += `<option value="${e.name}">${e.name}</option>`;
+  })
+  console.log(contacts);
+  sessionStorage.setItem('contactDetalis', JSON.stringify(contacts));
+  document.getElementById('inputContact').innerHTML = htmlAccumulator;
+})
+
+//Used to populate Email, Phone, and Mobile for the contact chosen
+document.getElementById('inputContact').addEventListener('change', () => {
+  let contactDetails = JSON.parse(sessionStorage.getItem('contactDetalis'));
+  let target = 0;
+  let contactName = document.getElementById('inputContact').innerHTML;
+  for (let i = 0; i < contactDetails.lenght; i++) {
+    if (contactDetails[i].name === contactName) {
+      target = i;
+    }
+  }
+  document.getElementById('inputEmail').value = contactDetails[target].email || "Not supplied";
+  document.getElementById('inputPhone').value = contactDetails[target].phone || "Not supplied";
+  document.getElementById('inputMobile').value = contactDetails[target].mobile || "Not supplied";
+})
 
 //Event listeners setction - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -1,7 +1,7 @@
 {% extends 'layout.njk' %}
 
 {% block content %}
-  <h2 class="registration-forms-title">NEW QUOTE FORM - {{quote}}</h2>
+  <h2 class="registration-forms-title">NEW QUOTE FORM (#{{quote}})</h2>
   <hr>
   <h4 class="registration-forms-title">CUSTOMER INFORMATION</h4>
 
@@ -20,8 +20,7 @@
     <div class="col-md-6">
       <label for="inputContact" class="form-label">Contact</label>
       <select id="inputContact" name="inputContact" class="form-select js-customer-info">
-        <option selected>Choose...</option>
-        <option>...</option>
+        <option></option>
       </select>
     </div>
     <div class="col-md-4">
