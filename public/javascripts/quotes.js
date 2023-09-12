@@ -146,12 +146,6 @@ function newCylStd () {
   sessionStorage.setItem('type', arrayType);
   sessionStorage.setItem('extra', arrayExtra);
   window.location.pathname = '/quotebrlassy';
-  // location.assign('http://localhost:3000/quotebrlassy');
-
-  // for (i = 0; i < inputId.length; i++) {
-  //   console.log(arrayArrays[i]);  
-  // }
-
 }
 
 //Used to calculate the net stroke. Difference btw gross stroke and stop tube length.
@@ -647,7 +641,7 @@ function netStrokeListener() {
 
 //Checking the theoretical forces against the required forces and alerting the user if theoretical is smaller than required
 //Creating session variables for the information
-document.querySelector('.js-btn-first-next').addEventListener('click', () => {
+document.getElementById('js-btn-first-next').addEventListener('click', () => {
   const checker = document.querySelectorAll('.js-radio-quote-for');
   const checkerInner = document.getElementById('inputInnerType');
   if (checker[0].checked) {
