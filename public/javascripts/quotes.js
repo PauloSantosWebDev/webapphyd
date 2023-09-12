@@ -97,7 +97,14 @@ function newCylStd () {
   }
   const theoreticalPush = Number(arrayMpa[1] * (Math.PI/4) * Math.pow(arrayMM[0], 2)).toFixed(2);
   const theoreticalPull = Number(arrayMpa[0] * (Math.PI/4) * (Math.pow(arrayMM[0], 2) - Math.pow(arrayMM[1], 2))).toFixed(2);
+  
   //Checking if input values make sense
+  //Checking if Customer and contact information were provided
+  if (!(document.getElementById('inputCustomer').value || document.getElementById('inputContact').value)) {
+    alert(`Please inform Customer and Contact.`);
+    return;
+  }
+  
   //Checking bore and rod, and gross stroke and stop tube.
   if (Number(arrayMM[0]) <= Number(arrayMM[1])) {
     alert(`Bore cannot be smaller or equal to rod diameter.`);
@@ -106,6 +113,13 @@ function newCylStd () {
     alert(`Gross stroke cannot be smaller or equal to stop tube length.`);
     return;
   }
+
+  //Checking if the closed centers was informed
+  if (!document.getElementById('inputClosedCentersIn').value) {
+    alert(`Please informed the closed centers.`);
+    return;
+  }
+
   //Checking theoretical against required forces
   if (theoreticalPush < arrayNew[1]) {
     const isTrue = confirm(`Do you want to continue? Theoretical push (${theoreticalPush} Newtons) is smaller then required push (${arrayNew[1]} Newtons).`);
@@ -295,6 +309,7 @@ document.body.addEventListener('click', (event) => {
 })
 
 window.addEventListener('load', () => {
+  sessionStorage.setItem('quoteTitle', document.querySelector(".registration-forms-title").innerHTML); //Used to capture the title and use the same on the next pages
   isNext = false;
   conversionListener();
   mountingsList();
@@ -318,6 +333,13 @@ window.addEventListener('load', () => {
       populateBack('extra', 'js-extra');
     }
     sessionStorage.setItem('firstPrevious', false);
+
+    //This last part is used to make sure all the customer information details are populated back
+    const eventChange = new Event("change");
+    document.getElementById('inputCustomer').dispatchEvent(eventChange);
+    setTimeout(() => {
+      document.getElementById('inputContact').value = sessionStorage.getItem('customerInfo').split(',')[1];
+    }, 500);
   }
 });
 
@@ -634,9 +656,6 @@ document.querySelector('.js-btn-first-next').addEventListener('click', () => {
       sessionStorage.setItem('radio-btn-quote-for', checker[0].value);
       newCylStd();
     }
-
-
-
   }
   // const checker = document.querySelectorAll('.js-radio-quote-for').forEach((e, i) => {
   //   if (e.value === 'option1') {
@@ -683,9 +702,15 @@ document.getElementById('inputContact').addEventListener('change', () => {
 //Used to update the contact details
 //The user does note have to go to the register contact to update information
 document.getElementById('js-btn-update-contact').addEventListener('click', async () => {
-  let specificContact = JSON.parse(sessionStorage.getItem('specificContact'));
-  await updateDetails ('2', specificContact.id, specificContact.email, specificContact.phone, specificContact.mobile);
-  return;
+  const response = confirm("Are you sure you want to update contact details?");
+  if (response) {
+    let specificContact = JSON.parse(sessionStorage.getItem('specificContact'));
+    await updateDetails ('2', specificContact.id, document.getElementById('inputEmail').value, document.getElementById('inputPhone').value, document.getElementById('inputMobile').value);
+    return
+  }
+  else {
+    return
+  }
 })
 
 //Event listeners setction - End

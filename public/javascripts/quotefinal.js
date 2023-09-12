@@ -78,6 +78,7 @@ prices.forEach((e, i) => {
 
 // Loads page with functionalities it needs when page is loaded
 window.addEventListener('load', () => {
+  document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
   if (sessionStorage.getItem('ninthPrevious') === 'true') {
     populateBack();
   }

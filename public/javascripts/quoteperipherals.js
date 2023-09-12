@@ -111,6 +111,7 @@ async function getCost(target, value, name) {
 
 //Loads page with functionalities it needs when page is loaded
 window.addEventListener('load', () => {
+  document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
   dependenceFieldsUpdate();
   if (sessionStorage.getItem('seventhPrevious') === 'true') {
     populateBack();

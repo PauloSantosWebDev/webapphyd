@@ -123,6 +123,7 @@ function populateBack () {
 
 // Loads page with functionalities it needs when page is loaded
 window.addEventListener('load', () => {
+  document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
   if (sessionStorage.getItem('eighthPrevious') === 'true') {
     populateBack();
   }

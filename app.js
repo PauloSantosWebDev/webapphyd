@@ -71,7 +71,7 @@ app.get('/quoteone', async (req, res) =>{
 
     let queryNumbers = async function () {
       return new Promise((resolve, reject) => {
-        db.run('INSERT INTO quote (quote_hyd_id, taken, status) VALUES (?, ?, ?)', ['0', 'P', 'I'], (err) => {
+        db.run('INSERT INTO quote (quote_hyd_id, taken, status) VALUES (?, ?, ?)', ['0', 'P', 'O'], (err) => {
           if (err) {
             console.error(err.message);
             // res.status(500).send('Error when inserting new line in quote table');
@@ -744,9 +744,6 @@ app.post('/quoteone', (req, res) => {
   const phone = req.body.phone;
   const mobile = req.body.mobile;
 
-  console.log(checker);
-  console.log(typeof id);
-
   if (checker === '1') {
     db.all('SELECT customer_id FROM customers WHERE name = ?', [value], (err, rows) => {
       if (err) {
@@ -766,7 +763,7 @@ app.post('/quoteone', (req, res) => {
     })
   }
   if (checker === '2') {
-    db.run ('UPDATE contacts SET email = ?, phone_number = ?, mobile_number = ? WHERE contact_id = ?', [email, phone, mobile, id], (err) => {
+    db.run (`UPDATE contacts SET email = ?, phone_number = ?, mobile_number = ? WHERE contact_id = ?`, [email, phone, mobile, id], (err) => {
       if (err) {
         console.error(err.message);
       }
