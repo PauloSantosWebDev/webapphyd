@@ -115,16 +115,16 @@ app.get('/quoteone', async (req, res) =>{
 
 //Quote barrel assembly page
 app.get('/quotebrlassy', (req, res) => {
-  db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
+  db.all('SELECT hydroil_id, item FROM materials ORDER BY hydroil_id', (err, rows) => {
     if (err) {
       throw err;
     }
-    const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
-    db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+    const serverHydroilId = rows.map(row => ({id: row.hydroil_id, item:row.item}));
+    db.all('SELECT service_code, service FROM ext_services ORDER BY service_code', (err, rows) => {
       if (err) {
         throw err;
       }
-      const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      const serverServiceCode = rows.map(row => ({id: row.service_code, service: row.service}));
       
       db.all('SELECT mc, ncctr, welding, honing, assembling FROM labour ORDER BY date DESC LIMIT 1', (err, rows) => {
         if (err) {
@@ -783,11 +783,11 @@ app.post('/quotebrlassy', (req, res) => {
   const parsedValue = req.body.value;
   const supplierName = req.body.name;
   if (checker === 'hydId') {
-    db.all('SELECT hydroil_id FROM materials ORDER BY hydroil_id', (err, rows) => {
+    db.all('SELECT hydroil_id, item FROM materials ORDER BY hydroil_id', (err, rows) => {
       if (err) {
         throw err;
       }
-      const serverHydroilId = rows.map(row => ({id: row.hydroil_id}));
+      const serverHydroilId = rows.map(row => ({id: row.hydroil_id, item: row.item}));
       res.json({
         status: 'success',
         body: serverHydroilId
@@ -795,11 +795,11 @@ app.post('/quotebrlassy', (req, res) => {
     })
   }
   else if (checker === 'serviceCode') {
-    db.all('SELECT service_code FROM ext_services ORDER BY service_code', (err, rows) => {
+    db.all('SELECT service_code, service FROM ext_services ORDER BY service_code', (err, rows) => {
       if (err) {
         throw err;
       }
-      const serverServiceCode = rows.map(row => ({id: row.service_code}));
+      const serverServiceCode = rows.map(row => ({id: row.service_code, service:row.service}));
       res.json({
         status: 'success',
         body: serverServiceCode
@@ -811,26 +811,21 @@ app.post('/quotebrlassy', (req, res) => {
       if (err) {
         throw err;
       }
-      const supplierIds = rows.map(row => ({id: row.supplier_id}));
-      let promises = supplierIds.map((e, i) => {
+      let promises = rows.map(e => {
         return new Promise((resolve, reject) => {
-          db.all('SELECT name FROM suppliers WHERE supplier_id = ?', [e.id], (err, rows) => {
+          db.all('SELECT name FROM suppliers WHERE supplier_id = ?', [e.supplier_id], (err, rows) => {
             if (err) {
               reject(err);
             }
-            resolve(rows.map(row => ({name: row.name})));
+            resolve(rows);
           })
         })
       })
       Promise.all(promises)
         .then(results => {
-          let accumulator = [];
-          results.forEach(result => {
-            accumulator = accumulator.concat(result);
-          })
           res.json({
             status: 'success',
-            body: accumulator
+            body: results
           })
         })
         .catch(err => {

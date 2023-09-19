@@ -20,6 +20,20 @@ let serverSupplierNames = [];
 let serverServiceCode = [];
 let labourPrice = [];
 
+//Making sure title is standard across the pages
+//Initiating functions and checking data to refill
+document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
+listenBrlMatlChange();
+dependenceFieldsUpdate();
+if (sessionStorage.getItem('secondPrevious') === 'true') {
+  document.addEventListener('DOMContentLoaded', () => {
+    for (let i = 0; i < (Number(sessionStorage.getItem('brlAssyMatlLines')) - 5); i++) {
+      document.getElementById('js-new-line-brl-matl').click();
+    }
+  })
+  populateBack();
+}
+
 //Object with 2 functions to keep data when lines are added to forms
 const keepDataNewLine = {
   saveData(rows, columns, classId) {
@@ -34,10 +48,7 @@ const keepDataNewLine = {
   },
   populateData(rows, columns, classId) {
     for (let i = 0; i < rows; i++) {
-      // console.log('i ' + i);
       for (let j = 0; j < columns; j++) {
-        // console.log('j ' + j);
-        // console.log(arrayColumns);
         document.querySelectorAll('.' + classId)[(i*columns)+j].value = arrayColumns[i][j];
       }
     }
@@ -50,26 +61,22 @@ document.getElementById('inputServicePart1').value = document.getElementById('in
 
 //Add listeners to barrel assembly material part lines
 function listenBrlMatlChange() {
-  if (brlAssyLabourLine >= brlAssyMatlLine) {
-    document.querySelectorAll('.js-part').forEach((e, i) => {
-      e.addEventListener('keyup', () => {
-        document.querySelectorAll('.js-lab-part')[i].value = e.value;
-      })
-      e.addEventListener('change', () => {
-        document.querySelectorAll('.js-lab-part')[i].value = e.value;
-      })
+  document.querySelectorAll('.js-part').forEach((e, i) => {
+    e.addEventListener('keyup', () => {
+      document.querySelectorAll('.js-lab-part')[i].value = e.value;
     })
-  }
-  if (brlAssyServLine >= brlAssyMatlLine) {
-    document.querySelectorAll('.js-part').forEach((e, i) => {
-      e.addEventListener('keyup', () => {
-        document.querySelectorAll('.js-serv-part')[i].value = e.value;
-      })
-      e.addEventListener('change', () => {
-        document.querySelectorAll('.js-serv-part')[i].value = e.value;
-      })
+    e.addEventListener('change', () => {
+      document.querySelectorAll('.js-lab-part')[i].value = e.value;
     })
-  }
+  })
+  document.querySelectorAll('.js-part').forEach((e, i) => {
+    e.addEventListener('keyup', () => {
+      document.querySelectorAll('.js-serv-part')[i].value = e.value;
+    })
+    e.addEventListener('change', () => {
+      document.querySelectorAll('.js-serv-part')[i].value = e.value;
+    })
+  })
 }
 
 //Used to save the data in the sessionStorage
@@ -79,7 +86,7 @@ function saveDataForReload() {
   // sessionStorage.setItem('brlAssyLabourLines', brlAssyLabourLine);
   // sessionStorage.setItem('brlAssyServLines', brlAssyServLine);
   const arrayStoreData = [];
-  document.querySelectorAll('.js-store-data').forEach((e, i) => {
+  document.querySelectorAll('.js-store-data').forEach(e => {
     arrayStoreData.push(e.value);
   });
   sessionStorage.setItem('storeDataBrlAssy', arrayStoreData);
@@ -89,26 +96,13 @@ function saveDataForReload() {
 
 //Used to populate back when previous is clicked in the next page
 function populateBack () {
-  let iteration = Number(sessionStorage.getItem('brlAssyMatlLines'));
-  for (let i = 0; i < (iteration - 5); i++) {
-    document.getElementById('js-new-line-brl-matl').click();
-  }
-  // iteration = Number(sessionStorage.getItem('brlAssyLabourLines'));
-  // for (let i = 0; i < (iteration - 5); i++) {
-  //   document.getElementById('js-new-line-brl-labour').click();
-  // }
-  // iteration = Number(sessionStorage.getItem('brlAssyServLines'));
-  // for (let i = 0; i < (iteration - 5); i++) {
-  //   document.getElementById('js-new-line-brl-serv').click();
-  // }
   let arrayStoreData = sessionStorage.getItem('storeDataBrlAssy');
   arrayStoreData = arrayStoreData.split(',');
   setTimeout(() => {
     document.querySelectorAll('.js-store-data').forEach((e, i) => {
       e.value = arrayStoreData[i];
     })
-  }, 1000);
-
+  }, 500);
   sessionStorage.setItem('secondPrevious', false);
 }
 
@@ -178,15 +172,15 @@ async function getCost(target, value, name) {
 //Event listeners setction - Start
 
 //Loads page with functionalities it needs when page is loaded
-window.addEventListener('load', () => {
-  document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
-  listenBrlMatlChange();
-  dependenceFieldsUpdate();
-  if (sessionStorage.getItem('secondPrevious') === 'true') {
-    populateBack();
-  }
-  isNext = false;
-})
+// window.addEventListener('load', () => {
+//   document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
+//   listenBrlMatlChange();
+//   dependenceFieldsUpdate();
+//   if (sessionStorage.getItem('secondPrevious') === 'true') {
+//     populateBack();
+//   }
+//   isNext = false;
+// })
 
 //Code to check if user really want to leave or reload the page
 window.onbeforeunload = () => {
@@ -197,11 +191,9 @@ window.onbeforeunload = () => {
 
 //Add new lines to the material session of the barrel assembly page
 document.getElementById('js-new-line-brl-matl').addEventListener('click', async () => {
-  
   const matlInfo = {
     part: '',
     hydroilId: '',
-    item: '',
     supplier: '',
     cost: '',
     usage: '',
@@ -211,27 +203,27 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   
   //for used to get all the data already inserted into the fields
   for(i = 0; i <= (brlAssyMatlLine - 6); i++) {
-    for(j = 0; j <= 6; j++) {
+    for(j = 0; j <= 5; j++) {
       if (j === 0) {
-        matlInfo.part = document.querySelectorAll('.js-save')[(i*7)+j].value;
+        matlInfo.part = document.querySelectorAll('.js-save')[(i*6)+j].value;
       }
       else if (j === 1) {
-        matlInfo.hydroilId = document.querySelectorAll('.js-save')[(i*7)+j].value;
+        matlInfo.hydroilId = document.querySelectorAll('.js-save')[(i*6)+j].value;
       }
+      // else if (j === 2) {
+      //   matlInfo.item = document.querySelectorAll('.js-save')[(i*7)+j].value;
+      // }
       else if (j === 2) {
-        matlInfo.item = document.querySelectorAll('.js-save')[(i*7)+j].value;
+        matlInfo.supplier = document.querySelectorAll('.js-save')[(i*6)+j].value;
       }
       else if (j === 3) {
-        matlInfo.supplier = document.querySelectorAll('.js-save')[(i*7)+j].value;
+        matlInfo.cost = document.querySelectorAll('.js-save')[(i*6)+j].value;
       }
       else if (j === 4) {
-        matlInfo.cost = document.querySelectorAll('.js-save')[(i*7)+j].value;
+        matlInfo.usage = document.querySelectorAll('.js-save')[(i*6)+j].value;
       }
       else if (j === 5) {
-        matlInfo.usage = document.querySelectorAll('.js-save')[(i*7)+j].value;
-      }
-      else if (j === 6) {
-        matlInfo.subtotal = document.querySelectorAll('.js-save')[(i*7)+j].value;
+        matlInfo.subtotal = document.querySelectorAll('.js-save')[(i*6)+j].value;
       }
     }
     arrayMatlInfo[i] = Object.assign({}, matlInfo);
@@ -242,7 +234,7 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   if (htmlAccumulator === '') {
     serverHydroilId = await addIdCode('hydId');
     serverHydroilId.forEach(e => {
-      htmlAccumulator += `<option value="${e.id}">${e.id}</option>`;
+      htmlAccumulator += `<option value="${e.id}">${e.id} - ${e.item}</option>`;
     })    
   }
 
@@ -265,9 +257,6 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control js-save js-item js-store-data" id="inputItem${brlAssyMatlLine}" name="inputItem${brlAssyMatlLine}">
-  </div>
-  <div class="col-md-2">
     <select id="inputSupplier${brlAssyMatlLine}" name="inputSupplier${brlAssyMatlLine}" class="form-select js-save js-supplier js-store-data input-off" tabindex="-1">
       <option></option>
       ${htmlAccumulatorSupplier}
@@ -276,10 +265,10 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
     <input type="text" class="form-control js-save js-cost js-store-data input-off" id="inputCost${brlAssyMatlLine}" name="inputCost${brlAssyMatlLine}" tabindex="-1">
   </div>
-  <div class="col-md-1"> 
+  <div class="col-md-2"> 
     <input type="number" min="0.00" class="form-control js-save js-usage js-store-data" id="inputUsage${brlAssyMatlLine}" name="inputUsage${brlAssyMatlLine}">
   </div>
-  <div class="col-md-1"> 
+  <div class="col-md-2"> 
     <input type="number" min="0.00" class="form-control js-save js-subtotal input-off js-store-data" id="inputSubTotal${brlAssyMatlLine}" name="inputSubTotal${brlAssyMatlLine}" tabindex=-1>
   </div>`;
   brlAssyMatlLine++;
@@ -287,27 +276,27 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
   dependenceFieldsUpdate();
   //Used to insert the data back after another line is added
   for (let i = 0; i < arrayMatlInfo.length; i++) {
-    for (let j = 0; j <= 6; j++) {
+    for (let j = 0; j <= 5; j++) {
       if (j === 0) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].part;
+        document.querySelectorAll('.js-save')[(i*6)+j].value = arrayMatlInfo[i].part;
       }
       else if (j === 1) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].hydroilId;
+        document.querySelectorAll('.js-save')[(i*6)+j].value = arrayMatlInfo[i].hydroilId;
       }
+      // else if (j === 2) {
+      //   document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].item;
+      // }
       else if (j === 2) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].item;
+        document.querySelectorAll('.js-save')[(i*6)+j].value = arrayMatlInfo[i].supplier;
       }
       else if (j === 3) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].supplier;
+        document.querySelectorAll('.js-save')[(i*6)+j].value = arrayMatlInfo[i].cost;
       }
       else if (j === 4) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].cost;
+        document.querySelectorAll('.js-save')[(i*6)+j].value = arrayMatlInfo[i].usage;
       }
       else if (j === 5) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].usage;
-      }
-      else if (j === 6) {
-        document.querySelectorAll('.js-save')[(i*7)+j].value = arrayMatlInfo[i].subtotal;
+        document.querySelectorAll('.js-save')[(i*6)+j].value = arrayMatlInfo[i].subtotal;
       }
     }
   }
@@ -359,7 +348,7 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
   if (htmlAccumulatorServ === '') {
     serverServiceCode = await addIdCode('serviceCode');
     serverServiceCode.forEach(e => {
-      htmlAccumulatorServ += `<option value="${e.id}">${e.id}</option>`;
+      htmlAccumulatorServ += `<option value="${e.id}">${e.id} - ${e.service}</option>`;
     })
   }
 
@@ -371,7 +360,7 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
       htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
     })    
   }
-  keepDataNewLine.saveData((brlAssyServLine-5), 7, 'js-save-serv');
+  keepDataNewLine.saveData((brlAssyServLine-5), 6, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
   <input type="text" class="form-control js-serv-part js-save-serv js-store-data input-off" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}" tabindex="-1">
   </div>
@@ -382,9 +371,6 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
     </select>
   </div>
   <div class="col-md-2">
-    <input type="text" class="form-control js-save-serv js-service js-store-data" id="inputService${brlAssyServLine}" name="inputService${brlAssyServLine}">
-  </div>
-  <div class="col-md-2">
     <select id="inputServiceSupplier${brlAssyServLine}" name="inputServiceSupplier${brlAssyServLine}" class="form-select js-save-serv js-serv-supplier js-store-data input-off" tabindex="-1">
       <option></option>
       ${htmlAccumulatorSupplier}
@@ -393,13 +379,13 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
   <div class="col-md-2"> <!--Here the cost per unit should be specified-->
     <input type="text" class="form-control js-save-serv js-serv-cost js-store-data input-off" id="inputServiceCost${brlAssyServLine}" name="inputServiceCost${brlAssyServLine}" tabindex="-1">
   </div>
-  <div class="col-md-1"> 
+  <div class="col-md-2"> 
     <input type="number" min="0.00" class="form-control js-save-serv js-serv-usage js-store-data" id="inputServiceUsage${brlAssyServLine}" name="inputServiceUsage${brlAssyServLine}">
   </div>
-  <div class="col-md-1"> 
+  <div class="col-md-2"> 
     <input type="number" min="0.00" class="form-control js-save-serv js-serv-subtotal input-off js-store-data" id="inputServiceSubTotal${brlAssyServLine}" name="inputServiceSubTotal${brlAssyServLine}" tabindex=-1>
   </div>`;
-  keepDataNewLine.populateData((brlAssyServLine-5), 7, 'js-save-serv');
+  keepDataNewLine.populateData((brlAssyServLine-5), 6, 'js-save-serv');
   brlAssyServLine++;
   listenBrlMatlChange();
   dependenceFieldsUpdate();
@@ -418,12 +404,12 @@ function dependenceFieldsUpdate() {
     e.addEventListener('change', async () => {
       document.querySelectorAll('.js-supplier')[i].removeAttribute('tabindex');
       document.querySelectorAll('.js-supplier')[i].classList.remove('input-off');
-      const item = await getInfo('matlItem', e.value);
-      document.querySelectorAll('.js-item')[i].value = item[0].item;
+      // const item = await getInfo('matlItem', e.value);
+      // document.querySelectorAll('.js-item')[i].value = item[0].item;
       const arraySuppliers = await getInfo('matlSupplier', e.value);
       let accumHTML = '';
       arraySuppliers.forEach(elem => {
-        accumHTML += `<option>${elem.name}</option>`
+        accumHTML += `<option>${elem[0].name}</option>`;
       })
       document.querySelectorAll('.js-supplier')[i].innerHTML = accumHTML;
       document.querySelectorAll('.js-usage')[i].value = '';
@@ -467,8 +453,8 @@ function dependenceFieldsUpdate() {
     e.addEventListener('change', async () => {
       document.querySelectorAll('.js-serv-supplier')[i].removeAttribute('tabindex');
       document.querySelectorAll('.js-serv-supplier')[i].classList.remove('input-off');
-      const service = await getInfo('servService', e.value);
-      document.querySelectorAll('.js-service')[i].value = service[0].service;
+      // const service = await getInfo('servService', e.value);
+      // document.querySelectorAll('.js-service')[i].value = service[0].service;
       const arraySuppliers = await getInfo('servSupplier', e.value);
       let accumHTML = '';
       arraySuppliers.forEach(elem => {
