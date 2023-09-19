@@ -18,12 +18,9 @@ if (sessionStorage.getItem('firstPrevious') === 'true') {
   //This is used to make sure all the customer information details are populated back
   document.addEventListener('DOMContentLoaded', () => {
     const nameToReload = sessionStorage.getItem('customerInfo').split(',')[1];
-
     if (sessionStorage.getItem('contactDetails')) {
       let array = JSON.parse(sessionStorage.getItem('contactDetails'));
       let htmlAccumulator = `<option></option>`;
-      console.log(array);
-      console.log(typeof array);
       array.forEach(e => {
         htmlAccumulator += `<option value="${e.name}">${e.name}</option>`;
       })
@@ -33,7 +30,7 @@ if (sessionStorage.getItem('firstPrevious') === 'true') {
   })
 }
 
-
+//--------------------------------------------------------------------------------------------------------------------------
 //General functions - Start
 
 //Selector is used to indicate which conversion has to be performed. 1 = In to MM, 2 = MM to In.
@@ -347,30 +344,6 @@ document.body.addEventListener('click', (event) => {
     mountingsList();
   }
 })
-
-// window.addEventListener('load', () => {
-//   sessionStorage.setItem('quoteTitle', document.querySelector(".registration-forms-title").innerHTML); //Used to capture the title and use the same on the next pages
-//   isNext = false;
-//   conversionListener();
-//   mountingsList();
-//   netStrokeListener ();
-  
-//   //If statetement used to populate back information when previous button is used
-//   if (sessionStorage.getItem('firstPrevious') === 'true') {
-//     const radioSelected = sessionStorage.getItem('radio-btn-quote-for');
-//     if (radioSelected === 'option1') {
-//       callToPopulate();
-//     }
-//     sessionStorage.setItem('firstPrevious', false);
-
-//     //This last part is used to make sure all the customer information details are populated back
-//     const eventChange = new Event("change");
-//     document.getElementById('inputCustomer').dispatchEvent(eventChange);
-//     setTimeout(() => {
-//       document.getElementById('inputContact').value = sessionStorage.getItem('customerInfo').split(',')[1];
-//     }, 500);
-//   }
-// });
 
 //Code to check if user really want to leave or reload the page
 window.onbeforeunload = () => {
@@ -686,16 +659,6 @@ document.getElementById('js-btn-first-next').addEventListener('click', () => {
       newCylStd();
     }
   }
-  // const checker = document.querySelectorAll('.js-radio-quote-for').forEach((e, i) => {
-  //   if (e.value === 'option1') {
-  //     console.log('Inside if for option1 seleced');
-  //   }
-  //   else {
-  //     console.log('Outside if for option1 seleced');
-  //   }
-  //   console.log(e);
-    
-  // });
 })
 
 
@@ -714,17 +677,6 @@ document.getElementById('inputCustomer').addEventListener('change', () => {
   }
   loadContact();
 })
-
-// document.getElementById('inputCustomer').addEventListener('change', async () => {
-//   let value = document.getElementById('inputCustomer').value;
-//   let htmlAccumulator = `<option></option>`;
-//   let contacts = await showContact('1', value);
-//   contacts.forEach(e => {
-//     htmlAccumulator += `<option value="${e.name}">${e.name}</option>`;
-//   })
-//   sessionStorage.setItem('contactDetalis', JSON.stringify(contacts));
-//   document.getElementById('inputContact').innerHTML = htmlAccumulator;
-// })
 
 //Used to populate Email, Phone, and Mobile for the contact chosen
 document.getElementById('inputContact').addEventListener('change', () => {
@@ -811,6 +763,3 @@ function mountingsList() {
 }
 //HTML Generating Functions - End
 //--------------------------------------------------------------------------------------------------------------------------
-
-
-
