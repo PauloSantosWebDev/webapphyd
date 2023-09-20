@@ -171,6 +171,8 @@ function newCylStd () {
   sessionStorage.setItem('customerInfo', arrayCustInfo);
   sessionStorage.setItem('type', arrayType);
   sessionStorage.setItem('extra', arrayExtra);
+  sessionStorage.setItem('quantity', document.getElementById('inputQuantity').value || 1);
+  sessionStorage.setItem('specialFeatures', document.getElementById('js-text-special-features').value || 'None');
   return true
 }
 
@@ -215,6 +217,8 @@ function callToPopulate () {
   populateBack('type', 'js-type');
   mountingsList();
   populateBack('extra', 'js-extra');
+  document.getElementById('inputQuantity').value = sessionStorage.getItem('quantity');
+  document.getElementById('js-text-special-features').value = sessionStorage.getItem('specialFeatures');
   return
 }
 
