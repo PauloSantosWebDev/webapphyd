@@ -10,9 +10,9 @@
       <label for="inputCustomer" class="form-label">Customer</label>
       <select id="inputCustomer" name="inputCustomer" class="form-select js-customer-info">
         <option></option>
-        {% for r in result %}
-          {% if r.name %}
-            <option value="{{r.name}}">{{r.name}}</option>
+        {% for c in customerName %}
+          {% if c.name %}
+            <option value="{{c.name}}">{{c.name}}</option>
           {% endif %}
         {% endfor %}
       </select>
@@ -252,8 +252,8 @@
         <li class="page-item">
           <a class="page-link disable-link" href="" tabindex="-1" >Prev.</a>
         </li>
-        <li class="page-item"><a class="page-link clear-btn" href="" id="js-btn-clear-page-data">Clear</a></li>
-        <li class="page-item"><a class="page-link save-btn" href="" id="js-btn-save-page-data">Save</a></li>
+        <li class="page-item"><a class="page-link clear-btn cpointer" id="js-btn-clear-page-data">Clear</a></li>
+        <li class="page-item"><a class="page-link save-btn cpointer" id="js-btn-save-page-data">Save</a></li>
         <li class="page-item">
           <a class="page-link" id="js-btn-first-next" style="cursor: pointer">Next</a>
         </li>

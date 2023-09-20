@@ -115,7 +115,7 @@ function newCylStd () {
   const arrayExtra = [];
   const inputId = ['.js-psi', '.js-mpa', '.js-bar', '.js-lbf', '.js-newton', '.js-ton', '.js-in-to-mm', '.js-mm-to-in', '.js-customer-info', '.js-type', '.js-extra'];
   const arrayArrays = [arrayPsi, arrayMpa, arrayBar, arrayLbf, arrayNew, arrayTon, arrayIn, arrayMM, arrayCustInfo, arrayType, arrayExtra];
-  for (i = 0; i < inputId.length; i++) {
+  for (let i = 0; i < inputId.length; i++) {
     document.querySelectorAll(inputId[i]).forEach((e) => {
       // arrayPsi.push(e.value);
       arrayArrays[i].push(e.value);
@@ -128,35 +128,35 @@ function newCylStd () {
   //Checking if Customer and contact information were provided
   if (!(document.getElementById('inputCustomer').value || document.getElementById('inputContact').value)) {
     alert(`Please inform Customer and Contact.`);
-    return;
+    return false;
   }
   
   //Checking bore and rod, and gross stroke and stop tube.
   if (Number(arrayMM[0]) <= Number(arrayMM[1])) {
     alert(`Bore cannot be smaller or equal to rod diameter.`);
-    return;
+    return false;
   } else if (Number(arrayMM[2]) <= Number(arrayMM[3])) {
     alert(`Gross stroke cannot be smaller or equal to stop tube length.`);
-    return;
+    return false;
   }
 
   //Checking if the closed centers was informed
   if (!document.getElementById('inputClosedCentersIn').value) {
     alert(`Please informed the closed centers.`);
-    return;
+    return false;
   }
 
   //Checking theoretical against required forces
   if (theoreticalPush < arrayNew[1]) {
     const isTrue = confirm(`Do you want to continue? Theoretical push (${theoreticalPush} Newtons) is smaller then required push (${arrayNew[1]} Newtons).`);
     if (!isTrue) {
-      return;
+      return false;
     }
   } 
   else if (theoreticalPull < arrayNew[0]) {
     const isTrue = confirm(`Do you want to continue? Theoretical pull (${theoreticalPull} Newtons) is smaller then required pull (${arrayNew[0]} Newtons).`);
     if (!isTrue) {
-      return;
+      return false;
       // location.replace('http://localhost:3000/');
     }
   }
@@ -171,7 +171,7 @@ function newCylStd () {
   sessionStorage.setItem('customerInfo', arrayCustInfo);
   sessionStorage.setItem('type', arrayType);
   sessionStorage.setItem('extra', arrayExtra);
-  window.location.pathname = '/quotebrlassy';
+  return true
 }
 
 //Used to calculate the net stroke. Difference btw gross stroke and stop tube length.
@@ -656,7 +656,10 @@ document.getElementById('js-btn-first-next').addEventListener('click', () => {
     if (checkerInner.value === 'standard') {
       isNext = true;
       sessionStorage.setItem('radio-btn-quote-for', checker[0].value);
-      newCylStd();
+      // newCylStd();
+      if (newCylStd()) {
+        window.location.pathname = '/quotebrlassy';
+      }
     }
   }
 })
@@ -675,24 +678,39 @@ document.getElementById('inputCustomer').addEventListener('change', () => {
     sessionStorage.setItem('contactDetails', JSON.stringify(contacts));
     document.getElementById('inputContact').innerHTML = htmlAccumulator;
   }
-  loadContact();
+  if (document.getElementById('inputCustomer').value) {
+    loadContact();
+  } 
+  else {
+    document.getElementById('inputContact').innerHTML =
+    document.getElementById('inputEmail').value = 
+    document.getElementById('inputPhone').value = 
+    document.getElementById('inputMobile').value = '';
+  }
 })
 
 //Used to populate Email, Phone, and Mobile for the contact chosen
 document.getElementById('inputContact').addEventListener('change', () => {
-  let contactDetails = JSON.parse(sessionStorage.getItem('contactDetails'));
-  let target = 0;
-  let contactName = document.getElementById('inputContact').innerHTML;
-  for (let i = 0; i < contactDetails.length; i++) {
-    if (contactDetails[i].name === contactName) {
-      target = i;
-    }
+  if (!document.getElementById('inputContact').value) {
+    document.getElementById('inputEmail').value = 
+    document.getElementById('inputPhone').value = 
+    document.getElementById('inputMobile').value = '';
   }
-  document.getElementById('inputEmail').value = contactDetails[target].email || "Not supplied";
-  document.getElementById('inputPhone').value = contactDetails[target].phone || "Not supplied";
-  document.getElementById('inputMobile').value = contactDetails[target].mobile || "Not supplied";
-  let specificContact = {id: contactDetails[target].id, email: contactDetails[target].email, phone: contactDetails[target].phone, mobile: contactDetails[target].mobile};
-  sessionStorage.setItem('specificContact', JSON.stringify(specificContact));
+  else {
+    let contactDetails = JSON.parse(sessionStorage.getItem('contactDetails'));
+    let target = 0;
+    let contactName = document.getElementById('inputContact').innerHTML;
+    for (let i = 0; i < contactDetails.length; i++) {
+      if (contactDetails[i].name === contactName) {
+        target = i;
+      }
+    }
+    document.getElementById('inputEmail').value = contactDetails[target].email || "Not supplied";
+    document.getElementById('inputPhone').value = contactDetails[target].phone || "Not supplied";
+    document.getElementById('inputMobile').value = contactDetails[target].mobile || "Not supplied";
+    let specificContact = {id: contactDetails[target].id, email: contactDetails[target].email, phone: contactDetails[target].phone, mobile: contactDetails[target].mobile};
+    sessionStorage.setItem('specificContact', JSON.stringify(specificContact));
+  }
 })
 
 //Used to update the contact details
@@ -707,6 +725,16 @@ document.getElementById('js-btn-update-contact').addEventListener('click', async
   else {
     return
   }
+})
+
+//Used to clear data from the fields, it just reload the page
+document.getElementById('js-btn-clear-page-data').addEventListener('click', () => {
+  window.location.reload();
+})
+
+//Used to save the data to the database
+document.getElementById('js-btn-save-page-data').addEventListener('click', () =>{
+  //Code
 })
 
 //Event listeners setction - End

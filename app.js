@@ -62,8 +62,7 @@ app.get('/quoteone', async (req, res) =>{
           if (err) {
             reject(err);
           }
-          const customerName = rows.map(row => ({name: row.name}));
-          resolve(customerName);
+          resolve(rows);
         })
       });
     }
@@ -71,30 +70,45 @@ app.get('/quoteone', async (req, res) =>{
 
     let queryNumbers = async function () {
       return new Promise((resolve, reject) => {
-        db.run('INSERT INTO quote (quote_hyd_id, taken, status) VALUES (?, ?, ?)', ['0', 'P', 'O'], (err) => {
+        db.all('SELECT quote_id FROM quote WHERE taken = ? ORDER BY quote_id DESC LIMIT 1', ['A'], (err, rows) => {
           if (err) {
             console.error(err.message);
-            // res.status(500).send('Error when inserting new line in quote table');
-          } 
+          }
+          if (rows != 0) {
+            db.run('UPDATE quote SET taken = ? WHERE quote_id = ?', ['P', rows[0].quote_id], (err) => {
+              if (err) {
+                console.error(err.message);
+              }
+            })
+            resolve(rows);
+          }
           else {
-            // res.status(200);
-            console.log('Data inserted successfully in quote table.');
-            // res.redirect('/regcustomer');
+            console.log("Table doesn't have any row available.");
+            db.run('INSERT INTO quote (quote_hyd_id, taken, status) VALUES (?, ?, ?)', ['0', 'P', 'O'], (err) => {
+              if (err) {
+                console.error(err.message);
+                // res.status(500).send('Error when inserting new line in quote table');
+              } 
+              else {
+                // res.status(200);
+                console.log('Data inserted successfully in quote table.');
+                // res.redirect('/regcustomer');
+              }
+            });
+            db.all('SELECT quote_id FROM quote WHERE taken = ? ORDER BY quote_id DESC LIMIT 1', ['P'], (err, rows) => {
+              if (err) {
+                reject(err);
+              }
+              resolve(rows);
+            })
           }
-        });
-        db.all('SELECT quote_id FROM quote WHERE taken = ? ORDER BY quote_id DESC LIMIT 1', ['P'], (err, rows) => {
-          if (err) {
-            reject(err);
-          }
-          const quoteNumbers = rows.map(row => ({number: row.quote_id}));
-          resolve(quoteNumbers);
         })
       });
     }
     let quoteNumber = await queryNumbers();
 
-    const hydroilQuoteNumber = quoteNumber[0].number + 100000;
-    db.run ('UPDATE quote SET quote_hyd_id = ? WHERE quote_id = ?', [hydroilQuoteNumber, quoteNumber[0].number], (err) => {
+    const hydroilQuoteNumber = quoteNumber[0].quote_id + 100000;
+    db.run ('UPDATE quote SET quote_hyd_id = ? WHERE quote_id = ?', [hydroilQuoteNumber, quoteNumber[0].quote_id], (err) => {
       if (err) {
         console.error(err.message);
       }
@@ -102,14 +116,13 @@ app.get('/quoteone', async (req, res) =>{
         console.log('Data successfully updated in the quote table.');
       }
     });
-    let result = customerName.concat(quoteNumber);
     req.session.quoteNumber = hydroilQuoteNumber;
-    req.session.customerNames = result;
-    res.render('quoteone.njk', {title: 'New quote page', quote: hydroilQuoteNumber, result});
+    req.session.customerNames = customerName;
+    res.render('quoteone.njk', {title: 'New quote page', quote: hydroilQuoteNumber, customerName});
   }
   else {
-    let result = req.session.customerNames;
-    res.render('quoteone.njk', {title: 'New quote page', quote: req.session.quoteNumber, result});
+    let customerName = req.session.customerNames;
+    res.render('quoteone.njk', {title: 'New quote page', quote: req.session.quoteNumber, customerName});
   }
 })
 

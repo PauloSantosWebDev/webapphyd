@@ -602,6 +602,15 @@ function dependenceFieldsUpdate() {
   })
 }
 
+//Used to clear data from the page fields and also from the sessionStorage
+document.getElementById('js-btn-clear-page-data').addEventListener('click', () => {
+  // sessionStorage.removeItem('htmlAccumulator');
+  // sessionStorage.removeItem('htmlAccumulatorSupplier');
+  // sessionStorage.removeItem('htmlAccumulatorServ');
+  // sessionStorage.removeItem('htmlAccumulatorSupplierServ');
+  window.location.reload();
+})
+
 //When next is clicked, all the date need to be saved and next page loaded
 document.getElementById('js-btn-second-next').addEventListener('click', () => {
   isNext = true;
