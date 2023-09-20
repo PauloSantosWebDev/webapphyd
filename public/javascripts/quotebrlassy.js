@@ -27,11 +27,16 @@ listenBrlMatlChange();
 dependenceFieldsUpdate();
 if (sessionStorage.getItem('secondPrevious') === 'true') {
   document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 0; i < (Number(sessionStorage.getItem('brlAssyMatlLines')) - 5); i++) {
-      document.getElementById('js-new-line-brl-matl').click();
+    function recreateRows (callback) {
+      for (let i = 0; i < (Number(sessionStorage.getItem('brlAssyMatlLines')) - 5); i++) {
+        document.getElementById('js-new-line-brl-matl').click();
+      }
+      callback();
     }
+    recreateRows(() => {
+      populateBack();
+    })
   })
-  populateBack();
 }
 
 //Object with 2 functions to keep data when lines are added to forms
@@ -98,11 +103,14 @@ function saveDataForReload() {
 function populateBack () {
   let arrayStoreData = sessionStorage.getItem('storeDataBrlAssy');
   arrayStoreData = arrayStoreData.split(',');
-  setTimeout(() => {
-    document.querySelectorAll('.js-store-data').forEach((e, i) => {
-      e.value = arrayStoreData[i];
-    })
-  }, 500);
+  document.querySelectorAll('.js-store-data').forEach((e, i) => {
+    e.value = arrayStoreData[i];
+  })
+  // setTimeout(() => {
+  //   document.querySelectorAll('.js-store-data').forEach((e, i) => {
+  //     e.value = arrayStoreData[i];
+  //   })
+  // }, 500);
   sessionStorage.setItem('secondPrevious', false);
 }
 
@@ -171,17 +179,6 @@ async function getCost(target, value, name) {
 //--------------------------------------------------------------------------------------------------------------------------
 //Event listeners setction - Start
 
-//Loads page with functionalities it needs when page is loaded
-// window.addEventListener('load', () => {
-//   document.querySelector(".registration-forms-title").innerHTML = sessionStorage.getItem('quoteTitle');
-//   listenBrlMatlChange();
-//   dependenceFieldsUpdate();
-//   if (sessionStorage.getItem('secondPrevious') === 'true') {
-//     populateBack();
-//   }
-//   isNext = false;
-// })
-
 //Code to check if user really want to leave or reload the page
 window.onbeforeunload = () => {
   if (!isNext) {
@@ -231,20 +228,28 @@ document.getElementById('js-new-line-brl-matl').addEventListener('click', async 
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
   //Used for Hydroil ID
-  if (htmlAccumulator === '') {
+  if (!sessionStorage.getItem('htmlAccumulator')) {
     serverHydroilId = await addIdCode('hydId');
     serverHydroilId.forEach(e => {
       htmlAccumulator += `<option value="${e.id}">${e.id} - ${e.item}</option>`;
-    })    
+    })
+    sessionStorage.setItem('htmlAccumulator', htmlAccumulator);
+  }
+  else {
+    htmlAccumulator = sessionStorage.getItem('htmlAccumulator');
   }
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
   //Used for suppliers
-  if (htmlAccumulatorSupplier === '') {
+  if (!sessionStorage.getItem('htmlAccumulatorSupplier')) {
     serverSupplierNames = await addIdCode('supplierNames');
     serverSupplierNames.forEach(e => {
       htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
-    })    
+    })
+    sessionStorage.setItem('htmlAccumulatorSupplier', htmlAccumulatorSupplier);
+  }
+  else {
+    htmlAccumulatorSupplier = sessionStorage.getItem('htmlAccumulatorSupplier');
   }
   
   document.getElementById('js-first-form-add-lines').innerHTML += `<div class="col-md-2">
@@ -345,21 +350,30 @@ document.getElementById('js-new-line-brl-serv').addEventListener('click', async 
   
   //Used as a guard to guarantee that the data needed is fetched only once, not everytime the button is clicked.
   //Used for service code
-  if (htmlAccumulatorServ === '') {
+  if (!sessionStorage.getItem('htmlAccumulatorServ')) {
     serverServiceCode = await addIdCode('serviceCode');
     serverServiceCode.forEach(e => {
       htmlAccumulatorServ += `<option value="${e.id}">${e.id} - ${e.service}</option>`;
     })
+    sessionStorage.setItem('htmlAccumulatorServ', htmlAccumulatorServ);
+  }
+  else {
+    htmlAccumulatorServ = sessionStorage.getItem('htmlAccumulatorServ');
   }
 
   //Used as a guard to avoid fetching all the time the add new line button is clicked
   //Used for suppliers
-  if (htmlAccumulatorSupplier === '') {
+  if (!sessionStorage.getItem('htmlAccumulatorSupplierServ')) {
     serverSupplierNames = await addIdCode('supplierNames');
     serverSupplierNames.forEach(e => {
       htmlAccumulatorSupplier += `<option value="${e.name}">${e.name}</option>`;
-    })    
+    })
+    sessionStorage.setItem('htmlAccumulatorSupplierServ', htmlAccumulatorSupplier);
   }
+  else {
+    htmlAccumulatorSupplier = sessionStorage.getItem('htmlAccumulatorSupplierServ');
+  }
+
   keepDataNewLine.saveData((brlAssyServLine-5), 6, 'js-save-serv');
   document.getElementById('js-third-form-add-lines').innerHTML += `<div class="col-md-2">
   <input type="text" class="form-control js-serv-part js-save-serv js-store-data input-off" id="inputServicePart${brlAssyServLine}" name="inputServicePart${brlAssyServLine}" tabindex="-1">
