@@ -279,25 +279,22 @@ async function updateDetails (target, id, email, phone, mobile) {
   }
 }
 
-//Used to save data on sql tables, not all the information of the quote, but the information of the first page
-// async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
-//   const options = {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
-//   };
-//   try {
-//     // const response = await fetch("/quoteone", options);
-//     // const result = await response.json();
-//     // return result.body;
-//     await fetch("/quoteone", options);
-//     return
-//   } catch (error) {
-//     console.error("Error: ", error);
-//   }
-// }
+//Used to save data on SQL tables, not all the information of the quote, but the information of the first page
+async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
+  };
+  try {
+    await fetch("/quoteone", options);
+    return
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
 
 //Fetch and async functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -793,24 +790,21 @@ document.getElementById('js-btn-save-page-data').addEventListener('click', () =>
     pins: document.getElementById('inputPin').value,
     numberCombinationsBRS: 1
   }
-  async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
-    };
-    try {
-      // const response = await fetch("/quoteone", options);
-      // const result = await response.json();
-      // return result.body;
-      await fetch("/quoteone", options);
-      return
-    } catch (error) {
-      console.error("Error: ", error);
-    }
-  }
+  // async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
+  //   const options = {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
+  //   };
+  //   try {
+  //     await fetch("/quoteone", options);
+  //     return
+  //   } catch (error) {
+  //     console.error("Error: ", error);
+  //   }
+  // }
   saveFirstPageToSql('3', saveToSqlGeneric, saveToSqlNewCyl, saveToSqlNewCylStd);
 })
 
