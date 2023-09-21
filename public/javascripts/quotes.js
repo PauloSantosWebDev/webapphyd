@@ -3,6 +3,10 @@ let isNext = false;
 
 //Initiating page
 sessionStorage.setItem('quoteTitle', document.querySelector(".registration-forms-title").innerHTML); //Used to capture the title and use the same on the next pages
+sessionStorage.setItem('versionNumber', 1);
+if (!sessionStorage.getItem('itemNumber')) {
+  sessionStorage.setItem('itemNumber', 1);
+}
 conversionListener();
 mountingsList();
 netStrokeListener ();
@@ -172,7 +176,7 @@ function newCylStd () {
   sessionStorage.setItem('type', arrayType);
   sessionStorage.setItem('extra', arrayExtra);
   sessionStorage.setItem('quantity', document.getElementById('inputQuantity').value || 1);
-  sessionStorage.setItem('specialFeatures', document.getElementById('js-text-special-features').value || 'None');
+  sessionStorage.setItem('specialFeatures', document.getElementById('js-text-special-features').value);
   return true
 }
 
@@ -274,6 +278,26 @@ async function updateDetails (target, id, email, phone, mobile) {
     console.error("Error: ", error);
   }
 }
+
+//Used to save data on sql tables, not all the information of the quote, but the information of the first page
+// async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
+//   const options = {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
+//   };
+//   try {
+//     // const response = await fetch("/quoteone", options);
+//     // const result = await response.json();
+//     // return result.body;
+//     await fetch("/quoteone", options);
+//     return
+//   } catch (error) {
+//     console.error("Error: ", error);
+//   }
+// }
 
 //Fetch and async functions - End
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -738,7 +762,56 @@ document.getElementById('js-btn-clear-page-data').addEventListener('click', () =
 
 //Used to save the data to the database
 document.getElementById('js-btn-save-page-data').addEventListener('click', () =>{
-  //Code
+  //Object used to parse the data to the server and save it in a sql database
+  let saveToSqlGeneric = {
+    contactID: JSON.parse(sessionStorage.getItem('specificContact')).id,
+    versionNumber: sessionStorage.getItem('versionNumber'),
+    itemNumber: sessionStorage.getItem('itemNumber'),
+    quantity: sessionStorage.getItem('quantity'),
+    specialFeatures: document.getElementById('js-text-special-features').value
+  }
+  let saveToSqlNewCyl = {
+    bodyType: document.getElementById('inputBodyType').value,
+    innerType: document.getElementById('inputInnerType').value,
+    forceGenerator: document.getElementById('inputForceGenerator').value,
+    actingType: document.getElementById('inputActingType').value,
+    pullPressureMpa: document.getElementById('inputPullPressureMpa').value,
+    pushPressureMpa: document.getElementById('inputPushPressureMpa').value,
+    pullForceNewton: document.getElementById('inputPullForceNewton').value,
+    pushForceNewton: document.getElementById('inputPushForceNewton').value
+  }
+  let saveToSqlNewCylStd = {
+    boreMM: document.getElementById('inputBoreMM').value,
+    rodMM: document.getElementById('inputRodMM').value,
+    grossStrokeMM: document.getElementById('inputGrossStrokeMM').value,
+    stopTubeMM: document.getElementById('inputStopTubeMM').value,
+    netStrokeMM: document.getElementById('inputNetStrokeMM').value,
+    closedCentersMM: document.getElementById('inputClosedCentersMM').value,
+    cylinderMounting: document.getElementById('inputCylMounting').value,
+    rodMounting: document.getElementById('inputRodMounting').value,
+    cushions: document.getElementById('inputCushion').value,
+    pins: document.getElementById('inputPin').value,
+    numberCombinationsBRS: 1
+  }
+  async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
+    };
+    try {
+      // const response = await fetch("/quoteone", options);
+      // const result = await response.json();
+      // return result.body;
+      await fetch("/quoteone", options);
+      return
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+  saveFirstPageToSql('3', saveToSqlGeneric, saveToSqlNewCyl, saveToSqlNewCylStd);
 })
 
 //Event listeners setction - End

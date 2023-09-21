@@ -50,6 +50,21 @@ FOREIGN KEY (service_code) REFERENCES ext_services(service_code), FOREIGN KEY (s
 //Main quote table (summary)
 db.run(`CREATE TABLE IF NOT EXISTS quote (quote_id INTEGER PRIMARY KEY AUTOINCREMENT, quote_hyd_id INTEGER NOT NULL, taken TEXT, total_price INTEGER, status TEXT NOT NULL, contact_id INTEGER, FOREIGN KEY (contact_id) REFERENCES contacts(contact_id), UNIQUE(quote_hyd_id))`);
 
+//Version control table
+db.run(`CREATE TABLE IF NOT EXISTS quote_version (quote_version_id INTEGER PRIMARY KEY AUTOINCREMENT, quote_id INTEGER NOT NULL, quote_version INTEGER NOT NULL, version_price INTEGER, FOREIGN KEY (quote_id) REFERENCES quote(quote_id))`);
+
+//Item control table
+db.run(`CREATE TABLE IF NOT EXISTS quote_item (quote_id INTEGER, quote_version INTEGER, quote_item INTEGER, quantity INTEGER, specification TEXT, price INTEGER, FOREIGN KEY (quote_id) REFERENCES quote(quote_id), FOREIGN KEY (quote_version) REFERENCES quote_version(quote_version))`);
+
+//Cylinder basic specs control table
+db.run(`CREATE TABLE IF NOT EXISTS cylinder (quote_id INTEGER, quote_version INTEGER, quote_item INTEGER, body_type TEXT, inner_type TEXT, force_generator TEXT, acting_type TEXT, closed_centers INTEGER, 
+      push_pressure INTEGER, pull_pressure INTEGER, push_force INTEGER, pull_force INTEGER, cylinder_mounting TEXT, rod_end_mounting TEXT, cushions TEXT, pins TEXT, special_features TEXT, FOREIGN KEY (quote_id) REFERENCES quote(quote_id),
+      FOREIGN KEY (quote_version) REFERENCES quote_version(quote_version))`);
+
+//Cylinder bore, rod and stroke control
+db.run(`CREATE TABLE IF NOT EXISTS cylinder_brs (quote_id INTEGER, quote_version INTEGER, quote_item INTEGER, brs_id INTEGER NOT NULL, bore INTEGER, rod INTEGER, gross_stroke INTEGER, 
+      stop_tube INTEGER, net_stroke INTEGER, FOREIGN KEY (quote_id) REFERENCES quote(quote_id), FOREIGN KEY (quote_version) REFERENCES quote_version(quote_version))`);
+
 // db.run(`CREATE TABLE IF NOT EXISTS materials (material_id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, hydroil_id TEXT NOT NULL, item TEXT NOT NULL, description TEXT NOT NULL, alt_description TEXT NOT NULL, supplier TEXT NOT NULL, supplier_id INTEGER, 
 //   cost REAL NOT NULL, unit TEXT NOT NULL, details TEXT, yield_mpa REAL, yield_psi REAL, uts_mpa REAL, uts_psi REAL, young REAL)`);
 

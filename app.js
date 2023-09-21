@@ -107,7 +107,10 @@ app.get('/quoteone', async (req, res) =>{
     }
     let quoteNumber = await queryNumbers();
 
+    req.session.quoteID = quoteNumber[0].quote_id; //Will be used when data has to be saved to the SQL tables in the post methods
+
     const hydroilQuoteNumber = quoteNumber[0].quote_id + 100000;
+
     db.run ('UPDATE quote SET quote_hyd_id = ? WHERE quote_id = ?', [hydroilQuoteNumber, quoteNumber[0].quote_id], (err) => {
       if (err) {
         console.error(err.message);
@@ -788,7 +791,83 @@ app.post('/quoteone', (req, res) => {
       status: 'success'
     });
   }
+  if (checker === '3') {
+    const contact = req.body.genericObject.contactID;
+    const version = req.body.genericObject.versionNumber;
+    const item = req.body.genericObject.itemNumber;
+    const quantity = req.body.genericObject.quantity;
+    const special = req.body.genericObject.specialFeatures;
+
+    const body = req.body.newCylinderObject.bodyType;
+    const inner = req.body.newCylinderObject.innerType;
+    const force = req.body.newCylinderObject.forceGenerator;
+    const acting = req.body.newCylinderObject.actingType;
+    const pullPress = req.body.newCylinderObject.pullPressureMpa;
+    const pushPress = req.body.newCylinderObject.pushPressureMpa;
+    const pullForce = req.body.newCylinderObject.pullForceNewton;
+    const pushForce = req.body.newCylinderObject.pushForceNewton;
+
+    const closedCenters = req.body.standardObject.closedCentersMM;
+    const cylMount = req.body.standardObject.cylinderMounting;
+    const rodMount = req.body.standardObject.rodMounting;
+    const cushion = req.body.standardObject.cushions;
+    const pins = req.body.standardObject.pins;
+    const bore = req.body.standardObject.boreMM;
+    const rod = req.body.standardObject.rodMM;
+    const gross = req.body.standardObject.grossStrokeMM;
+    const stop = req.body.standardObject.stopTubeMM;
+    const net = req.body.standardObject.netStrokeMM;
+    let brsID = req.body.standardObject.numberCombinationsBRS; //Like this for now because I am considering only std new cylinders. For double-ended and telescopic cylinders it will have to change.
+
+    db.run(`UPDATE quote SET contact_id = ? WHERE quote_id = ?`, [contact, req.session.quoteID], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Contact ID successfully updated in the quote table.');
+      }
+    });
+    db.run('INSERT INTO quote_version (quote_id, quote_version) VALUES (?, ?)', [req.session.quoteID, version], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Quote ID and quote version successfully updated in the quote_version table.');
+      }
+    })
+    db.run('INSERT INTO quote_item (quote_id, quote_version, quote_item, quantity) VALUES (?, ?, ?, ?)', [req.session.quoteID, version, item, quantity], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Quote ID, quote version, quote item and quantity successfully updated in the quote_item table.');
+      }
+    })
+    db.run(`INSERT INTO cylinder (quote_id, quote_version, quote_item, body_type, inner_type, force_generator, acting_type, closed_centers, push_pressure, pull_pressure, push_force, pull_force, 
+      cylinder_mounting, rod_end_mounting, cushions, pins, special_features) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [req.session.quoteID, version, item, body, inner, force, acting,
+      closedCenters, pullPress, pushPress, pullForce, pushForce, cylMount, rodMount, cushion, pins, special], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Data successfully updated in the cylinder table.');
+      }
+    })
+    db.run(`INSERT INTO cylinder_brs (quote_id, quote_version, quote_item, brs_id, bore, rod, gross_stroke, stop_tube, net_stroke) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [req.session.quoteID, version, item, 
+      brsID, bore, rod, gross, stop, net], (err) => {
+      if (err) {
+        console.error(err.message);
+      }
+      else {
+        console.log('Data successfully updated in the cylinder_brs table.');
+      }
+    })
+    res.json({
+      status: 'sucess'
+    });
+  }
 })
+
 
 //Used to load and populate many different fields in the barrel assembly page
 app.post('/quotebrlassy', (req, res) => {
