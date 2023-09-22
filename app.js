@@ -819,7 +819,7 @@ app.post('/quoteone', (req, res) => {
     const net = req.body.standardObject.netStrokeMM;
     let brsID = req.body.standardObject.numberCombinationsBRS; //Like this for now because I am considering only std new cylinders. For double-ended and telescopic cylinders it will have to change.
 
-    db.run(`UPDATE quote SET contact_id = ? WHERE quote_id = ?`, [contact, req.session.quoteID], (err) => {
+    db.run(`UPDATE quote SET contact_id = ?, taken = ? WHERE quote_id = ?`, [contact, 'T', req.session.quoteID], (err) => {
       if (err) {
         console.error(err.message);
       }
@@ -862,6 +862,12 @@ app.post('/quoteone', (req, res) => {
         console.log('Data successfully updated in the cylinder_brs table.');
       }
     })
+    res.json({
+      status: 'sucess'
+    });
+  }
+  if (checker === '4') {
+    req.session.quoteNumAllocated = false;
     res.json({
       status: 'sucess'
     });

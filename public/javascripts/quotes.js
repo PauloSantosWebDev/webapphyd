@@ -754,7 +754,10 @@ document.getElementById('js-btn-update-contact').addEventListener('click', async
 
 //Used to clear data from the fields, it just reload the page
 document.getElementById('js-btn-clear-page-data').addEventListener('click', () => {
-  window.location.reload();
+  const response = confirm("Are you sure you want to clear the fields?");
+  if (response) {
+    window.location.reload();  
+  }
 })
 
 //Used to save the data to the database
@@ -790,21 +793,29 @@ document.getElementById('js-btn-save-page-data').addEventListener('click', () =>
     pins: document.getElementById('inputPin').value,
     numberCombinationsBRS: 1
   }
-  // async function saveFirstPageToSql (target, genericObject, newCylinderObject, standardObject) {
-  //   const options = {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({target, genericObject, newCylinderObject, standardObject})
-  //   };
-  //   try {
-  //     await fetch("/quoteone", options);
-  //     return
-  //   } catch (error) {
-  //     console.error("Error: ", error);
-  //   }
-  // }
+
+  //Checking if input values make sense
+  //Checking if Customer and contact information were provided
+  if (!(document.getElementById('inputCustomer').value || document.getElementById('inputContact').value)) {
+    alert(`Please inform Customer and Contact.`);
+    return false;
+  }
+  
+  // //Checking bore and rod, and gross stroke and stop tube.
+  if (Number(document.getElementById('inputBoreMM').value) <= Number(document.getElementById('inputRodMM').value)) {
+    alert(`Bore cannot be smaller or equal to rod diameter.`);
+    return false;
+  } else if (Number(document.getElementById('inputGrossStrokeMM').value) <= Number(document.getElementById('inputStopTubeMM').value)) {
+    alert(`Gross stroke cannot be smaller or equal to stop tube length.`);
+    return false;
+  }
+
+  //Checking if the closed centers was informed
+  if (!document.getElementById('inputClosedCentersIn').value) {
+    alert(`Please informed the closed centers.`);
+    return false;
+  }
+  
   saveFirstPageToSql('3', saveToSqlGeneric, saveToSqlNewCyl, saveToSqlNewCylStd);
 })
 
